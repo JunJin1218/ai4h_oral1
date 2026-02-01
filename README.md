@@ -1,1 +1,2 @@
-존나하기실ㄴ호
+uv sync --extra cu124 (for gpu usage)
+uv run python -m {module}
