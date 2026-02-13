@@ -211,3 +211,8 @@ __marimo__/
 data/
 input_img/
 processed_img/
+
+#virtual environments
+venv/
+.venv/
+uv-env/
