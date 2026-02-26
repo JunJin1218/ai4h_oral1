@@ -25,7 +25,7 @@ def load_vit_model(
         device = "cuda" if torch.cuda.is_available() else "cpu"
     torch_device = torch.device(device)
 
-    processor = AutoImageProcessor.from_pretrained(model_name)
+    processor = AutoImageProcessor.from_pretrained(model_name, use_fast=True)
     model = ViTModel.from_pretrained(model_name)
     print(f"DEVICE: {torch_device}")
     model.to(torch_device)
