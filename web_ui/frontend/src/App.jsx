@@ -33,6 +33,7 @@ export default function App() {
   const [error, setError] = useState(null)
   const [dragOver, setDragOver] = useState(false)
   const [sortBy, setSortBy] = useState('score') // 'score' | 'alphabetical'
+  const [showLookalikeLimit, setShowLookalikeLimit] = useState('top10') // 'top10' | 'all'
   const [backendActive, setBackendActive] = useState(null) // null = checking, true/false = known
   const progressIntervalRef = useRef(null)
 
@@ -66,14 +67,16 @@ export default function App() {
   const onDrop = useCallback((e) => {
     e.preventDefault()
     setDragOver(false)
+    if (loading) return
     const file = e.dataTransfer?.files?.[0]
     setFile(file || null)
-  }, [setFile])
+  }, [setFile, loading])
 
   const onDragOver = useCallback((e) => {
     e.preventDefault()
+    if (loading) return
     setDragOver(true)
-  }, [])
+  }, [loading])
 
   const onDragLeave = useCallback((e) => {
     e.preventDefault()
@@ -146,6 +149,7 @@ export default function App() {
 
   const lookalikeItems = sortItems(findResult?.lookalikes ?? [], true)
   const notLookalikeItems = sortItems(findResult?.not_lookalikes ?? [], true)
+  const displayedLookalikes = showLookalikeLimit === 'top10' ? lookalikeItems.slice(0, 10) : lookalikeItems
 
   return (
     <div className="app">
@@ -179,7 +183,7 @@ export default function App() {
         <h2 className="section-title">UPLOAD QUERY MEDICATION</h2>
 
         <div
-          className={`upload-zone ${dragOver ? 'drag-over' : ''} ${urlQuery ? 'has-image' : ''}`}
+          className={`upload-zone ${dragOver ? 'drag-over' : ''} ${urlQuery ? 'has-image' : ''} ${loading ? 'upload-zone--scanning' : ''}`}
           onDrop={onDrop}
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
@@ -190,9 +194,13 @@ export default function App() {
               accept="image/jpeg,image/png,image/webp,image/gif"
               onChange={(e) => setFile(e.target.files?.[0] ?? null)}
               className="upload-input"
+              disabled={loading}
             />
             {urlQuery ? (
-              <img src={urlQuery} alt="Upload preview" className="upload-preview" />
+              <div className="upload-preview-wrap">
+                <img src={urlQuery} alt="Upload preview" className="upload-preview" />
+                <span className="upload-filename" title={queryImage.name}>{queryImage?.name ?? 'Query image'}</span>
+              </div>
             ) : (
               <>
                 <ImagePlaceholderIcon />
@@ -234,6 +242,9 @@ export default function App() {
                 Compared to {findResult.total_candidates} candidates (threshold: {findResult.threshold}).
                 {findResult.message && ` ${findResult.message}`}
               </p>
+              {queryImage?.name && (
+                <p className="query-image-name">Query image: <strong>{queryImage.name}</strong></p>
+              )}
               <div className="output-sort">
                 <span className="output-sort-label">Sort:</span>
                 <label className="output-sort-option">
@@ -254,29 +265,88 @@ export default function App() {
                   />
                   <span>A–Z</span>
                 </label>
+                <span className="output-sort-sep">|</span>
+                <span className="output-sort-label">Lookalikes:</span>
+                <label className="output-sort-option">
+                  <input
+                    type="radio"
+                    name="showLookalikeLimit"
+                    checked={showLookalikeLimit === 'top10'}
+                    onChange={() => setShowLookalikeLimit('top10')}
+                  />
+                  <span>Top 10</span>
+                </label>
+                <label className="output-sort-option">
+                  <input
+                    type="radio"
+                    name="showLookalikeLimit"
+                    checked={showLookalikeLimit === 'all'}
+                    onChange={() => setShowLookalikeLimit('all')}
+                  />
+                  <span>All</span>
+                </label>
               </div>
               <div className="result-columns">
                 <div className="result-list lookalikes">
                   <h3>Lookalikes (score ≥ 0.5) <span className="result-count">({lookalikeItems.length})</span></h3>
-                  <ul>
-                    {lookalikeItems.map((item, i) => (
-                      <li key={i}>
-                        <span className="name" title={item.name}>{displayName(item.name)}</span>
-                        <span className="score" title="Assessor score (lookalike probability)">{item.score}</span>
+                  <ul className="result-cards">
+                    {displayedLookalikes.map((item, i) => (
+                      <li key={i} className="result-card">
+                        <div className="result-card-img-wrap">
+                          {item.image_url ? (
+                            <>
+                              <img
+                                src={`${API_BASE}${item.image_url}`}
+                                alt={displayName(item.name)}
+                                className="result-card-img"
+                                loading="lazy"
+                                onError={(e) => { e.target.style.display = 'none'; const pl = e.target.nextElementSibling; if (pl) pl.classList.add('visible'); }}
+                              />
+                              <span className="result-card-placeholder">No image</span>
+                            </>
+                          ) : (
+                            <span className="result-card-placeholder visible">No image</span>
+                          )}
+                        </div>
+                        <div className="result-card-info">
+                          <span className="name" title={item.name}>{displayName(item.name)}</span>
+                          <span className="score" title="Assessor score (lookalike probability)">{item.score}</span>
+                        </div>
                       </li>
                     ))}
-                    {lookalikeItems.length === 0 && (
+                    {displayedLookalikes.length === 0 && (
                       <li className="empty">None</li>
+                    )}
+                    {showLookalikeLimit === 'top10' && lookalikeItems.length > 10 && (
+                      <li className="empty">Showing top 10 of {lookalikeItems.length}. Switch to &quot;All&quot; to see all.</li>
                     )}
                   </ul>
                 </div>
                 <div className="result-list not-lookalikes">
                   <h3>Non-lookalikes (score &lt; 0.5) <span className="result-count">({notLookalikeItems.length})</span></h3>
-                  <ul>
+                  <ul className="result-cards">
                     {notLookalikeItems.map((item, i) => (
-                      <li key={i}>
-                        <span className="name" title={item.name}>{displayName(item.name)}</span>
-                        <span className="score" title="Assessor score (lookalike probability)">{item.score}</span>
+                      <li key={i} className="result-card">
+                        <div className="result-card-img-wrap">
+                          {item.image_url ? (
+                            <>
+                              <img
+                                src={`${API_BASE}${item.image_url}`}
+                                alt={displayName(item.name)}
+                                className="result-card-img"
+                                loading="lazy"
+                                onError={(e) => { e.target.style.display = 'none'; const pl = e.target.nextElementSibling; if (pl) pl.classList.add('visible'); }}
+                              />
+                              <span className="result-card-placeholder">No image</span>
+                            </>
+                          ) : (
+                            <span className="result-card-placeholder visible">No image</span>
+                          )}
+                        </div>
+                        <div className="result-card-info">
+                          <span className="name" title={item.name}>{displayName(item.name)}</span>
+                          <span className="score" title="Assessor score (lookalike probability)">{item.score}</span>
+                        </div>
                       </li>
                     ))}
                     {notLookalikeItems.length === 0 && (

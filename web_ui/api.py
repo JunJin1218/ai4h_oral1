@@ -12,11 +12,15 @@ To use a different assessor (e.g. after comparing models): set env ASSESSOR_MODE
 import os
 import re
 import time
+import json
+import uuid
 from pathlib import Path
+from urllib.parse import quote
 import tempfile
 import torch
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 
 app = FastAPI(title="Lookalike API", version="0.1.0")
 
@@ -128,6 +132,135 @@ def _collect_embedding_paths(data_dir: Path) -> list[Path]:
             continue
         out.append(p)
     return sorted(out, key=lambda p: p.name)
+
+
+# Where to find source images for candidates (embedding stem -> image file)
+IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tif", ".tiff")
+
+
+def _image_path_for_embedding(emb_path: Path, data_dir: Path) -> Path | None:
+    """
+    Resolve an embedding path to a source image path.
+    Tries: input_img/<stem>.<ext>, data/images/<stem>.<ext>, and same-dir-as-embedding.
+    """
+    stem = emb_path.stem
+    stem_base = re.sub(r"_\d+$", "", stem)
+    candidates = [stem, stem_base] if stem_base != stem else [stem]
+
+    search_roots: list[Path] = []
+    input_img = os.environ.get("INPUT_IMG_DIR", "input_img")
+    search_roots.append(Path(input_img))
+    search_roots.append(data_dir / "images")
+    if "embeddings" in emb_path.parts:
+        parent = emb_path.parent
+        search_roots.append(parent.parent / "images")
+        search_roots.append(parent)
+
+    for root in search_roots:
+        if not root.exists():
+            continue
+        for base in candidates:
+            for ext in IMAGE_EXTENSIONS:
+                p = root / f"{base}{ext}"
+                if p.is_file():
+                    return p
+        for ext in IMAGE_EXTENSIONS:
+            for f in root.rglob(f"{candidates[0]}{ext}"):
+                if f.is_file():
+                    return f
+    return None
+
+
+def _candidate_image_path(name: str, data_dir: Path) -> Path | None:
+    """Resolve display name to candidate image file."""
+    from assessor.test_lookalike import find_embedding_path
+    emb_path = find_embedding_path(name, data_dir)
+    if emb_path is None:
+        return None
+    return _image_path_for_embedding(emb_path, data_dir)
+
+
+@app.get("/candidate_image")
+async def candidate_image(name: str = "", data_dir: str = "data"):
+    """Serve the source image for a candidate by name. Returns 404 if not found."""
+    if not name or not name.strip():
+        raise HTTPException(400, "Missing name")
+    data_path = Path(data_dir)
+    if not data_path.is_dir():
+        raise HTTPException(400, f"Data directory not found: {data_dir}")
+    image_path = _candidate_image_path(name.strip(), data_path)
+    if image_path is None or not image_path.is_file():
+        raise HTTPException(404, f"No image found for candidate: {name[:50]}...")
+    media_type = "image/jpeg"
+    if image_path.suffix.lower() in (".png",):
+        media_type = "image/png"
+    elif image_path.suffix.lower() in (".webp",):
+        media_type = "image/webp"
+    return FileResponse(str(image_path), media_type=media_type)
+
+
+# --- RL feedback: persist (query_embedding, candidate_name, label) for offline training
+FEEDBACK_DIR = Path(os.environ.get("FEEDBACK_DIR", "data/feedback"))
+FEEDBACK_LOG = FEEDBACK_DIR / "feedback.jsonl"
+
+
+@app.post("/feedback")
+async def submit_feedback(
+    query_image: UploadFile = File(...),
+    candidate_name: str = "",
+    is_lookalike: bool = True,
+    data_dir: str = "data",
+):
+    """
+    Submit human (or AI) feedback for RL: (query image, candidate name, correct label).
+    Saves query embedding to disk and appends a log line. Run train_from_feedback.py
+    periodically to update the assessor from this feedback (model stays persistent).
+    """
+    from image_embedding.vit import get_image_embedding
+
+    if not candidate_name or not candidate_name.strip():
+        raise HTTPException(400, "Missing candidate_name")
+    allowed = {"image/jpeg", "image/png", "image/webp", "image/gif"}
+    if query_image.content_type not in allowed:
+        raise HTTPException(400, "File must be an image (JPEG, PNG, WebP, GIF).")
+
+    _ensure_models()
+    data_path = Path(data_dir)
+    FEEDBACK_DIR.mkdir(parents=True, exist_ok=True)
+    emb_dir = FEEDBACK_DIR / "embeddings"
+    emb_dir.mkdir(parents=True, exist_ok=True)
+
+    with tempfile.NamedTemporaryFile(
+        suffix=Path(query_image.filename or "query").suffix, delete=False
+    ) as f:
+        f.write(await query_image.read())
+        path_query = f.name
+    try:
+        query_emb = get_image_embedding(
+            _vit_model, _vit_processor, path_query, device=_vit_device, pooling="cls"
+        )
+    finally:
+        Path(path_query).unlink(missing_ok=True)
+
+    if query_emb.shape != (_assessor_cfg.embedding_size,):
+        raise HTTPException(500, "Embedding size mismatch with assessor.")
+
+    emb_id = str(uuid.uuid4())
+    emb_path = emb_dir / f"{emb_id}.pt"
+    torch.save(query_emb.cpu(), emb_path)
+    rel_emb_path = str(emb_path.relative_to(FEEDBACK_DIR)) if FEEDBACK_DIR in emb_path.parents else str(emb_path)
+
+    label = 1 if is_lookalike else 0
+    record = {
+        "query_emb_path": rel_emb_path,
+        "candidate_name": candidate_name.strip(),
+        "label": label,
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+    with open(FEEDBACK_LOG, "a", encoding="utf-8") as out:
+        out.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+    return {"status": "ok", "id": emb_id, "label": label}
 
 
 @app.post("/find_lookalikes")
@@ -250,8 +383,8 @@ async def find_lookalikes(
     print(f"[lookalike] /find_lookalikes total: {time.perf_counter() - t_total:.2f}s")
 
     results.sort(key=lambda x: -x[2])
-    lookalikes = [{"name": n, "cosine_sim": c, "score": s} for n, c, s in results if s >= THRESHOLD]
-    not_lookalikes = [{"name": n, "cosine_sim": c, "score": s} for n, c, s in results if s < THRESHOLD]
+    lookalikes = [{"name": n, "cosine_sim": c, "score": s, "image_url": f"/candidate_image?name={quote(n)}"} for n, c, s in results if s >= THRESHOLD]
+    not_lookalikes = [{"name": n, "cosine_sim": c, "score": s, "image_url": f"/candidate_image?name={quote(n)}"} for n, c, s in results if s < THRESHOLD]
     # Top 100 by score (strongest lookalikes), bottom 100 (least similar)
     top_100 = [{"name": n, "cosine_sim": c, "score": s} for n, c, s in results[:100]]
     bottom_100 = [{"name": n, "cosine_sim": c, "score": s} for n, c, s in results[-100:]]
