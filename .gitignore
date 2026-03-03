@@ -211,3 +211,7 @@ __marimo__/
 data/
 input_img/
 processed_img/
+
+# Node / frontend
+node_modules/
+web_ui/frontend/node_modules/
