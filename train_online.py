@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import random
 import sqlite3
 from dataclasses import dataclass
@@ -10,6 +11,7 @@ from typing import Iterable
 
 import numpy as np
 import torch
+from torch.utils.tensorboard import SummaryWriter
 
 from assessor.model import AssessorConfig, AssessorMLP, load_assessor, save_assessor
 from utils import (
@@ -145,7 +147,7 @@ class OnlineTrainer:
     def __init__(
         self,
         *,
-        model_dir: str | Path = "assessor/model",
+        model_dir: str | Path | None = None,
         db_path: str | Path = "data/sqlite/ai4h.db",
         buffer_capacity: int = 20000,
         per_alpha: float = 0.6,
@@ -153,15 +155,20 @@ class OnlineTrainer:
         lr: float = 1e-4,
         index_path: str | Path = "data/faiss/embeddings.index",
     ) -> None:
+        if model_dir is None:
+            model_dir = os.environ.get("ASSESSOR_MODEL_DIR", "assessor/model")
         self.model_dir = Path(model_dir)
         self.db_path = Path(db_path)
         self.index_path = Path(index_path)
+        self.log_dir = Path(os.environ.get("TENSORBOARD_LOG_DIR", "log")) / "online"
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.replay = PrioritizedReplayBuffer(
             capacity=buffer_capacity,
             alpha=per_alpha,
             beta=per_beta,
         )
+        self.writer = SummaryWriter(log_dir=str(self.log_dir))
+        self.train_step_count = 0
 
         if (self.model_dir / "assessor.pt").exists() and (self.model_dir / "config.json").exists():
             self.model, self.cfg = load_assessor(device=self.device, in_dir=self.model_dir)
@@ -268,7 +275,10 @@ class OnlineTrainer:
             return
 
         priorities = []
+        pos_count = 0
         for x in items:
+            if int(x.label) == 1:
+                pos_count += 1
             if x.model_score is None:
                 priorities.append(1.0)
             else:
@@ -326,6 +336,13 @@ class OnlineTrainer:
 
             conn.commit()
 
+        neg_count = len(items) - pos_count
+        self.writer.add_scalar("online/feedback_ingested", len(items), self.train_step_count)
+        self.writer.add_scalar("online/feedback_positive", pos_count, self.train_step_count)
+        self.writer.add_scalar("online/feedback_negative", neg_count, self.train_step_count)
+        self.writer.add_scalar("online/replay_size", len(self.replay), self.train_step_count)
+        self.writer.flush()
+
     def train_step(
         self,
         *,
@@ -375,6 +392,12 @@ class OnlineTrainer:
                 (steps, batch_size, avg_loss),
             )
             conn.commit()
+        self.train_step_count += max(1, steps)
+        self.writer.add_scalar("online/loss", avg_loss, self.train_step_count)
+        self.writer.add_scalar("online/replay_size", len(self.replay), self.train_step_count)
+        self.writer.add_scalar("online/batch_size", batch_size, self.train_step_count)
+        self.writer.add_scalar("online/steps_per_update", steps, self.train_step_count)
+        self.writer.flush()
         save_assessor(self.model, self.cfg, out_dir=self.model_dir)
         return avg_loss
 

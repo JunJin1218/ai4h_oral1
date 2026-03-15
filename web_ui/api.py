@@ -7,6 +7,7 @@ Run from project root:
 
 from __future__ import annotations
 
+import os
 import random
 import sqlite3
 from dataclasses import dataclass
@@ -34,6 +35,7 @@ app.add_middleware(
 DB_PATH = Path("data/sqlite/ai4h.db")
 INDEX_PATH = Path("data/faiss/embeddings.index")
 IMAGE_ROOTS = [Path("input_img"), Path("processed_img")]
+ASSESSOR_MODEL_DIR = Path(os.environ.get("ASSESSOR_MODEL_DIR", "assessor/model"))
 
 
 class SessionInitRequest(BaseModel):
@@ -81,7 +83,12 @@ _image_index: dict[str, Path] | None = None
 def _get_trainer() -> OnlineTrainer:
     global _trainer
     if _trainer is None:
-        _trainer = OnlineTrainer(db_path=DB_PATH, index_path=INDEX_PATH)
+        _trainer = OnlineTrainer(
+            model_dir=ASSESSOR_MODEL_DIR,
+            db_path=DB_PATH,
+            index_path=INDEX_PATH,
+        )
+        print(f"[web_ui.api] assessor model dir: {_trainer.model_dir}")
     return _trainer
 
 
