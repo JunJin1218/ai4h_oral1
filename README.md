@@ -1,3 +1,5 @@
+# Please use Linux (WSL)
+
 # Lookalike medication identification (AI for Healthcare)
 
 Identify and distinguish lookalike medications from images. Uses **ViT** for image embeddings and **model_v3** (Assessor MLP) for lookalike scoring, trained on ground-truth labels with both lookalike and non-lookalike examples (class-balanced loss).
