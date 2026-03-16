@@ -214,3 +214,4 @@ processed_img/
 
 # .js
 node_modules/
+log/
