@@ -11,16 +11,25 @@ import os
 import random
 import sqlite3
 from dataclasses import dataclass
+from io import BytesIO
 from pathlib import Path
 from threading import Lock
 
 from fastapi import FastAPI, HTTPException
+from fastapi import File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from PIL import Image
 from pydantic import BaseModel, Field
 
+from image_embedding.vit import get_image_embedding, load_vit_model
 from train_online import OnlineTrainer, build_feedback_items
-from utils import get_file_name_by_vector_id, get_vector_id_by_file_name, reconstruct_vector_by_id
+from utils import (
+    get_file_name_by_vector_id,
+    get_vector_id_by_file_name,
+    reconstruct_vector_by_id,
+    search_similar_with_metadata,
+)
 
 app = FastAPI(title="Lookalike Online Trainer API", version="0.2.0")
 
@@ -78,6 +87,7 @@ _lock = Lock()
 _trainer: OnlineTrainer | None = None
 _session = SessionState()
 _image_index: dict[str, Path] | None = None
+_vit_bundle: tuple | None = None
 
 
 def _get_trainer() -> OnlineTrainer:
@@ -102,6 +112,13 @@ def _build_image_index() -> dict[str, Path]:
             if path.is_file() and path.suffix.lower() in exts:
                 index.setdefault(path.stem, path)
     return index
+
+
+def _get_vit_bundle():
+    global _vit_bundle
+    if _vit_bundle is None:
+        _vit_bundle = load_vit_model()
+    return _vit_bundle
 
 
 def _resolve_image_path_from_embedding_file(file_name: str) -> Path | None:
@@ -170,6 +187,56 @@ def _make_batch_payload() -> dict:
     }
 
 
+def _predict_candidates_from_image(image: Image.Image, *, top_k: int, similarity_type: str) -> dict:
+    trainer = _get_trainer()
+    processor, vit_model, vit_device = _get_vit_bundle()
+    query_vector_t = get_image_embedding(
+        vit_model,
+        processor,
+        image,
+        device=vit_device,
+        pooling="cls",
+    )
+    query_vector = query_vector_t.detach().cpu().numpy().astype("float32", copy=False)
+
+    candidates = search_similar_with_metadata(
+        query_vector=query_vector,
+        similarity_type=similarity_type,
+        top_n=top_k,
+        index_path=INDEX_PATH,
+        db_path=DB_PATH,
+        exclude_vector_id=None,
+    )
+    scores = trainer.score_candidates(query_vector, candidates)
+
+    lookalikes = []
+    non_lookalikes = []
+    for cand, score in zip(candidates, scores):
+        img = _resolve_image_path_from_embedding_file(cand.file_name or "")
+        item = {
+            "vector_id": cand.vector_id,
+            "file_name": cand.file_name,
+            "retrieval_score": round(float(cand.score), 6),
+            "model_score": round(float(score), 6),
+            "is_lookalike": bool(float(score) >= 0.5),
+            "image_url": f"/online/image/{cand.vector_id}" if img else None,
+        }
+        if float(score) >= 0.5:
+            lookalikes.append(item)
+        else:
+            non_lookalikes.append(item)
+
+    return {
+        "lookalikes": lookalikes,
+        "non_lookalikes": non_lookalikes,
+        "meta": {
+            "top_k": top_k,
+            "similarity_type": similarity_type,
+            "threshold": 0.5,
+        },
+    }
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
@@ -198,6 +265,35 @@ def init_online_session(req: SessionInitRequest) -> dict:
             "per": {"alpha": trainer.replay.alpha, "beta": trainer.replay.beta},
             "batch": batch,
         }
+
+
+@app.post("/inference/predict")
+async def inference_predict(
+    image: UploadFile = File(...),
+    top_k: int = 20,
+    similarity_type: str = "l2",
+) -> dict:
+    if top_k <= 0 or top_k > 200:
+        raise HTTPException(400, "top_k must be between 1 and 200.")
+    try:
+        metric = similarity_type.lower()
+        if metric not in {"l2", "euclidean", "ip", "inner_product", "dot", "cosine", "cos", "cos_sim"}:
+            raise HTTPException(400, "invalid similarity_type")
+        content = await image.read()
+        if not content:
+            raise HTTPException(400, "Uploaded image is empty.")
+        pil_image = Image.open(BytesIO(content)).convert("RGB")
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(400, f"Failed to parse uploaded image: {exc}") from exc
+
+    with _lock:
+        return _predict_candidates_from_image(
+            pil_image,
+            top_k=top_k,
+            similarity_type=similarity_type,
+        )
 
 
 @app.get("/online/session/next")

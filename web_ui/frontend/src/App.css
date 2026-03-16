@@ -101,6 +101,29 @@
   margin: 0 0 0.5rem 0;
 }
 
+.page-nav {
+  display: flex;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+}
+
+.page-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #374151;
+  background: #fff;
+  font-size: 0.85rem;
+}
+
+.page-link:hover {
+  border-color: #c41e3a;
+  color: #c41e3a;
+}
+
 .instructions-list {
   margin: 0;
   padding-left: 1.25rem;
@@ -205,6 +228,21 @@
   display: flex;
   justify-content: center;
   margin-bottom: 1rem;
+}
+
+.session-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 1rem 0 1.25rem;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.session-toggle input {
+  width: 16px;
+  height: 16px;
+  accent-color: #c41e3a;
 }
 
 .scan-btn {
@@ -384,7 +422,8 @@
 .result-list {
   border-radius: 10px;
   padding: 1rem;
-  max-height: 320px;
+  height: 520px;
+  min-height: 520px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -406,6 +445,13 @@
   color: #1a1a1a;
   margin: 0 0 0.5rem 0;
   flex-shrink: 0;
+}
+
+.result-list-body {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.15rem;
 }
 
 .result-list ul {
@@ -528,10 +574,19 @@
   margin-top: 0.25rem;
 }
 
+.output-empty--compact {
+  min-height: auto;
+  padding: 1rem;
+}
+
 .candidate-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.75rem;
+}
+
+.candidate-grid--scroll {
+  align-content: start;
 }
 
 .candidate-card {
@@ -614,6 +669,10 @@
 @media (max-width: 960px) {
   .settings-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .result-list {
+    height: 420px;
+    min-height: 420px;
   }
   .query-image {
     width: 170px;
