@@ -4,6 +4,7 @@ import json
 import os
 import re
 import sqlite3
+from datetime import datetime, timezone
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -17,7 +18,7 @@ from utils import (
 
 
 TOP_K = 50
-MODEL = "gpt-5.1"
+MODEL = "gpt-5-mini"
 DB_PATH = Path("data/sqlite/ai4h.db")
 INDEX_PATH = Path("data/faiss/embeddings.index")
 IMAGE_ROOTS = [Path("input_img"), Path("processed_img")]
@@ -25,6 +26,9 @@ PROMPT_PATH = Path("data_augmentation/prompt.txt")
 SCHEMA_PATH = Path("data_augmentation/schema.json")
 FEW_SHOTS_PATH = Path("data_augmentation/few_shots.jsonl")
 OUTPUT_DIR = Path("data_augmentation/batches")
+COMPLETION_WINDOW = "24h"
+ENDPOINT = "/v1/responses"
+BATCH_LOG_PATH = Path("data_augmentation/batch_id_logs.jsonl")
 
 
 def sanitize_name(value: str) -> str:
@@ -69,15 +73,10 @@ def load_prompt() -> str:
 
 def load_schema_format() -> dict:
     payload = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    if "type" not in payload:
+        payload = {"type": "json_schema", **payload}
     return {
-        "format": {
-            "type": "json_schema",
-            "json_schema": {
-                "name": payload["name"],
-                "schema": payload["schema"],
-                "strict": bool(payload.get("strict", False)),
-            },
-        }
+        "format": payload
     }
 
 
@@ -145,6 +144,27 @@ def upload_vision_file(client: OpenAI, path: Path, cache: dict[Path, str]) -> st
     return uploaded.id
 
 
+def append_batch_log(
+    *,
+    batch_id: str,
+    input_file_id: str,
+    query_file_name: str,
+    candidate_file_names: list[str],
+    jsonl_path: Path,
+) -> None:
+    BATCH_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    record = {
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "batch_id": batch_id,
+        "input_file_id": input_file_id,
+        "jsonl_path": str(jsonl_path),
+        "query_image_name": query_file_name,
+        "candidate_image_names": candidate_file_names,
+    }
+    with BATCH_LOG_PATH.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(record, ensure_ascii=True) + "\n")
+
+
 def main() -> None:
     load_dotenv()
     if not os.environ.get("OPENAI_API_KEY"):
@@ -179,6 +199,7 @@ def main() -> None:
     output_path = OUTPUT_DIR / f"batch_{sanitize_name(Path(query_file_name).stem)}.jsonl"
 
     written = 0
+    written_candidate_names: list[str] = []
     with output_path.open("w", encoding="utf-8") as f:
         for rank, cand in enumerate(candidates, start=1):
             if not cand.file_name:
@@ -212,6 +233,31 @@ def main() -> None:
             }
             f.write(json.dumps(line, ensure_ascii=True) + "\n")
             written += 1
+            written_candidate_names.append(cand.file_name)
+
+    if written == 0:
+        raise RuntimeError("No batch requests were written.")
+
+    with output_path.open("rb") as f:
+        uploaded = client.files.create(file=f, purpose="batch")
+
+    batch = client.batches.create(
+        input_file_id=uploaded.id,
+        endpoint=ENDPOINT,
+        completion_window=COMPLETION_WINDOW,
+        metadata={
+            "source_file": output_path.name,
+            "query_file_name": query_file_name,
+        },
+    )
+
+    append_batch_log(
+        batch_id=batch.id,
+        input_file_id=uploaded.id,
+        query_file_name=query_file_name,
+        candidate_file_names=written_candidate_names,
+        jsonl_path=output_path,
+    )
 
     print("query_file_name:", query_file_name)
     print("query_file_id:", query_file_id)
@@ -219,6 +265,10 @@ def main() -> None:
     print("few_shots:", len(few_shots))
     print("written_requests:", written)
     print("output_path:", output_path)
+    print("input_file_id:", uploaded.id)
+    print("batch_id:", batch.id)
+    print("batch_status:", batch.status)
+    print("batch_log_path:", BATCH_LOG_PATH)
 
 
 if __name__ == "__main__":

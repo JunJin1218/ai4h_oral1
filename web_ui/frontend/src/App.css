@@ -648,11 +648,27 @@
   accent-color: #c41e3a;
 }
 
+.candidate-card--reasoning {
+  align-items: flex-start;
+}
+
+.candidate-reasoning {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #374151;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
 .actions-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
   margin-top: 1rem;
+}
+
+.actions-row--query {
+  align-items: end;
 }
 
 .result-list-ul {

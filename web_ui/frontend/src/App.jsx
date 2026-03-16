@@ -45,6 +45,7 @@ function Shell({ title, subtitle, backendActive, children }) {
           <a href="/inference" className="page-link">Inference</a>
           <a href="/" className="page-link">Training</a>
           <a href="/replay_buffer" className="page-link">Replay Buffer</a>
+          <a href="/ai_feedback_retriever" className="page-link">AI Feedback</a>
         </nav>
 
         <div className="instructions-panel">
@@ -289,6 +290,179 @@ function ResultList({ title, items }) {
                   <div className="candidate-sub">
                     id: {c.vector_id} | ret: {c.retrieval_score} | model: {c.model_score}
                   </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function AIFeedbackPage({ backendActive }) {
+  const [loadingQueries, setLoadingQueries] = useState(false)
+  const [loadingDetail, setLoadingDetail] = useState(false)
+  const [error, setError] = useState(null)
+  const [queries, setQueries] = useState([])
+  const [selectedQueryId, setSelectedQueryId] = useState('')
+  const [detail, setDetail] = useState(null)
+
+  const loadQueries = useCallback(async () => {
+    setError(null)
+    setLoadingQueries(true)
+    try {
+      const res = await fetch(`${API_BASE}/ai_feedback/queries?limit=100`)
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.detail || res.statusText || 'Failed to load AI feedback queries')
+      }
+      const data = await res.json()
+      const nextQueries = data.queries ?? []
+      setQueries(nextQueries)
+      setSelectedQueryId((prev) => {
+        if (prev && nextQueries.some((q) => String(q.query_vector_id) === String(prev))) return prev
+        return nextQueries[0] ? String(nextQueries[0].query_vector_id) : ''
+      })
+    } catch (e) {
+      setError(e.message || 'Failed to load AI feedback queries')
+    } finally {
+      setLoadingQueries(false)
+    }
+  }, [])
+
+  const loadDetail = useCallback(async (queryId) => {
+    if (!queryId) {
+      setDetail(null)
+      return
+    }
+    setError(null)
+    setLoadingDetail(true)
+    try {
+      const res = await fetch(`${API_BASE}/ai_feedback/by_query?query_vector_id=${Number(queryId)}`)
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.detail || res.statusText || 'Failed to load AI feedback detail')
+      }
+      setDetail(await res.json())
+    } catch (e) {
+      setError(e.message || 'Failed to load AI feedback detail')
+    } finally {
+      setLoadingDetail(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    loadQueries()
+  }, [loadQueries])
+
+  useEffect(() => {
+    loadDetail(selectedQueryId)
+  }, [selectedQueryId, loadDetail])
+
+  return (
+    <Shell title="AI Feedback Retriever" subtitle="Batch AI Feedback Viewer" backendActive={backendActive}>
+      <ol className="instructions-list">
+        <li>Choose a query image imported from AI batch results.</li>
+        <li>Review which candidates the AI marked as lookalike or non-lookalike.</li>
+        <li>Check the stored reasoning for each candidate pair.</li>
+      </ol>
+
+      <h2 className="section-title">QUERY SELECTOR</h2>
+      <div className="output-section">
+        <div className="actions actions-row actions-row--query">
+          <label className="setting-item">
+            <span>Imported query</span>
+            <select value={selectedQueryId} onChange={(e) => setSelectedQueryId(e.target.value)} disabled={loadingQueries || queries.length === 0}>
+              {queries.length === 0 ? (
+                <option value="">No imported AI feedback yet</option>
+              ) : (
+                queries.map((q) => (
+                  <option key={q.query_vector_id} value={q.query_vector_id}>
+                    {q.query_image_name}
+                  </option>
+                ))
+              )}
+            </select>
+          </label>
+          <button type="button" className="scan-btn scan-btn--active" onClick={loadQueries} disabled={loadingQueries || loadingDetail}>
+            {loadingQueries ? 'Refreshing…' : 'Refresh'}
+          </button>
+        </div>
+        {queries.length > 0 && selectedQueryId && (
+          <p className="find-meta">
+            {(() => {
+              const selected = queries.find((q) => String(q.query_vector_id) === String(selectedQueryId))
+              if (!selected) return null
+              return `Lookalikes: ${selected.lookalike_count} | Non-lookalikes: ${selected.non_lookalike_count} | Total: ${selected.total_count}`
+            })()}
+          </p>
+        )}
+      </div>
+
+      {error && <div className="error">{error}</div>}
+
+      <h2 className="section-title">AI FEEDBACK RESULTS</h2>
+      <section className="output-section">
+        {!selectedQueryId ? (
+          <div className="output-empty">Import AI feedback first, then choose a query.</div>
+        ) : loadingDetail ? (
+          <div className="output-empty">Loading AI feedback…</div>
+        ) : !detail ? (
+          <div className="output-empty">No AI feedback detail loaded.</div>
+        ) : (
+          <div className="find-result">
+            <p className="find-meta">
+              Query: {detail.query?.file_name} | Lookalikes: {detail.meta?.lookalike_count} | Non-lookalikes: {detail.meta?.non_lookalike_count}
+            </p>
+            <div className="query-panel">
+              <div className="query-title">Imported Query</div>
+              <div className="query-card">
+                {detail.query?.image_url ? (
+                  <img src={toAbsoluteImageUrl(detail.query.image_url)} alt="ai feedback query" className="query-image" />
+                ) : (
+                  <div className="query-image query-image--missing">No image</div>
+                )}
+                <div className="query-meta">
+                  <div className="query-name">{detail.query?.file_name}</div>
+                  <div className="query-sub">vector_id: {detail.query?.vector_id}</div>
+                  <div className="query-sub">batch count: {detail.meta?.batch_ids?.length ?? 0}</div>
+                </div>
+              </div>
+            </div>
+            <div className="result-columns">
+              <AIFeedbackResultList title="Lookalikes" items={detail.lookalikes ?? []} />
+              <AIFeedbackResultList title="Non-lookalikes" items={detail.non_lookalikes ?? []} />
+            </div>
+          </div>
+        )}
+      </section>
+    </Shell>
+  )
+}
+
+function AIFeedbackResultList({ title, items }) {
+  return (
+    <div className={`result-list ${title === 'Lookalikes' ? 'lookalikes' : 'not-lookalikes'}`}>
+      <h3>{title}</h3>
+      <div className="result-list-body">
+        {items.length === 0 ? (
+          <div className="output-empty output-empty--compact">No items.</div>
+        ) : (
+          <div className="candidate-grid candidate-grid--scroll">
+            {items.map((item, idx) => (
+              <div className="candidate-card candidate-card--reasoning" key={`${item.vector_id}-${idx}`}>
+                {item.image_url ? (
+                  <img src={toAbsoluteImageUrl(item.image_url)} alt={item.file_name} className="candidate-image" />
+                ) : (
+                  <div className="candidate-image candidate-image--missing">No image</div>
+                )}
+                <div className="candidate-meta">
+                  <div className="candidate-name" title={item.file_name}>{item.file_name}</div>
+                  <div className="candidate-sub">
+                    id: {item.vector_id} | batch: {item.batch_id}
+                  </div>
+                  <div className="candidate-reasoning">{item.reasoning}</div>
                 </div>
               </div>
             ))}
@@ -576,6 +750,9 @@ export default function App() {
 
   if (pathname === '/replay_buffer') {
     return <ReplayBufferPage backendActive={backendActive} />
+  }
+  if (pathname === '/ai_feedback_retriever') {
+    return <AIFeedbackPage backendActive={backendActive} />
   }
   if (pathname === '/inference') {
     return <InferencePage backendActive={backendActive} />

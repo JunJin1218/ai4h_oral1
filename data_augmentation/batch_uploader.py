@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 
-JSONL_PATH = Path("data_augmentation/batches/batch_Rosuvastatin_APO-Front_Box_20mg_Tab_Apotex_Canada_v1_7November2019__1.jsonl")
+JSONL_PATH = Path("data_augmentation/batches/batch_Imipramine_Accord-Front_box_Tab_10mg_E_MA_mfr_Accord_Pharmaceuticals_UK_v1_19May2021__0.jsonl")
 COMPLETION_WINDOW = "24h"
 ENDPOINT = "/v1/responses"
 

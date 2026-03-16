@@ -45,6 +45,7 @@ DB_PATH = Path("data/sqlite/ai4h.db")
 INDEX_PATH = Path("data/faiss/embeddings.index")
 IMAGE_ROOTS = [Path("input_img"), Path("processed_img")]
 ASSESSOR_MODEL_DIR = Path(os.environ.get("ASSESSOR_MODEL_DIR", "assessor/model"))
+AI_AUGMENT_TABLE = "ai_augment_feedback"
 
 
 class SessionInitRequest(BaseModel):
@@ -139,6 +140,15 @@ def _random_query_file_name() -> str:
     if row is None:
         raise HTTPException(400, "image_db is empty.")
     return str(row[0])
+
+
+def _ai_augment_table_exists(conn: sqlite3.Connection) -> bool:
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?",
+        (AI_AUGMENT_TABLE,),
+    )
+    return cur.fetchone() is not None
 
 
 def _make_batch_payload() -> dict:
@@ -436,3 +446,123 @@ def get_replay_buffer(limit: int = 100) -> dict:
                 "items": graph_rows,
             },
         }
+
+
+@app.get("/ai_feedback/queries")
+def get_ai_feedback_queries(limit: int = 50) -> dict:
+    if limit <= 0:
+        raise HTTPException(400, "limit must be > 0")
+
+    with sqlite3.connect(DB_PATH) as conn:
+        if not _ai_augment_table_exists(conn):
+            return {"queries": []}
+
+        cur = conn.cursor()
+        cur.execute(
+            f"""
+            SELECT
+                query_vector_id,
+                query_image_name,
+                COUNT(*) AS total_count,
+                SUM(label) AS lookalike_count,
+                COUNT(*) - SUM(label) AS non_lookalike_count,
+                MAX(id) AS latest_id
+            FROM {AI_AUGMENT_TABLE}
+            WHERE COALESCE(error, 0) = 0
+            GROUP BY query_vector_id, query_image_name
+            ORDER BY latest_id DESC
+            LIMIT ?
+            """,
+            (int(limit),),
+        )
+        rows = cur.fetchall()
+
+    queries = []
+    for row in rows:
+        query_vector_id = int(row[0])
+        query_image_name = str(row[1])
+        query_img = _resolve_image_path_from_embedding_file(query_image_name)
+        queries.append(
+            {
+                "query_vector_id": query_vector_id,
+                "query_image_name": query_image_name,
+                "total_count": int(row[2]),
+                "lookalike_count": int(row[3] or 0),
+                "non_lookalike_count": int(row[4] or 0),
+                "image_url": f"/online/image/{query_vector_id}" if query_img else None,
+            }
+        )
+    return {"queries": queries}
+
+
+@app.get("/ai_feedback/by_query")
+def get_ai_feedback_by_query(query_vector_id: int) -> dict:
+    with sqlite3.connect(DB_PATH) as conn:
+        if not _ai_augment_table_exists(conn):
+            raise HTTPException(404, "ai_augment_feedback table not found.")
+
+        cur = conn.cursor()
+        cur.execute(
+            f"""
+            SELECT
+                batch_id,
+                query_image_name,
+                candidate_vector_id,
+                candidate_image_name,
+                label,
+                reasoning
+            FROM {AI_AUGMENT_TABLE}
+            WHERE query_vector_id = ?
+              AND COALESCE(error, 0) = 0
+            ORDER BY id DESC
+            """,
+            (int(query_vector_id),),
+        )
+        rows = cur.fetchall()
+
+    if not rows:
+        raise HTTPException(404, "No AI feedback rows found for this query_vector_id.")
+
+    query_image_name = str(rows[0][1])
+    query_img = _resolve_image_path_from_embedding_file(query_image_name)
+    lookalikes = []
+    non_lookalikes = []
+    batch_ids: list[str] = []
+    seen_batches: set[str] = set()
+
+    for batch_id, _, candidate_vector_id, candidate_image_name, label, reasoning in rows:
+        batch_id = str(batch_id)
+        if batch_id not in seen_batches:
+            seen_batches.add(batch_id)
+            batch_ids.append(batch_id)
+
+        candidate_vector_id = int(candidate_vector_id)
+        cand_img = _resolve_image_path_from_embedding_file(str(candidate_image_name))
+        item = {
+            "vector_id": candidate_vector_id,
+            "file_name": candidate_image_name,
+            "label": int(label),
+            "reasoning": reasoning,
+            "batch_id": batch_id,
+            "image_url": f"/online/image/{candidate_vector_id}" if cand_img else None,
+        }
+        if int(label) == 1:
+            lookalikes.append(item)
+        else:
+            non_lookalikes.append(item)
+
+    return {
+        "query": {
+            "vector_id": int(query_vector_id),
+            "file_name": query_image_name,
+            "image_url": f"/online/image/{int(query_vector_id)}" if query_img else None,
+        },
+        "lookalikes": lookalikes,
+        "non_lookalikes": non_lookalikes,
+        "meta": {
+            "total_count": len(rows),
+            "lookalike_count": len(lookalikes),
+            "non_lookalike_count": len(non_lookalikes),
+            "batch_ids": batch_ids,
+        },
+    }
