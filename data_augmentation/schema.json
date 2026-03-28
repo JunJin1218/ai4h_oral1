@@ -1,0 +1,28 @@
+{
+  "type": "json_schema",
+  "name": "lookalike_reasoning",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "error": {
+        "type": "boolean",
+        "description": "Set to true only if there is any issue accessing, reading, or comparing the provided images. Otherwise, set to false."
+      },
+      "reasoning": {
+        "type": "string",
+        "description": "Brief text reasoning on whether Query image and Candidate image are lookalikes."
+      },
+      "lookalike": {
+        "type": "boolean",
+        "description": "Whether the Query image and Candidate image are lookalike (True or False)."
+      }
+    },
+    "required": [
+      "error",
+      "reasoning",
+      "lookalike"
+    ],
+    "additionalProperties": false
+  },
+  "strict": true
+}
