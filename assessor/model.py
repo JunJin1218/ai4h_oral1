@@ -25,6 +25,20 @@ class AssessorConfig:
     dropout: float = 0.2
 
 
+def cosine_similarity(e1: torch.Tensor, e2: torch.Tensor) -> torch.Tensor:
+    """
+    Cosine similarity between embedding vectors (L2-normalized then dot product).
+    e1, e2: (B, D) or (D,). Returns (B,) or scalar in [-1, 1].
+    """
+    if e1.dim() == 1:
+        e1 = e1.unsqueeze(0)
+    if e2.dim() == 1:
+        e2 = e2.unsqueeze(0)
+    e1 = F.normalize(e1, p=2, dim=-1)
+    e2 = F.normalize(e2, p=2, dim=-1)
+    return (e1 * e2).sum(dim=-1)
+
+
 def build_pair_features(e1: torch.Tensor, e2: torch.Tensor) -> torch.Tensor:
     """
     e1/e2: (B, D) or (D,)

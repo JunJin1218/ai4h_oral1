@@ -212,7 +212,6 @@ data/
 input_img/
 processed_img/
 
-#virtual environments
-venv/
-.venv/
-uv-env/
+# Node / frontend
+node_modules/
+web_ui/frontend/node_modules/
