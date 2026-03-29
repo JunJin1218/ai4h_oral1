@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import random
 import re
 import sqlite3
 from datetime import datetime, timezone
@@ -52,16 +53,40 @@ def resolve_image_path(file_name: str, image_index: dict[str, Path]) -> Path | N
     return image_index.get(Path(file_name).stem)
 
 
+def is_excluded_query_file_name(file_name: str) -> bool:
+    return Path(file_name).stem.endswith("2")
+
+
 def choose_random_query_file_name() -> str:
     if not DB_PATH.exists():
         raise RuntimeError(f"DB not found: {DB_PATH}")
     with sqlite3.connect(DB_PATH) as conn:
         cur = conn.cursor()
-        cur.execute("SELECT file_name FROM image_db ORDER BY RANDOM() LIMIT 1")
-        row = cur.fetchone()
-    if row is None:
+        cur.execute("SELECT file_name FROM image_db")
+        all_file_names = [str(row[0]) for row in cur.fetchall()]
+
+    if not all_file_names:
         raise RuntimeError("image_db is empty.")
-    return str(row[0])
+
+    allowed_file_names = [name for name in all_file_names if not is_excluded_query_file_name(name)]
+    excluded_file_names = [name for name in all_file_names if is_excluded_query_file_name(name)]
+
+    print(
+        "[batch_generator] query filter:"
+        f" total={len(all_file_names)}"
+        f" allowed={len(allowed_file_names)}"
+        f" excluded_suffix_2={len(excluded_file_names)}"
+    )
+    if excluded_file_names:
+        preview = ", ".join(Path(name).stem for name in excluded_file_names[:5])
+        print(f"[batch_generator] excluded query stem samples: {preview}")
+
+    if not allowed_file_names:
+        raise RuntimeError("No eligible query images remain after excluding stems ending with '2'.")
+
+    query_file_name = random.choice(allowed_file_names)
+    print(f"[batch_generator] selected query stem: {Path(query_file_name).stem}")
+    return query_file_name
 
 
 def load_prompt() -> str:

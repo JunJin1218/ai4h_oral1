@@ -28,6 +28,8 @@ Metadata rule:
 Use file names as weak metadata hints for drug name, brand, strength, dosage form, manufacturer, packaging side/view, and version/date.
 If file-name metadata conflicts with clear visible image evidence, trust the image more.
 
+If the information inferred from both the file names and the images shows that the drug name and strength match exactly, then treat them as the same medication, not a lookalike. In that case, set lookalike = false and explicitly state in the reasoning that the two medications are the same medication.
+
 Decision criteria:
 Consider:
 - layout
@@ -41,8 +43,47 @@ Consider:
 - barcode area
 - distinctive symbols or background texture
 
+Additional guidance on presentation type:
+
+First identify the dominant presentation type in each image, such as:
+- box / carton / bottle label
+- blister foil side or non-transparent side
+- transparent blister side with visible tablets/capsules
+- mixed or multi-side view
+- cropped / partial / unclear view
+
+Then judge confusion risk using the cues most relevant to that presentation type.
+
+Type-specific cues:
+- For box, carton, or cylindrical bottle/container packaging:
+  focus on logo/brand mark, drug-name prominence, strength placement, color bands, overall panel layout, typography hierarchy, barcode area, and distinctive background patterns or textures.
+
+- For blister foil or non-transparent views where tablets are not directly visible:
+  focus on foil material/texture, repeated printed text pattern, logo repetition, font style, text density, text orientation, cavity/grid structure, and overall print layout.
+
+- For transparent blister views or direct tablet/capsule views:
+  focus on pill arrangement (how the pills are laid out), pill color, pill shape, size impression, imprint/engraving, score line, capsule color split, and blister cavity structure.
+
+- For mixed or multi-side views:
+  if one major visible side or presentation element is strongly confusable, the pair may still be considered lookalike even if another side is more distinguishable.
+
+Important threshold rule:
+1. Do not classify as lookalike based only on generic pharmaceutical appearance, shared white background, common packaging format, or dense medical text.
+2. Return lookalike = true only when multiple distinctive visual cues align strongly enough to create realistic confusion risk.
+3. If one or two highly salient differentiating cues are immediately obvious, such as clearly different drug-name blocks, strongly different logo/brand identity, very different tablet color/shape, or clearly different foil print style, prefer lookalike = false unless the remaining evidence still suggests realistic confusion risk.
+4. Do not use differences in the exact text content, such as drug name wording or strength values, as the main reason to reject lookalike, unless those differences create a clearly obvious visual distinction at a glance.
+
 Return lookalike = true when the two items are visually similar enough to create realistic confusion risk.
 Return lookalike = false when they are visually distinguishable enough that confusion risk is low.
+
+Exclude obvious non-lookalikes.
+
+Do not classify two products as lookalikes if the overall visual identity is clearly different at a glance, even when they share some generic packaging traits such as a light background, a colored corner accent, a similar box orientation, or a manufacturer logo placed in a similar area.
+
+Shared broad layout motifs alone are not enough.
+To count as lookalike, the pair should present a realistic risk of quick human confusion in practice.
+
+If a typical viewer would immediately distinguish them by the product-name area, typography, dominant text layout, major color blocking, or overall front-face design, classify them as not lookalike.
 
 Reasoning requirements:
 - Be brief and concrete.

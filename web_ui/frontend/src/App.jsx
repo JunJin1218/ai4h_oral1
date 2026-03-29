@@ -462,6 +462,9 @@ function AIFeedbackResultList({ title, items }) {
                   <div className="candidate-sub">
                     id: {item.vector_id} | batch: {item.batch_id}
                   </div>
+                  {item.identical && (
+                    <div className="candidate-flag">Identical</div>
+                  )}
                   <div className="candidate-reasoning">{item.reasoning}</div>
                 </div>
               </div>

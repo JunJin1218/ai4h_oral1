@@ -1,8 +1,0 @@
-{
-  "embedding_size": 1280,
-  "hidden_sizes": [
-    1024,
-    256
-  ],
-  "dropout": 0.2
-}

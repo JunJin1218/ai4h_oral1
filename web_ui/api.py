@@ -510,6 +510,7 @@ def get_ai_feedback_by_query(query_vector_id: int) -> dict:
                 candidate_vector_id,
                 candidate_image_name,
                 label,
+                COALESCE(identical, 0),
                 reasoning
             FROM {AI_AUGMENT_TABLE}
             WHERE query_vector_id = ?
@@ -530,7 +531,7 @@ def get_ai_feedback_by_query(query_vector_id: int) -> dict:
     batch_ids: list[str] = []
     seen_batches: set[str] = set()
 
-    for batch_id, _, candidate_vector_id, candidate_image_name, label, reasoning in rows:
+    for batch_id, _, candidate_vector_id, candidate_image_name, label, identical, reasoning in rows:
         batch_id = str(batch_id)
         if batch_id not in seen_batches:
             seen_batches.add(batch_id)
@@ -542,6 +543,7 @@ def get_ai_feedback_by_query(query_vector_id: int) -> dict:
             "vector_id": candidate_vector_id,
             "file_name": candidate_image_name,
             "label": int(label),
+            "identical": bool(int(identical)),
             "reasoning": reasoning,
             "batch_id": batch_id,
             "image_url": f"/online/image/{candidate_vector_id}" if cand_img else None,

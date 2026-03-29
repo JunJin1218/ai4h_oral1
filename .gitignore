@@ -215,3 +215,6 @@ processed_img/
 # .js
 node_modules/
 log/
+
+batches/
+batch_results/
