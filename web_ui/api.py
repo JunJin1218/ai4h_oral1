@@ -1,28 +1,37 @@
 """
-FastAPI backend for lookalike comparison.
+FastAPI backend for online labeling + training loop.
 
-Pipeline:
-- Cosine similarity is used only for retrieval (top-k candidates per query), not as the
-  lookalike decision. The assessor model is the decision model, trained on ground truth.
-- find_lookalikes: embed query -> retrieve top-k by cosine -> run assessor on those k only.
-Run from project root: uv run uvicorn web_ui.api:app --reload --host 0.0.0.0 --port 8000
-
-To use a different assessor (e.g. after comparing models): set env ASSESSOR_MODEL_DIR=assessor/model_new
+Run from project root:
+  uv run uvicorn web_ui.api:app --reload --host 0.0.0.0 --port 8000
 """
+
+from __future__ import annotations
+
 import os
-import re
-import time
-import json
-import uuid
+import random
+import sqlite3
+from dataclasses import dataclass
+from io import BytesIO
 from pathlib import Path
-from urllib.parse import quote
-import tempfile
-import torch
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from threading import Lock
+
+from fastapi import FastAPI, HTTPException
+from fastapi import File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from PIL import Image
+from pydantic import BaseModel, Field
 
-app = FastAPI(title="Lookalike API", version="0.1.0")
+from image_embedding.vit import get_image_embedding, load_vit_model
+from train_online import OnlineTrainer, build_feedback_items
+from utils import (
+    get_file_name_by_vector_id,
+    get_vector_id_by_file_name,
+    reconstruct_vector_by_id,
+    search_similar_with_metadata,
+)
+
+app = FastAPI(title="Lookalike Online Trainer API", version="0.2.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -32,369 +41,528 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Lazy-loaded models (loaded on first /compare request)
-_vit_processor = None
-_vit_model = None
-_vit_device = None
-_assessor_model = None
-_assessor_cfg = None
+DB_PATH = Path("data/sqlite/ai4h.db")
+INDEX_PATH = Path("data/faiss/embeddings.index")
+IMAGE_ROOTS = [Path("input_img"), Path("processed_img")]
+ASSESSOR_MODEL_DIR = Path(os.environ.get("ASSESSOR_MODEL_DIR", "assessor/model"))
+AI_AUGMENT_TABLE = "ai_augment_feedback"
 
 
-def _ensure_models():
-    global _vit_processor, _vit_model, _vit_device, _assessor_model, _assessor_cfg
-    if _assessor_model is None:
-        t0 = time.perf_counter()
-        from image_embedding.vit import load_vit_model, get_image_embedding
-        from assessor.model import load_assessor
-        _vit_processor, _vit_model, _vit_device = load_vit_model()
-        model_dir = os.environ.get("ASSESSOR_MODEL_DIR", "assessor/model")
-        _assessor_model, _assessor_cfg = load_assessor(device=_vit_device, in_dir=model_dir)
-        _assessor_model.eval()
-        print(f"[lookalike] Models loaded in {time.perf_counter() - t0:.1f}s (device: {_vit_device}, assessor: {model_dir})")
+class SessionInitRequest(BaseModel):
+    similarity_type: str = Field(default="l2")
+    top_k: int = Field(default=20, ge=1, le=200)
+    per_alpha: float = Field(default=0.6, ge=0.0, le=1.0)
+    per_beta: float = Field(default=0.4, ge=0.0, le=1.0)
+    batch_size: int = Field(default=32, ge=1, le=512)
+    train_steps: int = Field(default=1, ge=1, le=20)
+    min_buffer_size: int = Field(default=32, ge=1, le=5000)
+    recent_ratio: float = Field(default=0.5, ge=0.0, le=1.0)
+    hydrate_from_feedback: bool = False
+    hydrate_limit: int = Field(default=2000, ge=1, le=50000)
 
 
-THRESHOLD = 0.5
+class LabelItem(BaseModel):
+    vector_id: int
+    label: int
 
 
-@app.get("/health")
-def health():
-    return {"status": "ok"}
+class SubmitRequest(BaseModel):
+    query_vector_id: int
+    labels: list[LabelItem]
 
 
-@app.get("/config")
-def config():
-    """Return model config for the UI (e.g. decision threshold, which assessor is used)."""
-    model_dir = os.environ.get("ASSESSOR_MODEL_DIR", "assessor/model")
-    return {"threshold": THRESHOLD, "assessor_model_dir": model_dir}
+@dataclass
+class SessionState:
+    similarity_type: str = "l2"
+    top_k: int = 20
+    batch_size: int = 32
+    train_steps: int = 1
+    min_buffer_size: int = 32
+    recent_ratio: float = 0.5
+    current_query_vector_id: int | None = None
+    current_query_file_name: str | None = None
+    current_candidate_vector_ids: list[int] | None = None
 
 
-@app.post("/compare")
-async def compare(
-    image_a: UploadFile = File(...),
-    image_b: UploadFile = File(...),
-):
-    """
-    Compare two images; returns lookalike score in [0, 1] (1 = lookalike).
-    """
-    from image_embedding.vit import get_image_embedding
+_lock = Lock()
+_trainer: OnlineTrainer | None = None
+_session = SessionState()
+_image_index: dict[str, Path] | None = None
+_vit_bundle: tuple | None = None
 
-    t_total = time.perf_counter()
-    _ensure_models()
 
-    allowed = {"image/jpeg", "image/png", "image/webp", "image/gif"}
-    if image_a.content_type not in allowed or image_b.content_type not in allowed:
-        raise HTTPException(400, "Both files must be images (JPEG, PNG, WebP, GIF).")
-
-    with tempfile.NamedTemporaryFile(suffix=Path(image_a.filename or "a").suffix, delete=False) as fa:
-        fa.write(await image_a.read())
-        path_a = fa.name
-    with tempfile.NamedTemporaryFile(suffix=Path(image_b.filename or "b").suffix, delete=False) as fb:
-        fb.write(await image_b.read())
-        path_b = fb.name
-
-    try:
-        t0 = time.perf_counter()
-        emb_a = get_image_embedding(
-            _vit_model, _vit_processor, path_a, device=_vit_device, pooling="cls"
+def _get_trainer() -> OnlineTrainer:
+    global _trainer
+    if _trainer is None:
+        _trainer = OnlineTrainer(
+            model_dir=ASSESSOR_MODEL_DIR,
+            db_path=DB_PATH,
+            index_path=INDEX_PATH,
         )
-        emb_b = get_image_embedding(
-            _vit_model, _vit_processor, path_b, device=_vit_device, pooling="cls"
-        )
-        print(f"[lookalike] /compare embeddings: {time.perf_counter() - t0:.2f}s")
-    finally:
-        Path(path_a).unlink(missing_ok=True)
-        Path(path_b).unlink(missing_ok=True)
-
-    emb_a = emb_a.to(_vit_device)
-    emb_b = emb_b.to(_vit_device)
-    if emb_a.shape != (_assessor_cfg.embedding_size,) or emb_b.shape != (_assessor_cfg.embedding_size,):
-        raise HTTPException(500, "Embedding size mismatch with assessor.")
-
-    t0 = time.perf_counter()
-    with torch.no_grad():
-        score = _assessor_model(emb_a, emb_b)
-    print(f"[lookalike] /compare assessor: {time.perf_counter() - t0:.2f}s")
-    print(f"[lookalike] /compare total: {time.perf_counter() - t_total:.2f}s")
-
-    score_val = float(score.item())
-    return {
-        "score": round(score_val, 4),
-        "lookalike": score_val > THRESHOLD,
-        "threshold": THRESHOLD,
-    }
+        print(f"[web_ui.api] assessor model dir: {_trainer.model_dir}")
+    return _trainer
 
 
-def _collect_embedding_paths(data_dir: Path) -> list[Path]:
-    """All .pt embedding paths under data/, excluding Annotation."""
-    out: list[Path] = []
-    for p in data_dir.rglob("*.pt"):
-        if "Annotation" in p.parts:
-            continue
-        out.append(p)
-    return sorted(out, key=lambda p: p.name)
-
-
-# Where to find source images for candidates (embedding stem -> image file)
-IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tif", ".tiff")
-
-
-def _image_path_for_embedding(emb_path: Path, data_dir: Path) -> Path | None:
-    """
-    Resolve an embedding path to a source image path.
-    Tries: input_img/<stem>.<ext>, data/images/<stem>.<ext>, and same-dir-as-embedding.
-    """
-    stem = emb_path.stem
-    stem_base = re.sub(r"_\d+$", "", stem)
-    candidates = [stem, stem_base] if stem_base != stem else [stem]
-
-    search_roots: list[Path] = []
-    input_img = os.environ.get("INPUT_IMG_DIR", "input_img")
-    search_roots.append(Path(input_img))
-    search_roots.append(data_dir / "images")
-    if "embeddings" in emb_path.parts:
-        parent = emb_path.parent
-        search_roots.append(parent.parent / "images")
-        search_roots.append(parent)
-
-    for root in search_roots:
+def _build_image_index() -> dict[str, Path]:
+    index: dict[str, Path] = {}
+    exts = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tif", ".tiff"}
+    for root in IMAGE_ROOTS:
         if not root.exists():
             continue
-        for base in candidates:
-            for ext in IMAGE_EXTENSIONS:
-                p = root / f"{base}{ext}"
-                if p.is_file():
-                    return p
-        for ext in IMAGE_EXTENSIONS:
-            for f in root.rglob(f"{candidates[0]}{ext}"):
-                if f.is_file():
-                    return f
-    return None
+        for path in sorted(root.rglob("*")):
+            if path.is_file() and path.suffix.lower() in exts:
+                index.setdefault(path.stem, path)
+    return index
 
 
-def _candidate_image_path(name: str, data_dir: Path) -> Path | None:
-    """Resolve display name to candidate image file."""
-    from assessor.test_lookalike import find_embedding_path
-    emb_path = find_embedding_path(name, data_dir)
-    if emb_path is None:
-        return None
-    return _image_path_for_embedding(emb_path, data_dir)
+def _get_vit_bundle():
+    global _vit_bundle
+    if _vit_bundle is None:
+        _vit_bundle = load_vit_model()
+    return _vit_bundle
 
 
-@app.get("/candidate_image")
-async def candidate_image(name: str = "", data_dir: str = "data"):
-    """Serve the source image for a candidate by name. Returns 404 if not found."""
-    if not name or not name.strip():
-        raise HTTPException(400, "Missing name")
-    data_path = Path(data_dir)
-    if not data_path.is_dir():
-        raise HTTPException(400, f"Data directory not found: {data_dir}")
-    image_path = _candidate_image_path(name.strip(), data_path)
-    if image_path is None or not image_path.is_file():
-        raise HTTPException(404, f"No image found for candidate: {name[:50]}...")
-    media_type = "image/jpeg"
-    if image_path.suffix.lower() in (".png",):
-        media_type = "image/png"
-    elif image_path.suffix.lower() in (".webp",):
-        media_type = "image/webp"
-    return FileResponse(str(image_path), media_type=media_type)
+def _resolve_image_path_from_embedding_file(file_name: str) -> Path | None:
+    global _image_index
+    if _image_index is None:
+        _image_index = _build_image_index()
+    stem = Path(file_name).stem
+    return _image_index.get(stem)
 
 
-# --- RL feedback: persist (query_embedding, candidate_name, label) for offline training
-FEEDBACK_DIR = Path(os.environ.get("FEEDBACK_DIR", "data/feedback"))
-FEEDBACK_LOG = FEEDBACK_DIR / "feedback.jsonl"
+def _random_query_file_name() -> str:
+    if not DB_PATH.exists():
+        raise HTTPException(400, "DB not found. Build image_db first.")
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT file_name FROM image_db ORDER BY RANDOM() LIMIT 1")
+        row = cur.fetchone()
+    if row is None:
+        raise HTTPException(400, "image_db is empty.")
+    return str(row[0])
 
 
-@app.post("/feedback")
-async def submit_feedback(
-    query_image: UploadFile = File(...),
-    candidate_name: str = "",
-    is_lookalike: bool = True,
-    data_dir: str = "data",
-):
-    """
-    Submit human (or AI) feedback for RL: (query image, candidate name, correct label).
-    Saves query embedding to disk and appends a log line. Run train_from_feedback.py
-    periodically to update the assessor from this feedback (model stays persistent).
-    """
-    from image_embedding.vit import get_image_embedding
+def _ai_augment_table_exists(conn: sqlite3.Connection) -> bool:
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?",
+        (AI_AUGMENT_TABLE,),
+    )
+    return cur.fetchone() is not None
 
-    if not candidate_name or not candidate_name.strip():
-        raise HTTPException(400, "Missing candidate_name")
-    allowed = {"image/jpeg", "image/png", "image/webp", "image/gif"}
-    if query_image.content_type not in allowed:
-        raise HTTPException(400, "File must be an image (JPEG, PNG, WebP, GIF).")
 
-    _ensure_models()
-    data_path = Path(data_dir)
-    FEEDBACK_DIR.mkdir(parents=True, exist_ok=True)
-    emb_dir = FEEDBACK_DIR / "embeddings"
-    emb_dir.mkdir(parents=True, exist_ok=True)
+def _make_batch_payload() -> dict:
+    trainer = _get_trainer()
+    query_file = _random_query_file_name()
+    query_vector_id = get_vector_id_by_file_name(query_file, db_path=DB_PATH)
+    query_vector = reconstruct_vector_by_id(query_vector_id, index_path=INDEX_PATH)
 
-    with tempfile.NamedTemporaryFile(
-        suffix=Path(query_image.filename or "query").suffix, delete=False
-    ) as f:
-        f.write(await query_image.read())
-        path_query = f.name
-    try:
-        query_emb = get_image_embedding(
-            _vit_model, _vit_processor, path_query, device=_vit_device, pooling="cls"
+    candidates = trainer.retrieve_candidates(
+        query_file_name=query_file,
+        top_k=_session.top_k,
+        similarity_type=_session.similarity_type,
+    )
+    scores = trainer.score_candidates(query_vector, candidates)
+
+    _session.current_query_vector_id = query_vector_id
+    _session.current_query_file_name = query_file
+    _session.current_candidate_vector_ids = [x.vector_id for x in candidates]
+
+    query_img = _resolve_image_path_from_embedding_file(query_file)
+    candidate_payload = []
+    for cand, score in zip(candidates, scores):
+        img = _resolve_image_path_from_embedding_file(cand.file_name or "")
+        candidate_payload.append(
+            {
+                "vector_id": cand.vector_id,
+                "file_name": cand.file_name,
+                "retrieval_score": round(float(cand.score), 6),
+                "model_score": round(float(score), 6),
+                "image_url": f"/online/image/{cand.vector_id}" if img else None,
+            }
         )
-    finally:
-        Path(path_query).unlink(missing_ok=True)
 
-    if query_emb.shape != (_assessor_cfg.embedding_size,):
-        raise HTTPException(500, "Embedding size mismatch with assessor.")
-
-    emb_id = str(uuid.uuid4())
-    emb_path = emb_dir / f"{emb_id}.pt"
-    torch.save(query_emb.cpu(), emb_path)
-    rel_emb_path = str(emb_path.relative_to(FEEDBACK_DIR)) if FEEDBACK_DIR in emb_path.parents else str(emb_path)
-
-    label = 1 if is_lookalike else 0
-    record = {
-        "query_emb_path": rel_emb_path,
-        "candidate_name": candidate_name.strip(),
-        "label": label,
-        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    return {
+        "query": {
+            "vector_id": query_vector_id,
+            "file_name": query_file,
+            "image_url": f"/online/image/{query_vector_id}" if query_img else None,
+        },
+        "candidates": candidate_payload,
+        "session": {
+            "similarity_type": _session.similarity_type,
+            "top_k": _session.top_k,
+            "buffer_size": len(_get_trainer().replay),
+        },
     }
-    with open(FEEDBACK_LOG, "a", encoding="utf-8") as out:
-        out.write(json.dumps(record, ensure_ascii=False) + "\n")
-
-    return {"status": "ok", "id": emb_id, "label": label}
 
 
-@app.post("/find_lookalikes")
-async def find_lookalikes(
-    query_image: UploadFile = File(...),
-    data_dir: str = "data",
-    batch_size: int = 64,
-    top_k: int = 0,  # 0 = compare with full catalog (all 6K+); else cap at this many
-    exclude_query_and_capsules: bool = True,
-):
-    """
-    Pipeline: (1) Embed query. (2) Retrieve top-k candidates by cosine similarity (O(n)).
-    (3) Run assessor (decision model) only on those k pairs. Cosine is retrieval only;
-    the assessor score is the lookalike decision.
-    By default the catalog excludes paths containing 'query' or 'capsules' (e.g. query images, ind. capsules).
-    """
-    from image_embedding.vit import get_image_embedding
-    from torch.nn.functional import normalize
+def _predict_candidates_from_image(image: Image.Image, *, top_k: int, similarity_type: str) -> dict:
+    trainer = _get_trainer()
+    processor, vit_model, vit_device = _get_vit_bundle()
+    query_vector_t = get_image_embedding(
+        vit_model,
+        processor,
+        image,
+        device=vit_device,
+        pooling="cls",
+    )
+    query_vector = query_vector_t.detach().cpu().numpy().astype("float32", copy=False)
 
-    t_total = time.perf_counter()
-    _ensure_models()
+    candidates = search_similar_with_metadata(
+        query_vector=query_vector,
+        similarity_type=similarity_type,
+        top_n=top_k,
+        index_path=INDEX_PATH,
+        db_path=DB_PATH,
+        exclude_vector_id=None,
+    )
+    scores = trainer.score_candidates(query_vector, candidates)
 
-    allowed = {"image/jpeg", "image/png", "image/webp", "image/gif"}
-    if query_image.content_type not in allowed:
-        raise HTTPException(400, "File must be an image (JPEG, PNG, WebP, GIF).")
-
-    data_path = Path(data_dir)
-    if not data_path.is_dir():
-        raise HTTPException(400, f"Data directory not found: {data_dir}")
-
-    t0 = time.perf_counter()
-    pt_paths = _collect_embedding_paths(data_path)
-    if exclude_query_and_capsules:
-        pt_paths = [p for p in pt_paths if "query" not in p.as_posix().lower() and "capsules" not in p.as_posix().lower()]
-    print(f"[lookalike] /find_lookalikes catalog discovery: {time.perf_counter() - t0:.2f}s ({len(pt_paths)} .pt files)")
-
-    if not pt_paths:
-        return {
-            "lookalikes": [],
-            "not_lookalikes": [],
-            "threshold": THRESHOLD,
-            "total_candidates": 0,
-            "message": "No embedding files found under data/ (excluding Annotation).",
+    lookalikes = []
+    non_lookalikes = []
+    for cand, score in zip(candidates, scores):
+        img = _resolve_image_path_from_embedding_file(cand.file_name or "")
+        item = {
+            "vector_id": cand.vector_id,
+            "file_name": cand.file_name,
+            "retrieval_score": round(float(cand.score), 6),
+            "model_score": round(float(score), 6),
+            "is_lookalike": bool(float(score) >= 0.5),
+            "image_url": f"/online/image/{cand.vector_id}" if img else None,
         }
-
-    top_k_used = len(pt_paths) if top_k <= 0 else min(top_k, len(pt_paths))
-
-    with tempfile.NamedTemporaryFile(
-        suffix=Path(query_image.filename or "query").suffix, delete=False
-    ) as f:
-        f.write(await query_image.read())
-        path_query = f.name
-
-    try:
-        t0 = time.perf_counter()
-        query_emb = get_image_embedding(
-            _vit_model, _vit_processor, path_query, device=_vit_device, pooling="cls"
-        )
-        print(f"[lookalike] /find_lookalikes query embedding: {time.perf_counter() - t0:.2f}s")
-    finally:
-        Path(path_query).unlink(missing_ok=True)
-
-    query_emb = query_emb.to(_vit_device)
-    if query_emb.shape != (_assessor_cfg.embedding_size,):
-        raise HTTPException(500, "Embedding size mismatch with assessor.")
-    query_emb_norm = normalize(query_emb.unsqueeze(0), p=2, dim=-1)
-
-    def _name(p: Path) -> str:
-        try:
-            rel = p.relative_to(data_path)
-            s = str(rel.with_suffix("")).replace("\\", " / ")
-            # Drop leading "embeddings / " or "embeddings/" so UI shows drug name only
-            s = re.sub(r"^embeddings\s*/\s*", "", s, flags=re.IGNORECASE).lstrip()
-            return s or p.stem
-        except ValueError:
-            return p.stem
-
-    # Step 1: Retrieve top-k by cosine similarity (O(n))
-    t0 = time.perf_counter()
-    retrieval: list[tuple[str, Path, float]] = []
-    for i in range(0, len(pt_paths), batch_size):
-        batch_paths = pt_paths[i : i + batch_size]
-        batch_tensors: list[torch.Tensor] = []
-        valid_names: list[str] = []
-        valid_paths: list[Path] = []
-        for p in batch_paths:
-            try:
-                t = torch.load(p, map_location=_vit_device, weights_only=True)
-            except Exception:
-                continue
-            if torch.is_tensor(t) and t.shape == (_assessor_cfg.embedding_size,):
-                batch_tensors.append(t.float())
-                valid_names.append(_name(p))
-                valid_paths.append(p)
-        if not batch_tensors:
-            continue
-        batch = torch.stack(batch_tensors).to(_vit_device)
-        batch_norm = normalize(batch, p=2, dim=-1)
-        cos_sims = (query_emb_norm @ batch_norm.T).squeeze(0)
-        for k in range(len(valid_names)):
-            retrieval.append((valid_names[k], valid_paths[k], float(cos_sims[k].item())))
-    retrieval.sort(key=lambda x: -x[2])
-    top_k_actual = min(top_k_used, len(retrieval))
-    retrieval = retrieval[:top_k_actual]
-    print(f"[lookalike] /find_lookalikes retrieval top-{top_k_actual} by cosine: {time.perf_counter() - t0:.2f}s")
-
-    # Step 2: Run assessor (decision model) only on top-k
-    t0 = time.perf_counter()
-    results: list[tuple[str, float, float]] = []
-    query_emb_1 = query_emb_norm.squeeze(0)
-    for name, p, cos_sim in retrieval:
-        emb = torch.load(p, map_location=_vit_device, weights_only=True)
-        if not torch.is_tensor(emb) or emb.shape != (_assessor_cfg.embedding_size,):
-            continue
-        cand = emb.float().to(_vit_device)
-        with torch.no_grad():
-            score = _assessor_model(query_emb_1, cand)
-        results.append((name, round(float(cos_sim), 4), round(float(score.item()), 4)))
-    print(f"[lookalike] /find_lookalikes assessor on {len(results)} candidates: {time.perf_counter() - t0:.2f}s")
-    print(f"[lookalike] /find_lookalikes total: {time.perf_counter() - t_total:.2f}s")
-
-    results.sort(key=lambda x: -x[2])
-    lookalikes = [{"name": n, "cosine_sim": c, "score": s, "image_url": f"/candidate_image?name={quote(n)}"} for n, c, s in results if s >= THRESHOLD]
-    not_lookalikes = [{"name": n, "cosine_sim": c, "score": s, "image_url": f"/candidate_image?name={quote(n)}"} for n, c, s in results if s < THRESHOLD]
-    # Top 100 by score (strongest lookalikes), bottom 100 (least similar)
-    top_100 = [{"name": n, "cosine_sim": c, "score": s} for n, c, s in results[:100]]
-    bottom_100 = [{"name": n, "cosine_sim": c, "score": s} for n, c, s in results[-100:]]
+        if float(score) >= 0.5:
+            lookalikes.append(item)
+        else:
+            non_lookalikes.append(item)
 
     return {
         "lookalikes": lookalikes,
-        "not_lookalikes": not_lookalikes,
-        "top_100": top_100,
-        "bottom_100": bottom_100,
-        "threshold": THRESHOLD,
-        "total_candidates": len(results),
-        "retrieval_top_k": top_k_actual,
+        "non_lookalikes": non_lookalikes,
+        "meta": {
+            "top_k": top_k,
+            "similarity_type": similarity_type,
+            "threshold": 0.5,
+        },
+    }
+
+
+@app.get("/health")
+def health() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+@app.post("/online/session/init")
+def init_online_session(req: SessionInitRequest) -> dict:
+    with _lock:
+        trainer = _get_trainer()
+        _session.similarity_type = req.similarity_type
+        _session.top_k = req.top_k
+        _session.batch_size = req.batch_size
+        _session.train_steps = req.train_steps
+        _session.min_buffer_size = req.min_buffer_size
+        _session.recent_ratio = req.recent_ratio
+
+        trainer.reset_replay(per_alpha=req.per_alpha, per_beta=req.per_beta)
+        hydrated = 0
+        if req.hydrate_from_feedback:
+            hydrated = trainer.hydrate_replay_from_online_feedback(limit=req.hydrate_limit)
+
+        batch = _make_batch_payload()
+        return {
+            "message": "session initialized",
+            "hydrated": hydrated,
+            "per": {"alpha": trainer.replay.alpha, "beta": trainer.replay.beta},
+            "batch": batch,
+        }
+
+
+@app.post("/inference/predict")
+async def inference_predict(
+    image: UploadFile = File(...),
+    top_k: int = 20,
+    similarity_type: str = "l2",
+) -> dict:
+    if top_k <= 0 or top_k > 200:
+        raise HTTPException(400, "top_k must be between 1 and 200.")
+    try:
+        metric = similarity_type.lower()
+        if metric not in {"l2", "euclidean", "ip", "inner_product", "dot", "cosine", "cos", "cos_sim"}:
+            raise HTTPException(400, "invalid similarity_type")
+        content = await image.read()
+        if not content:
+            raise HTTPException(400, "Uploaded image is empty.")
+        pil_image = Image.open(BytesIO(content)).convert("RGB")
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(400, f"Failed to parse uploaded image: {exc}") from exc
+
+    with _lock:
+        return _predict_candidates_from_image(
+            pil_image,
+            top_k=top_k,
+            similarity_type=similarity_type,
+        )
+
+
+@app.get("/online/session/next")
+def next_batch() -> dict:
+    with _lock:
+        return _make_batch_payload()
+
+
+@app.post("/online/session/submit")
+def submit_labels(req: SubmitRequest) -> dict:
+    with _lock:
+        trainer = _get_trainer()
+        if _session.current_query_vector_id is None or _session.current_query_file_name is None:
+            raise HTTPException(400, "No active batch. Call /online/session/init or /online/session/next.")
+        if req.query_vector_id != _session.current_query_vector_id:
+            raise HTTPException(400, "query_vector_id does not match current batch.")
+
+        labels_by_vector_id: dict[int, int] = {}
+        for item in req.labels:
+            if item.label not in (0, 1):
+                raise HTTPException(400, "label must be 0 or 1.")
+            labels_by_vector_id[int(item.vector_id)] = int(item.label)
+
+        query_vector = reconstruct_vector_by_id(req.query_vector_id, index_path=INDEX_PATH)
+        candidates = trainer.retrieve_candidates(
+            query_file_name=_session.current_query_file_name,
+            top_k=_session.top_k,
+            similarity_type=_session.similarity_type,
+        )
+        scores = trainer.score_candidates(query_vector, candidates)
+        feedback = build_feedback_items(
+            query_vector_id=req.query_vector_id,
+            query_file_name=_session.current_query_file_name,
+            query_vector=query_vector,
+            candidates=candidates,
+            labels_by_vector_id=labels_by_vector_id,
+            model_scores=scores,
+        )
+
+        trainer.ingest_feedback(feedback)
+        loss = trainer.train_step(
+            batch_size=_session.batch_size,
+            steps=_session.train_steps,
+            min_buffer_size=_session.min_buffer_size,
+            recent_ratio=_session.recent_ratio,
+        )
+
+        next_payload = _make_batch_payload()
+        return {
+            "ingested": len(feedback),
+            "trained": loss is not None,
+            "loss": None if loss is None else round(float(loss), 6),
+            "buffer_size": len(trainer.replay),
+            "next_batch": next_payload,
+        }
+
+
+@app.get("/online/image/{vector_id}")
+def get_image(vector_id: int):
+    file_name = get_file_name_by_vector_id(vector_id, db_path=DB_PATH)
+    if file_name is None:
+        raise HTTPException(404, "vector_id not found.")
+    image_path = _resolve_image_path_from_embedding_file(file_name)
+    if image_path is None or not image_path.exists():
+        raise HTTPException(404, "image not found for this vector.")
+    return FileResponse(path=image_path)
+
+
+@app.get("/online/replay_buffer")
+def get_replay_buffer(limit: int = 100) -> dict:
+    if limit <= 0:
+        raise HTTPException(400, "limit must be > 0")
+    with _lock:
+        trainer = _get_trainer()
+        replay_items = trainer.replay_snapshot(limit=limit)
+        with sqlite3.connect(DB_PATH) as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT COUNT(*) FROM online_feedback")
+            feedback_count = int(cur.fetchone()[0])
+            cur.execute("SELECT COUNT(*) FROM lookalike_graph")
+            graph_count = int(cur.fetchone()[0])
+            cur.execute(
+                """
+                SELECT id, label, query_vector_id, candidate_vector_id, query_file_name, candidate_file_name, retrieval_score, model_score, created_at
+                FROM online_feedback
+                ORDER BY id DESC
+                LIMIT ?
+                """,
+                (int(limit),),
+            )
+            feedback_rows = [
+                {
+                    "id": int(r[0]),
+                    "label": int(r[1]),
+                    "query_vector_id": r[2],
+                    "candidate_vector_id": r[3],
+                    "query_file_name": r[4],
+                    "candidate_file_name": r[5],
+                    "retrieval_score": r[6],
+                    "model_score": r[7],
+                    "created_at": r[8],
+                }
+                for r in cur.fetchall()
+            ]
+            cur.execute(
+                """
+                SELECT lg.id, lg.base_id, lg.similar_id, ib.file_name, isb.file_name
+                FROM lookalike_graph lg
+                LEFT JOIN image_db ib ON ib.id = lg.base_id
+                LEFT JOIN image_db isb ON isb.id = lg.similar_id
+                ORDER BY lg.id DESC
+                LIMIT ?
+                """,
+                (int(limit),),
+            )
+            graph_rows = [
+                {
+                    "id": int(r[0]),
+                    "base_id": int(r[1]) if r[1] is not None else None,
+                    "similar_id": int(r[2]) if r[2] is not None else None,
+                    "base_file_name": r[3],
+                    "similar_file_name": r[4],
+                }
+                for r in cur.fetchall()
+            ]
+
+        return {
+            "replay": {
+                "size": len(trainer.replay),
+                "alpha": trainer.replay.alpha,
+                "beta": trainer.replay.beta,
+                "items": replay_items,
+            },
+            "online_feedback": {
+                "count": feedback_count,
+                "items": feedback_rows,
+            },
+            "lookalike_graph": {
+                "count": graph_count,
+                "items": graph_rows,
+            },
+        }
+
+
+@app.get("/ai_feedback/queries")
+def get_ai_feedback_queries(limit: int = 50) -> dict:
+    if limit <= 0:
+        raise HTTPException(400, "limit must be > 0")
+
+    with sqlite3.connect(DB_PATH) as conn:
+        if not _ai_augment_table_exists(conn):
+            return {"queries": []}
+
+        cur = conn.cursor()
+        cur.execute(
+            f"""
+            SELECT
+                query_vector_id,
+                query_image_name,
+                COUNT(*) AS total_count,
+                SUM(label) AS lookalike_count,
+                COUNT(*) - SUM(label) AS non_lookalike_count,
+                MAX(id) AS latest_id
+            FROM {AI_AUGMENT_TABLE}
+            WHERE COALESCE(error, 0) = 0
+            GROUP BY query_vector_id, query_image_name
+            ORDER BY latest_id DESC
+            LIMIT ?
+            """,
+            (int(limit),),
+        )
+        rows = cur.fetchall()
+
+    queries = []
+    for row in rows:
+        query_vector_id = int(row[0])
+        query_image_name = str(row[1])
+        query_img = _resolve_image_path_from_embedding_file(query_image_name)
+        queries.append(
+            {
+                "query_vector_id": query_vector_id,
+                "query_image_name": query_image_name,
+                "total_count": int(row[2]),
+                "lookalike_count": int(row[3] or 0),
+                "non_lookalike_count": int(row[4] or 0),
+                "image_url": f"/online/image/{query_vector_id}" if query_img else None,
+            }
+        )
+    return {"queries": queries}
+
+
+@app.get("/ai_feedback/by_query")
+def get_ai_feedback_by_query(query_vector_id: int) -> dict:
+    with sqlite3.connect(DB_PATH) as conn:
+        if not _ai_augment_table_exists(conn):
+            raise HTTPException(404, "ai_augment_feedback table not found.")
+
+        cur = conn.cursor()
+        cur.execute(
+            f"""
+            SELECT
+                batch_id,
+                query_image_name,
+                candidate_vector_id,
+                candidate_image_name,
+                label,
+                reasoning
+            FROM {AI_AUGMENT_TABLE}
+            WHERE query_vector_id = ?
+              AND COALESCE(error, 0) = 0
+            ORDER BY id DESC
+            """,
+            (int(query_vector_id),),
+        )
+        rows = cur.fetchall()
+
+    if not rows:
+        raise HTTPException(404, "No AI feedback rows found for this query_vector_id.")
+
+    query_image_name = str(rows[0][1])
+    query_img = _resolve_image_path_from_embedding_file(query_image_name)
+    lookalikes = []
+    non_lookalikes = []
+    batch_ids: list[str] = []
+    seen_batches: set[str] = set()
+
+    for batch_id, _, candidate_vector_id, candidate_image_name, label, reasoning in rows:
+        batch_id = str(batch_id)
+        if batch_id not in seen_batches:
+            seen_batches.add(batch_id)
+            batch_ids.append(batch_id)
+
+        candidate_vector_id = int(candidate_vector_id)
+        cand_img = _resolve_image_path_from_embedding_file(str(candidate_image_name))
+        item = {
+            "vector_id": candidate_vector_id,
+            "file_name": candidate_image_name,
+            "label": int(label),
+            "reasoning": reasoning,
+            "batch_id": batch_id,
+            "image_url": f"/online/image/{candidate_vector_id}" if cand_img else None,
+        }
+        if int(label) == 1:
+            lookalikes.append(item)
+        else:
+            non_lookalikes.append(item)
+
+    return {
+        "query": {
+            "vector_id": int(query_vector_id),
+            "file_name": query_image_name,
+            "image_url": f"/online/image/{int(query_vector_id)}" if query_img else None,
+        },
+        "lookalikes": lookalikes,
+        "non_lookalikes": non_lookalikes,
+        "meta": {
+            "total_count": len(rows),
+            "lookalike_count": len(lookalikes),
+            "non_lookalike_count": len(non_lookalikes),
+            "batch_ids": batch_ids,
+        },
     }

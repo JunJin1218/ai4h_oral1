@@ -212,6 +212,6 @@ data/
 input_img/
 processed_img/
 
-# Node / frontend
+# .js
 node_modules/
-web_ui/frontend/node_modules/
+log/
