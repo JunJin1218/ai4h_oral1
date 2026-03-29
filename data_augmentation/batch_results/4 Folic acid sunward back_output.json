@@ -1,0 +1,181 @@
+{
+  "query_name": "4 Folic acid sunward back",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\4 Folic acid sunward back.jpg",
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 17,
+  "query_lookalike_count": 7,
+  "candidate_results": [
+    {
+      "candidate_name": "Chlorpheniramine (DHA) 4mg tab_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Chlorpheniramine (DHA) 4mg tab_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"The query shows the plain back of a blister with visible round yellow tablets and no printed text; the candidate shows the printed foil front of a blister with dense diagonal black text and logos. Overall appearance (plain tablet side vs heavily printed text side) and visual patterns are very different, making confusion unlikely.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "The query shows the plain back of a blister with visible round yellow tablets and no printed text; the candidate shows the printed foil front of a blister with dense diagonal black text and logos. Overall appearance (plain tablet side vs heavily printed text side) and visual patterns are very different, making confusion unlikely.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Chlorpheniramine (Allersin-F Sunward Singapore) 4mg Tab [20Dec17]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Chlorpheniramine (Allersin-F Sunward Singapore) 4mg Tab [20Dec17]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show very similar Sunward silver blisters with round pale-yellow tablets in the same 2x5 arrangement, identical dimple pattern on the foil, and similar embossing of expiry/lot at the ends. The query shows the tablet side only, while the candidate shows both tablet and printed foil sides of a nearly identical strip. From the visible side in common, they look almost the same, so they could easily be confused in practice.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show very similar Sunward silver blisters with round pale-yellow tablets in the same 2x5 arrangement, identical dimple pattern on the foil, and similar embossing of expiry/lot at the ends. The query shows the tablet side only, while the candidate shows both tablet and printed foil sides of a nearly identical strip. From the visible side in common, they look almost the same, so they could easily be confused in practice.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Chlorpheniramine (Allersin-F Sunward Singapore) 4mg Tab [20Dec17]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Chlorpheniramine (Allersin-F Sunward Singapore) 4mg Tab [20Dec17]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"The query shows the plain foil back of a blister with only yellow round tablets visible and no printed text. The candidate shows the printed front of a blister with extensive black text (ALLERSIN-F TABLET, drug info) on a similar silver foil. While both are blister packs, the presence of prominent text and branding on the candidate versus the completely plain tablet-only view on the query makes their overall appearance clearly different, reducing realistic confusion risk.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "The query shows the plain foil back of a blister with only yellow round tablets visible and no printed text. The candidate shows the printed front of a blister with extensive black text (ALLERSIN-F TABLET, drug info) on a similar silver foil. While both are blister packs, the presence of prominent text and branding on the candidate versus the completely plain tablet-only view on the query makes their overall appearance clearly different, reducing realistic confusion risk.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Vitamin B Complex (DHA B-plex) [16May12]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Vitamin B Complex (DHA B-plex) [16May12]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show nearly identical plain silver blisters containing 10 small round yellow tablets arranged in two columns of five, with minimal or no visible print on the foil. The tablet color, size, layout, and backing style closely match, giving a very similar overall appearance and a realistic risk of confusion.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show nearly identical plain silver blisters containing 10 small round yellow tablets arranged in two columns of five, with minimal or no visible print on the foil. The tablet color, size, layout, and backing style closely match, giving a very similar overall appearance and a realistic risk of confusion.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Vitamin B Complex (DHA B-plex) [16May12]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Vitamin B Complex (DHA B-plex) [16May12]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"The query image shows the plain back side of a silver blister with exposed yellow round tablets and almost no printing, while the candidate shows the printed front side of a blister with strong red text bands and branding. Overall appearance, color emphasis, and layout differ markedly, so confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "The query image shows the plain back side of a silver blister with exposed yellow round tablets and almost no printing, while the candidate shows the printed front side of a blister with strong red text bands and branding. Overall appearance, color emphasis, and layout differ markedly, so confusion risk is low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Methotrexate (Emthexate) Tab 2.5mg (MA&mfr_Teva Czech Industries, Czech Republic) v1 [9Mar2022]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Methotrexate (Emthexate) Tab 2.5mg (MA&mfr_Teva Czech Industries, Czech Republic) v1 [7Dec2022]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are narrow silver blister strips with 10 round yellow tablets in a 2x5 arrangement, which is a strong similarity. However, the candidate has a very prominent vertical magenta band with repeated “Methotrexate” text and embossed tablet markings, while the query strip is plain with no colored text area or tablet imprint visible. These distinct visual cues make them reasonably distinguishable in practice, reducing confusion risk.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are narrow silver blister strips with 10 round yellow tablets in a 2x5 arrangement, which is a strong similarity. However, the candidate has a very prominent vertical magenta band with repeated “Methotrexate” text and embossed tablet markings, while the query strip is plain with no colored text area or tablet imprint visible. These distinct visual cues make them reasonably distinguishable in practice, reducing confusion risk.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Methotrexate (Emthexate) Tab 2.5mg (MA&mfr_Teva Czech Industries, Czech Republic) v1 [9Mar2022]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Methotrexate (Emthexate) Tab 2.5mg (MA&mfr_Teva Czech Industries, Czech Republic) v1 [7Dec2022]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver blisters containing small round yellow tablets in a 2×5 layout, which is visually similar. However, the candidate has a prominent vertical magenta strip with repeated white “Methotrexate” text and tablet engravings, while the query has a plain foil back with no central color band or visible imprint. This bold colored strip is a strong distinguishing feature, reducing the likelihood of confusion at a glance, though the similarity of tablet color and blister size could still cause some resemblance. Overall, they are distinguishable enough that confusion risk is moderate to low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver blisters containing small round yellow tablets in a 2×5 layout, which is visually similar. However, the candidate has a prominent vertical magenta strip with repeated white “Methotrexate” text and tablet engravings, while the query has a plain foil back with no central color band or visible imprint. This bold colored strip is a strong distinguishing feature, reducing the likelihood of confusion at a glance, though the similarity of tablet color and blister size could still cause some resemblance. Overall, they are distinguishable enough that confusion risk is moderate to low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Hydralazine (Beacons Singapore) 50mg Tab [26Jan18]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Hydralazine (Beacons Singapore) 50mg Tab [26Jan18]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show the back side of silver blisters containing identical‑looking small round yellow tablets arranged in a 2x5 layout, with similar foil texture and no printed branding visible. At a practical level these would be very easy to confuse when separated from their boxes or front-printed blisters.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show the back side of silver blisters containing identical‑looking small round yellow tablets arranged in a 2x5 layout, with similar foil texture and no printed branding visible. At a practical level these would be very easy to confuse when separated from their boxes or front-printed blisters.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Hydralazine (Beacons Singapore) 50mg Tab [26Jan18]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Hydralazine (Beacons Singapore) 50mg Tab [26Jan18]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"The query shows the plain, unprinted foil side of a blister with exposed round yellow tablets; no text or branding is visible. The candidate shows the printed foil side with prominent black HYDRALAZINE 50MG text and logos on a light background. Overall color impression, visible features, and layout differ substantially, making confusion between these two sides unlikely in practice.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "The query shows the plain, unprinted foil side of a blister with exposed round yellow tablets; no text or branding is visible. The candidate shows the printed foil side with prominent black HYDRALAZINE 50MG text and logos on a light background. Overall color impression, visible features, and layout differ substantially, making confusion between these two sides unlikely in practice.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Diclofenac (Voren YSP Malaysia) 25mg Tab [2Feb18]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Diclofenac (Voren YSP Malaysia) 25mg Tab [2Feb18]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show the back of silver blisters with identical layout: a 2×5 grid of small round yellow tablets, same foil texture, similar tablet color and size, and only faint embossed text at the ends. There is no visible printed branding or color difference to distinguish them easily, so they could be readily confused in practice.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show the back of silver blisters with identical layout: a 2×5 grid of small round yellow tablets, same foil texture, similar tablet color and size, and only faint embossed text at the ends. There is no visible printed branding or color difference to distinguish them easily, so they could be readily confused in practice.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Diclofenac (Voren YSP Malaysia) 25mg Tab [2Feb18]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Diclofenac (Voren YSP Malaysia) 25mg Tab [2Feb18]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show the same style of silver blister strip with identical yellow round tablets arranged in two columns of five, similar embossing pattern, and no printed text on the tablet side. A user seeing only the tablet side (as in the query) could easily confuse it with the tablet side of the Voren strip in the candidate image. Branding and text appear only on the reverse in the candidate, so visual differentiation on the visible side is minimal.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show the same style of silver blister strip with identical yellow round tablets arranged in two columns of five, similar embossing pattern, and no printed text on the tablet side. A user seeing only the tablet side (as in the query) could easily confuse it with the tablet side of the Voren strip in the candidate image. Branding and text appear only on the reverse in the candidate, so visual differentiation on the visible side is minimal.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Diclofenac (Voren YSP Malaysia) 25mg Tab [2Feb18]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Diclofenac (Voren YSP Malaysia) 25mg Tab [2Feb18]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"The query shows the plain back side of a silver blister with only yellow round tablets visible and no printing. The candidate shows the printed front of a blister with prominent purple text, logo, and barcode. Overall visual appearance, color accents, and presence/absence of text are clearly different, so confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "The query shows the plain back side of a silver blister with only yellow round tablets visible and no printing. The candidate shows the printed front of a blister with prominent purple text, logo, and barcode. Overall visual appearance, color accents, and presence/absence of text are clearly different, so confusion risk is low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Diclofenac (Voren) 25mg Tab_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Diclofenac (Voren) 25mg Tab_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show the back of blister strips with identical structure: 2×5 layout of small round yellow tablets on a silver dotted foil, similar tablet size, spacing, and overall proportions. There is minimal visible text or branding to distinguish them from this side, so at a glance they are highly confusable.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show the back of blister strips with identical structure: 2×5 layout of small round yellow tablets on a silver dotted foil, similar tablet size, spacing, and overall proportions. There is minimal visible text or branding to distinguish them from this side, so at a glance they are highly confusable.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Diclofenac (Voren) 25mg Tab_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Diclofenac (Voren) 25mg Tab_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"The query shows the plain back of a blister with only yellow round tablets visible and no printed text or branding, just a uniform silver foil. The candidate shows the printed front of a blister with strong blue VOREN branding, text blocks, and logos. Overall layout, visible elements, and color patterns are clearly different; confusion risk between these views is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "The query shows the plain back of a blister with only yellow round tablets visible and no printed text or branding, just a uniform silver foil. The candidate shows the printed front of a blister with strong blue VOREN branding, text blocks, and logos. Overall layout, visible elements, and color patterns are clearly different; confusion risk between these views is low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Promethazine Teoclate (Votazine) 25mg Tab [10Dec12]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Promethazine Teoclate (Votazine) 25mg Tab [10Dec12]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"The query shows the plain back of a blister with exposed yellow round tablets and no printed text, just silver foil and pill domes. The candidate shows the printed front of a blister with diagonal black branding text and logos across the silver foil. The presence of bold text stripes on one and complete absence of printing on the other makes their overall appearance clearly different, so confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "The query shows the plain back of a blister with exposed yellow round tablets and no printed text, just silver foil and pill domes. The candidate shows the printed front of a blister with diagonal black branding text and logos across the silver foil. The presence of bold text stripes on one and complete absence of printing on the other makes their overall appearance clearly different, so confusion risk is low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Promethazine Teoclate (Votazine) 25mg Tab [10Dec12]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Promethazine Teoclate (Votazine) 25mg Tab [10Dec12]_0.jpg",
+      "output_text": "{\"error\": false, \"reasoning\": \"Both images show the back side of silver blisters with ten small round yellow tablets in a 2x5 layout, with minimal visible text and no branding on the foil side. The color of tablets, foil texture, and overall arrangement are highly similar, making them easy to confuse in practice.\", \"lookalike\": true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show the back side of silver blisters with ten small round yellow tablets in a 2x5 layout, with minimal visible text and no branding on the foil side. The color of tablets, foil texture, and overall arrangement are highly similar, making them easy to confuse in practice.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Letrozole (Sandoz) 2.5mg Tab [1July16]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Letrozole (Sandoz) 2.5mg Tab [1July16]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both show yellow round tablets in a silver blister, but the query image is the plain, unprinted foil side with only tablets visible, while the candidate clearly shows grid lines and prominent red printed text and branding on the foil. The overall appearance and side of the blister presented are different enough that confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both show yellow round tablets in a silver blister, but the query image is the plain, unprinted foil side with only tablets visible, while the candidate clearly shows grid lines and prominent red printed text and branding on the foil. The overall appearance and side of the blister presented are different enough that confusion risk is low.",
+        "lookalike": false
+      }
+    }
+  ]
+}

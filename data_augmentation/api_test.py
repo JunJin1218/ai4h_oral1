@@ -1,4 +1,8 @@
 from __future__ import annotations
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 import argparse
 import json
@@ -130,7 +134,7 @@ def upload_vision_file(client: OpenAI, path: Path) -> str:
 
 
 def main() -> None:
-    load_dotenv()
+    load_dotenv(".env")
 
     parser = argparse.ArgumentParser(description="Minimal OpenAI image comparison test")
     parser.add_argument("--model", default=os.environ.get("OPENAI_MODEL", DEFAULT_MODEL))

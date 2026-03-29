@@ -1,0 +1,123 @@
+{
+  "query_name": "7 Amiodarone 200",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\7 Amiodarone 200.jpg",
+  "missing_candidates": [
+    "Zolpiderm (Stilnox CR) Tab 6.25 mg v1 [9April2018]_0.jpg"
+  ],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 11,
+  "query_lookalike_count": 6,
+  "candidate_results": [
+    {
+      "candidate_name": "Alfuzosin (Xatral) XL 10mg Tab [06Jun13]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Alfuzosin (Xatral) XL 10mg Tab [06Jun13]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Sanofi blister packs with the same silver foil, repeating black text blocks, and prominent red horizontal bands saying “USE THE DOSE AS PRESCRIBED / RESPECTER LES DOSES PRESCRITES”. The lower halves (printed foil sides) look almost identical in layout, language, and color scheme; only the brand names and some text differ. Although the tablets themselves differ in shape/color, at a glance the packaging design is very similar and could realistically be confused.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Sanofi blister packs with the same silver foil, repeating black text blocks, and prominent red horizontal bands saying “USE THE DOSE AS PRESCRIBED / RESPECTER LES DOSES PRESCRITES”. The lower halves (printed foil sides) look almost identical in layout, language, and color scheme; only the brand names and some text differ. Although the tablets themselves differ in shape/color, at a glance the packaging design is very similar and could realistically be confused.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Alfuzosin (Xatral) XL 10mg Tab [06Jun13]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Alfuzosin (Xatral) XL 10mg Tab [06Jun13]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver blisters, but the query shows round white scored tablets with printed text on the foil (CORDARONE, red warning bands), while the candidate shows yellow-and-white banded oblong capsules with no visible printing on the foil. Tablet color, shape, and overall visual impression are clearly different, so confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver blisters, but the query shows round white scored tablets with printed text on the foil (CORDARONE, red warning bands), while the candidate shows yellow-and-white banded oblong capsules with no visible printing on the foil. Tablet color, shape, and overall visual impression are clearly different, so confusion risk is low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Alfuzosin (Xatral) XL 10mg Tab [06Jun13]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Alfuzosin (Xatral) XL 10mg Tab [06Jun13]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver Sanofi-Aventis blisters with dense black text in similar fonts and repeated red warning bands saying to use/respect the prescribed dose. Branding text (Cordarone vs Xatral XL) and some layout details differ, but at a glance the overall color scheme, typography style, and warning-band design are very similar, creating realistic confusion risk.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver Sanofi-Aventis blisters with dense black text in similar fonts and repeated red warning bands saying to use/respect the prescribed dose. Branding text (Cordarone vs Xatral XL) and some layout details differ, but at a glance the overall color scheme, typography style, and warning-band design are very similar, creating realistic confusion risk.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Amisulpride (Solian) Tab 20mg [26May16]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Amisulpride (Solian) Tab 20mg [26May16]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver Sanofi blisters with the same overall layout: white round tablets on top, and an identical printed-foil style beneath showing repeating product name, 200 mg strength, black text, and orange warning bars. Typography, color scheme (silver/black/orange), and structure closely match, so they could easily be confused at a glance despite different drug names (Cordarone vs Solian).\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver Sanofi blisters with the same overall layout: white round tablets on top, and an identical printed-foil style beneath showing repeating product name, 200 mg strength, black text, and orange warning bars. Typography, color scheme (silver/black/orange), and structure closely match, so they could easily be confused at a glance despite different drug names (Cordarone vs Solian).",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Zolpiderm (Stilnox CR) Tab 6.25 mg v1 [9April2018]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Zolpiderm (Stilnox CR) Tab 6.25 mg v1 [9April2018]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver blister strips, but the query shows white round scored tablets plus a printed foil side with prominent black and red text blocks, while the candidate shows only brownish tablets in a plain silver blister with no visible printing. Tablet color and appearance, strip size/shape, and presence/absence of printed foil differ clearly, so confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver blister strips, but the query shows white round scored tablets plus a printed foil side with prominent black and red text blocks, while the candidate shows only brownish tablets in a plain silver blister with no visible printing. Tablet color and appearance, strip size/shape, and presence/absence of printed foil differ clearly, so confusion risk is low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Zolpidem (Stilnox red) 10mg Tab_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Zolpidem (Stilnox red) 10mg Tab_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"The query shows a silver blister strip with visible printed branding and red/black text, containing round white tablets in a 4x5 layout. The candidate is a plain silver blister with no visible printing and oblong white tablets arranged in two vertical columns. Tablet shapes, layout, and presence/absence of printed text are clearly different, so confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "The query shows a silver blister strip with visible printed branding and red/black text, containing round white tablets in a 4x5 layout. The candidate is a plain silver blister with no visible printing and oblong white tablets arranged in two vertical columns. Tablet shapes, layout, and presence/absence of printed text are clearly different, so confusion risk is low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Zolpidem (Stilnox red) 10mg Tab_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Zolpidem (Stilnox red) 10mg Tab_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver blisters with black text and prominent diagonal red bands. Although the brand names and text layout differ, the repeating pattern of black type with slanted red rectangles on a metallic background creates a very similar overall appearance that could plausibly be confused at a glance, especially in a busy setting.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver blisters with black text and prominent diagonal red bands. Although the brand names and text layout differ, the repeating pattern of black type with slanted red rectangles on a metallic background creates a very similar overall appearance that could plausibly be confused at a glance, especially in a busy setting.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Diacerein (Biogaran-Front) 50mg Cap (E)(Laboratoires Biogaran, France)[13May2020]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Diacerein (Biogaran-Front) 50mg Cap (E)(Laboratoires Biogaran, France)[13May2020]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver blister packs, but the query shows white round scored tablets plus a printed foil side with prominent black and red text, while the candidate shows two‑tone yellow/green capsules with no printing visible on the foil. The dosage forms, colors, and overall appearance are clearly different, making confusion unlikely.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver blister packs, but the query shows white round scored tablets plus a printed foil side with prominent black and red text, while the candidate shows two‑tone yellow/green capsules with no printing visible on the foil. The dosage forms, colors, and overall appearance are clearly different, making confusion unlikely.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Diacerein (Biogaran-Rear) 50mg Cap (E)(Laboratoires Biogaran, France)[13May2020]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Diacerein (Biogaran-Rear) 50mg Cap (E)(Laboratoires Biogaran, France)[13May2020]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver blisters with white backing printed in dark text plus repeated red warning bars, in French, arranged diagonally across the pack. The overall color scheme, font style, and repeating layout look very similar, making them easy to confuse at a glance despite different product names and strengths.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver blisters with white backing printed in dark text plus repeated red warning bars, in French, arranged diagonally across the pack. The overall color scheme, font style, and repeating layout look very similar, making them easy to confuse at a glance despite different product names and strengths.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Amiloride (Modamide) 5mg tab [14Feb14]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Amiloride (Modamide) 5mg tab [14Feb14]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver blisters with round white tablets, but the query pack has prominent printed branding/text in black and red on the foil and a different tablet arrangement, whereas the candidate blister has no printing visible on the foil and a simpler 2x5 layout. The absence of similar text, color accents, or branding means they are visually distinct enough that confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver blisters with round white tablets, but the query pack has prominent printed branding/text in black and red on the foil and a different tablet arrangement, whereas the candidate blister has no printing visible on the foil and a simpler 2x5 layout. The absence of similar text, color accents, or branding means they are visually distinct enough that confusion risk is low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Amiloride (Modamide) 5mg tab [14Feb14]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Amiloride (Modamide) 5mg tab [14Feb14]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver tablet blisters printed predominantly in black with red highlight bars on French warning text, using similar font styles and repeated diagonal layout. Brand names differ (Cordarone vs Modamide) and strengths differ, but overall color scheme and typography on a silver foil background are close enough that the packs could plausibly be confused at a glance.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver tablet blisters printed predominantly in black with red highlight bars on French warning text, using similar font styles and repeated diagonal layout. Brand names differ (Cordarone vs Modamide) and strengths differ, but overall color scheme and typography on a silver foil background are close enough that the packs could plausibly be confused at a glance.",
+        "lookalike": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "query_name": "3 Antacid Beacons front",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\3 Antacid Beacons front.jpg",
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 7,
+  "query_lookalike_count": 3,
+  "candidate_results": [
+    {
+      "candidate_name": "Anarex tab (Paracetamol 450mg, Orphenadrine 35mg) Tab (MA&mfr_Beacons Pharmaceuticals Pte Ltd, Sinagpore) v1 [19Jan2022]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Anarex tab (Paracetamol 450mg, Orphenadrine 35mg) Tab (MA&mfr_Beacons Pharmaceuticals Pte Ltd, Sinagpore) v1 [19Jan2022]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver blisters from the same manufacturer with 2×5 round tablets and similar foil texture and embossing style, which already makes them resemble each other from the back/foil side. However, the query pack’s front clearly shows beige tablets and prominent blue-printed branding on the foil, while the candidate shows alternating white and blue tablets with no printed text visible on the photographed side. The distinct tablet color pattern (monocolor vs alternating blue/white) and absence of blue text/branding on the candidate provide strong visual cues, so overall confusion risk is moderate but not high enough to consider them lookalikes.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver blisters from the same manufacturer with 2×5 round tablets and similar foil texture and embossing style, which already makes them resemble each other from the back/foil side. However, the query pack’s front clearly shows beige tablets and prominent blue-printed branding on the foil, while the candidate shows alternating white and blue tablets with no printed text visible on the photographed side. The distinct tablet color pattern (monocolor vs alternating blue/white) and absence of blue text/branding on the candidate provide strong visual cues, so overall confusion risk is moderate but not high enough to consider them lookalikes.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Anarex tab (Paracetamol 450mg, Orphenadrine 35mg) Tab (MA&mfr_Beacons Pharmaceuticals Pte Ltd, Sinagpore) v1 [19Jan2022]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Anarex tab (Paracetamol 450mg, Orphenadrine 35mg) Tab (MA&mfr_Beacons Pharmaceuticals Pte Ltd, Sinagpore) v1 [19Jan2022]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Beacons-branded silver blisters with prominent dark-blue rectangular name blocks, repeated logos, and similar typography and layout patterns. The ANAREX and ALUMAG PLUS strips share overall color scheme, branding, and repeating text blocks, making them easy to confuse at a glance despite different product names and strengths.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Beacons-branded silver blisters with prominent dark-blue rectangular name blocks, repeated logos, and similar typography and layout patterns. The ANAREX and ALUMAG PLUS strips share overall color scheme, branding, and repeating text blocks, making them easy to confuse at a glance despite different product names and strengths.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Folic Acid (Beacons) 5mg Tab_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Folic Acid (Beacons) 5mg Tab_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver Beacons blisters with round scored tablets in a 2x5 layout and similar blister foil texture, but the query shows a pinkish-beige tablet plus prominent blue-printed brand panels on the foil, while the candidate has plain orange tablets with mostly blank foil (blue text only at the cropped edge). The color of tablets and presence/absence of large blue branding areas create a noticeably different overall look, making confusion less likely at a glance.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver Beacons blisters with round scored tablets in a 2x5 layout and similar blister foil texture, but the query shows a pinkish-beige tablet plus prominent blue-printed brand panels on the foil, while the candidate has plain orange tablets with mostly blank foil (blue text only at the cropped edge). The color of tablets and presence/absence of large blue branding areas create a noticeably different overall look, making confusion less likely at a glance.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Folic Acid (Beacons) 5mg Tab_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Folic Acid (Beacons) 5mg Tab_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Beacons blister packs using the same blue Beacons logo within a rectangular block and bold white text on blue bands, repeated across a silver/white foil. Branding style, color scheme, and repeating layout are very similar, differing mainly in product name and background tint, so a user could plausibly confuse them at a glance.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Beacons blister packs using the same blue Beacons logo within a rectangular block and bold white text on blue bands, repeated across a silver/white foil. Branding style, color scheme, and repeating layout are very similar, differing mainly in product name and background tint, so a user could plausibly confuse them at a glance.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Tolbutamide (Tolmide) 500mg Tab_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Tolbutamide (Tolmide) 500mg Tab_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both show 10 round tablets in a 2x5 silver blister strip with similar tablet size and some tablets having a score line, which could create confusion if only the tablet side is seen. However, the query pack also has a second attached blister with prominent blue ALUMAG PLUS branding and text, while the candidate strip is completely plain silver on the back with no printing visible. Overall presentation and presence/absence of printed branding make them distinguishable in normal handling.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both show 10 round tablets in a 2x5 silver blister strip with similar tablet size and some tablets having a score line, which could create confusion if only the tablet side is seen. However, the query pack also has a second attached blister with prominent blue ALUMAG PLUS branding and text, while the candidate strip is completely plain silver on the back with no printing visible. Overall presentation and presence/absence of printed branding make them distinguishable in normal handling.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Tolbutamide (Tolmide) 500mg Tab_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Tolbutamide (Tolmide) 500mg Tab_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Beacons-branded blister packs with very similar structure: 10 round scored tablets on a silver blister above a printed foil section. The printed foils use repeating horizontal blue title bars with white drug names, the same Beacons logo icon, and similar blue text blocks beneath, giving a closely matched color scheme, branding, and layout. Despite different product names and some text differences, the overall appearance is similar enough that they could realistically be confused.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Beacons-branded blister packs with very similar structure: 10 round scored tablets on a silver blister above a printed foil section. The printed foils use repeating horizontal blue title bars with white drug names, the same Beacons logo icon, and similar blue text blocks beneath, giving a closely matched color scheme, branding, and layout. Despite different product names and some text differences, the overall appearance is similar enough that they could realistically be confused.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Chlorpromazine (Largo) 100mg Tab_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Chlorpromazine (Largo) 100mg Tab_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Beacons products on silver blisters, but the visual impressions differ: ALUMAG PLUS uses bold blue branding blocks with blue text, while LARGO 100mg uses green text and logos in a repeating pattern without solid blocks. Color schemes (blue vs green) and layout style are clearly distinct, reducing practical confusion risk despite shared Beacons logo and blister format.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Beacons products on silver blisters, but the visual impressions differ: ALUMAG PLUS uses bold blue branding blocks with blue text, while LARGO 100mg uses green text and logos in a repeating pattern without solid blocks. Color schemes (blue vs green) and layout style are clearly distinct, reducing practical confusion risk despite shared Beacons logo and blister format.",
+        "lookalike": false
+      }
+    }
+  ]
+}

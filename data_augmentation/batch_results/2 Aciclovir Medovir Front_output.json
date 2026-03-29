@@ -1,0 +1,83 @@
+{
+  "query_name": "2 Aciclovir Medovir Front",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\2 Aciclovir Medovir Front.jpg",
+  "missing_candidates": [
+    "Aciclovir (Medovir) Tab 400mg [5Apr16]_2"
+  ],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 7,
+  "query_lookalike_count": 2,
+  "candidate_results": [
+    {
+      "candidate_name": "Lisinopril (Dapril) 20mg Tab (Medochemie Ltd, Cyprus) v1 [3September2020]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Lisinopril (Dapril) 20mg Tab (Medochemie Ltd, Cyprus) v1 [3September2020]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show silver blisters containing small round pink tablets of very similar size and color. The foil texture and general strip dimensions appear alike. The query image shows only the tablet side of the blister with no printing visible, while the candidate shows both the plain tablet side and a printed side, but in normal handling the tablet-facing side of the candidate strip would look almost the same as the query. These shared visual features create a realistic risk that someone could confuse the two at a glance.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show silver blisters containing small round pink tablets of very similar size and color. The foil texture and general strip dimensions appear alike. The query image shows only the tablet side of the blister with no printing visible, while the candidate shows both the plain tablet side and a printed side, but in normal handling the tablet-facing side of the candidate strip would look almost the same as the query. These shared visual features create a realistic risk that someone could confuse the two at a glance.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Lorazepam (Lorans) 1mg Tab_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Lorazepam (Lorans) 1mg Tab_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Query shows a plain silver blister with large round pink tablets only; no printed text or branding is visible. Candidate shows a silver blister of much smaller white tablets plus a second blister face with prominent green printed text (LORANS 1, manufacturer, etc.). Differences in tablet color/size and presence of extensive green printing make the overall appearance clearly distinct, so confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Query shows a plain silver blister with large round pink tablets only; no printed text or branding is visible. Candidate shows a silver blister of much smaller white tablets plus a second blister face with prominent green printed text (LORANS 1, manufacturer, etc.). Differences in tablet color/size and presence of extensive green printing make the overall appearance clearly distinct, so confusion risk is low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Lorazepam (Lorans) 1mg Tab [1July16]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Lorazepam (Lorans) 1mg Tab [1July16]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"The query shows a plain silver blister strip with large round pink tablets only, no printed text visible. The candidate is a silver blister with small white tablets and significant black printing (drug name, manufacturer) on one side plus an exposed tablet side on the other. Differences in tablet color/size, presence of extensive text, and overall layout make them clearly distinguishable; confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "The query shows a plain silver blister strip with large round pink tablets only, no printed text visible. The candidate is a silver blister with small white tablets and significant black printing (drug name, manufacturer) on one side plus an exposed tablet side on the other. Differences in tablet color/size, presence of extensive text, and overall layout make them clearly distinguishable; confusion risk is low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Lorazepam (Lorans-Box) 1mg Tab [1July16]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Lorazepam (Lorans-Box) 1mg Tab [1July16]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Query shows a silver blister strip with large pink round tablets only, no printed text visible. Candidate shows a similar silver blister strip but with small white tablets and a second printed foil layer with extensive black text and logos. Differences in tablet color/size and presence of bold printed branding on candidate create a clearly different appearance, so confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Query shows a silver blister strip with large pink round tablets only, no printed text visible. Candidate shows a similar silver blister strip but with small white tablets and a second printed foil layer with extensive black text and logos. Differences in tablet color/size and presence of bold printed branding on candidate create a clearly different appearance, so confusion risk is low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Spironolactone (Medochemie Cyprus) 25mg Tab [22March18]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Spironolactone (Medochemie Cyprus) 25mg Tab [22March18]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show plain, silver blisters with 10 round scored tablets in a 2x5 arrangement and no visible printed text. The main difference is tablet color (pink vs white), but in a quick, real-world setting this alone may not reliably prevent confusion, especially if lighting or viewing angle obscures color. Overall blister structure and appearance are very similar, giving a realistic confusion risk.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show plain, silver blisters with 10 round scored tablets in a 2x5 arrangement and no visible printed text. The main difference is tablet color (pink vs white), but in a quick, real-world setting this alone may not reliably prevent confusion, especially if lighting or viewing angle obscures color. Overall blister structure and appearance are very similar, giving a realistic confusion risk.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Spironolactone (Medochemie Cyprus) 25mg Tab [22March18]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Spironolactone (Medochemie Cyprus) 25mg Tab [22March18]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"The query shows the tablet side of a blister strip with large round pink tablets and no visible text or branding. The candidate shows the printed foil side of a different blister with orange text, logos, and a distinct layout. While both are silver blisters, one view is tablet-facing and the other is fully text-branded, giving clearly different appearances and low risk of confusion at a glance.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "The query shows the tablet side of a blister strip with large round pink tablets and no visible text or branding. The candidate shows the printed foil side of a different blister with orange text, logos, and a distinct layout. While both are silver blisters, one view is tablet-facing and the other is fully text-branded, giving clearly different appearances and low risk of confusion at a glance.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Spironolactone (Medochemie Cyprus) 25mg Tab [22March18]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Spironolactone (Medochemie Cyprus) 25mg Tab [22March18]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Query shows a plain silver blister with large round pink tablets, no visible printed text. Candidate shows a silver blister with smaller off‑white tablets and an attached printed foil backing with orange text and branding. Tablet colors and sizes differ, and the presence of prominent text/branding on the candidate versus none on the query makes the overall appearance distinct enough that confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Query shows a plain silver blister with large round pink tablets, no visible printed text. Candidate shows a silver blister with smaller off‑white tablets and an attached printed foil backing with orange text and branding. Tablet colors and sizes differ, and the presence of prominent text/branding on the candidate versus none on the query makes the overall appearance distinct enough that confusion risk is low.",
+        "lookalike": false
+      }
+    }
+  ]
+}
