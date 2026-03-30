@@ -1,119 +1,59 @@
 {
   "query_name": "8 Loratadine 10 Front",
-  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\8 Loratadine 10 Front.jpg",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\8 Loratadine 10 Front.PNG",
   "missing_candidates": [],
   "few_shots_count": 3,
   "model": "gpt-5.1",
-  "query_total_candidates": 11,
+  "query_total_candidates": 5,
   "query_lookalike_count": 5,
   "candidate_results": [
     {
-      "candidate_name": "Bromhexine (Bislan) 8mg Tab [24Aug16]_0",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Bromhexine (Bislan) 8mg Tab [24Aug16]_0.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Both images show unprinted silver blisters of similar size, shape, and layout, each with two columns of white tablets on a dotted foil background and embossed text only at the strip ends. Although the tablet shapes differ slightly (oval vs round), the overall appearance at a quick glance is very similar, creating realistic confusion risk.\",\"lookalike\":true}",
-      "parsed_output": {
-        "error": false,
-        "reasoning": "Both images show unprinted silver blisters of similar size, shape, and layout, each with two columns of white tablets on a dotted foil background and embossed text only at the strip ends. Although the tablet shapes differ slightly (oval vs round), the overall appearance at a quick glance is very similar, creating realistic confusion risk.",
-        "lookalike": true
-      }
-    },
-    {
       "candidate_name": "Bromhexine (Bislan) 8mg Tab [24Aug16]_1",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Bromhexine (Bislan) 8mg Tab [24Aug16]_1.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Both are narrow, silver Y.S.P.-style blister strips, but the query shows only plain tablet blisters with no printed text or branding on the foil, while the candidate has prominent repeated purple BISLAN/Bromhexine labeling and logos over the entire surface. The strong text and color differences provide clear visual distinction, so confusion risk is low.\",\"lookalike\":false}",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Bromhexine (Bislan) 8mg Tab [24Aug16]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Y.S.P. silver blisters with metallic background and the same purple ink, using nearly identical typography, logo placement, and repeated text blocks. The only major difference is the product name and strength, but at a glance the packs look very similar and could realistically be confused.\",\"lookalike\":true}",
       "parsed_output": {
         "error": false,
-        "reasoning": "Both are narrow, silver Y.S.P.-style blister strips, but the query shows only plain tablet blisters with no printed text or branding on the foil, while the candidate has prominent repeated purple BISLAN/Bromhexine labeling and logos over the entire surface. The strong text and color differences provide clear visual distinction, so confusion risk is low.",
-        "lookalike": false
-      }
-    },
-    {
-      "candidate_name": "Bromhexine (Bislan) 8mg Tab [24Aug16]_2",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Bromhexine (Bislan) 8mg Tab [24Aug16]_2.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"The query shows a plain silver blister strip with no printed text on the foil side, only embossed lot/exp details, and contains oval white tablets. The candidate’s right-hand strip is similar silver foil but with round tablets and a different embossing pattern; the left-hand strip has prominent purple printed branding and text. Overall layouts, tablet shapes, and presence/absence of printed graphics differ enough that confusion risk is low, especially since the candidate pack usually appears together with its highly printed side.\",\"lookalike\":false}",
-      "parsed_output": {
-        "error": false,
-        "reasoning": "The query shows a plain silver blister strip with no printed text on the foil side, only embossed lot/exp details, and contains oval white tablets. The candidate’s right-hand strip is similar silver foil but with round tablets and a different embossing pattern; the left-hand strip has prominent purple printed branding and text. Overall layouts, tablet shapes, and presence/absence of printed graphics differ enough that confusion risk is low, especially since the candidate pack usually appears together with its highly printed side.",
-        "lookalike": false
+        "reasoning": "Both are Y.S.P. silver blisters with metallic background and the same purple ink, using nearly identical typography, logo placement, and repeated text blocks. The only major difference is the product name and strength, but at a glance the packs look very similar and could realistically be confused.",
+        "lookalike": true
       }
     },
     {
       "candidate_name": "Loratadine (Loradine) 10mg Tab [25Feb15]_1",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Loratadine (Loradine) 10mg Tab [25Feb15]_1.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver blisters with white oval tablets in 2x5 layout, but the candidate has prominent purple branding text, logos, and a barcode, while the query front has no printed text at all—only tablets visible. In real use, one is the printed back, the other the clear front; they look quite different at a glance, so confusion risk is low.\",\"lookalike\":false}",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Loratadine (Loradine) 10mg Tab [25Feb15]_1.jpg",
+      "output_text": "{\"error\": false, \"reasoning\": \"Both are silver Y.S.P. loratadine 10mg blisters with identical magenta brand block 'LORADINE', same font, logo, text layout, and overall structure; only minor differences like barcode presence do not reduce high confusion risk.\", \"lookalike\": true}",
       "parsed_output": {
         "error": false,
-        "reasoning": "Both are silver blisters with white oval tablets in 2x5 layout, but the candidate has prominent purple branding text, logos, and a barcode, while the query front has no printed text at all—only tablets visible. In real use, one is the printed back, the other the clear front; they look quite different at a glance, so confusion risk is low.",
-        "lookalike": false
-      }
-    },
-    {
-      "candidate_name": "Loratadine (Loradine) 10mg Tab [25Feb15]_0",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Loratadine (Loradine) 10mg Tab [25Feb15]_0.jpg",
-      "output_text": "{\"error\": false, \"reasoning\": \"Both images show nearly identical silver blister strips with 10 white oval tablets arranged in two vertical columns. The foil texture, lack of printed branding on the front, capsule size and shape, and even the embossed lot/expiry text positions are extremely similar. There are no strong differentiating visual cues, so they could easily be confused.\", \"lookalike\": true}",
-      "parsed_output": {
-        "error": false,
-        "reasoning": "Both images show nearly identical silver blister strips with 10 white oval tablets arranged in two vertical columns. The foil texture, lack of printed branding on the front, capsule size and shape, and even the embossed lot/expiry text positions are extremely similar. There are no strong differentiating visual cues, so they could easily be confused.",
-        "lookalike": true
-      }
-    },
-    {
-      "candidate_name": "Cinnarizine (Cinna) Tab 25mg (MA_YungShing pharmaceuticals, mfr_YSP Industries, Malaysia) v1 [16Aug2021]_0",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Cinnarizine (Cinna) Tab 25mg (MA_YungShing pharmaceuticals, mfr_YSP Industries, Malaysia) v1 [16Aug2021]_0.jpg",
-      "output_text": "{\"error\": false, \"reasoning\": \"Both images show silver, unprinted blisters with the same 10-tablet 2x5 layout, same foil texture, and similar clear blisters containing small white tablets. The only notable difference is tablet shape (oval vs round), which is subtle and not always checked carefully in practice. Overall appearance is very similar, posing a realistic risk of confusion.\", \"lookalike\": true}",
-      "parsed_output": {
-        "error": false,
-        "reasoning": "Both images show silver, unprinted blisters with the same 10-tablet 2x5 layout, same foil texture, and similar clear blisters containing small white tablets. The only notable difference is tablet shape (oval vs round), which is subtle and not always checked carefully in practice. Overall appearance is very similar, posing a realistic risk of confusion.",
+        "reasoning": "Both are silver Y.S.P. loratadine 10mg blisters with identical magenta brand block 'LORADINE', same font, logo, text layout, and overall structure; only minor differences like barcode presence do not reduce high confusion risk.",
         "lookalike": true
       }
     },
     {
       "candidate_name": "Cinnarizine (Cinna) Tab 25mg (MA_YungShing pharmaceuticals, mfr_YSP Industries, Malaysia) v1 [16Aug2021]_1",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Cinnarizine (Cinna) Tab 25mg (MA_YungShing pharmaceuticals, mfr_YSP Industries, Malaysia) v1 [16Aug2021]_1.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Query shows the plain front side of a silver blister with only white oval tablets visible and no printed text or branding. Candidate is the printed back side of a silver blister with prominent black ‘CINNA’ branding, detailed text, and Y.S.P. logo repeated. Although both are narrow silver strips, the presence of bold printing and logos on the candidate versus the completely unprinted tablet side on the query makes them clearly distinguishable in normal handling; confusion risk is low.\",\"lookalike\":false}",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Cinnarizine (Cinna) Tab 25mg (MA_YungShing pharmaceuticals, mfr_YSP Industries, Malaysia) v1 [16Aug2021]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Y.S.P. silver blisters with the same vertical strip format, repeated brand blocks, identical \\\"Each tablet contains\\\" wording, same Y.S.P. hexagon logo position, and similar font and layout. The main differences are the accent color (purple vs black) and product name, which are not strong enough to prevent mix‑ups at a glance, especially in a busy setting.\",\"lookalike\":true}",
       "parsed_output": {
         "error": false,
-        "reasoning": "Query shows the plain front side of a silver blister with only white oval tablets visible and no printed text or branding. Candidate is the printed back side of a silver blister with prominent black ‘CINNA’ branding, detailed text, and Y.S.P. logo repeated. Although both are narrow silver strips, the presence of bold printing and logos on the candidate versus the completely unprinted tablet side on the query makes them clearly distinguishable in normal handling; confusion risk is low.",
-        "lookalike": false
-      }
-    },
-    {
-      "candidate_name": "Clomiphene (YSP) 50mg Tab_0",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Clomiphene (YSP) 50mg Tab_0.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver, unprinted blisters with 10 tablets arranged in two columns of five, similar foil texture, and clear plastic bubbles. However, the tablets differ in shape and color (white oval vs yellow round with embossed logo), providing a noticeable visual cue but still easy to overlook in practice. Overall blister structure and appearance are close enough that they could realistically be confused at a glance.\",\"lookalike\":true}",
-      "parsed_output": {
-        "error": false,
-        "reasoning": "Both are silver, unprinted blisters with 10 tablets arranged in two columns of five, similar foil texture, and clear plastic bubbles. However, the tablets differ in shape and color (white oval vs yellow round with embossed logo), providing a noticeable visual cue but still easy to overlook in practice. Overall blister structure and appearance are close enough that they could realistically be confused at a glance.",
+        "reasoning": "Both are Y.S.P. silver blisters with the same vertical strip format, repeated brand blocks, identical \"Each tablet contains\" wording, same Y.S.P. hexagon logo position, and similar font and layout. The main differences are the accent color (purple vs black) and product name, which are not strong enough to prevent mix‑ups at a glance, especially in a busy setting.",
         "lookalike": true
       }
     },
     {
       "candidate_name": "Clomiphene (YSP) 50mg Tab_1",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Clomiphene (YSP) 50mg Tab_1.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"The query shows the plain front of a silver blister with only white oval tablets visible and no printed text or branding on this side. The candidate is the printed back of a blister: silver foil with prominent blue CLOMIPHENE name bands, detailed text, and Y.S.P. logos. The sides shown have very different visual cues and overall appearance, so confusion risk between these specific views is low.\",\"lookalike\":false}",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Clomiphene (YSP) 50mg Tab_1.jpg",
+      "output_text": "{\"error\": false, \"reasoning\": \"Both are Y.S.P. silver blisters with the same repeated layout: bold drug name in a solid bar at the left, dosage and ingredient text below, the word 'Tablet' to the right, and the identical Y.S.P. hexagon logo stacked vertically down the strip. Only the accent color (purple vs blue) and drug name/strength differ; overall design and structure are very similar and easily confusable at a glance.\", \"lookalike\": true}",
       "parsed_output": {
         "error": false,
-        "reasoning": "The query shows the plain front of a silver blister with only white oval tablets visible and no printed text or branding on this side. The candidate is the printed back of a blister: silver foil with prominent blue CLOMIPHENE name bands, detailed text, and Y.S.P. logos. The sides shown have very different visual cues and overall appearance, so confusion risk between these specific views is low.",
-        "lookalike": false
+        "reasoning": "Both are Y.S.P. silver blisters with the same repeated layout: bold drug name in a solid bar at the left, dosage and ingredient text below, the word 'Tablet' to the right, and the identical Y.S.P. hexagon logo stacked vertically down the strip. Only the accent color (purple vs blue) and drug name/strength differ; overall design and structure are very similar and easily confusable at a glance.",
+        "lookalike": true
       }
     },
     {
       "candidate_name": "Cetirizine (Ceritec YSP) 10mg Tab [12Apr13]_1",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Cetirizine (Ceritec YSP) 10mg Tab [12Apr13]_1.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"The query shows a plain silver blister front with only white oval tablets visible and almost no printed text or branding on the foil side; it appears as an unprinted front face. The candidate shows a silver blister back heavily printed with magenta CERITEC branding, text blocks, and logos. Overall color impression, text presence, and layout are clearly different, so confusion risk is low.\",\"lookalike\":false}",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Cetirizine (Ceritec YSP) 10mg Tab [12Apr13]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Y.S.P. silver blisters with the same magenta color, logo, and overall text style. Brand names appear in solid magenta rectangles, positioned repeatedly along the strip, with similar font weight and size, and both state 10mg antihistamine tablets. Layout of repeated panels and placement of the Y.S.P. hexagon logo are very similar. Differences in product name (Loratadine vs Ceritec/Cetirizine) and some wording are not strong enough to prevent confusion at a glance, so they pose a realistic lookalike risk.\",\"lookalike\":true}",
       "parsed_output": {
         "error": false,
-        "reasoning": "The query shows a plain silver blister front with only white oval tablets visible and almost no printed text or branding on the foil side; it appears as an unprinted front face. The candidate shows a silver blister back heavily printed with magenta CERITEC branding, text blocks, and logos. Overall color impression, text presence, and layout are clearly different, so confusion risk is low.",
-        "lookalike": false
-      }
-    },
-    {
-      "candidate_name": "Cetirizine (Ceritec YSP) 10mg Tab [12Apr13]_0",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Cetirizine (Ceritec YSP) 10mg Tab [12Apr13]_0.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Both images show nearly identical silver blister packs with 10 white oval tablets arranged in two vertical columns of five, same general tablet size and shape, and similar clear plastic blisters and embossed text only at the ends. No printed branding or coloring is visible on either side shown, so at a glance they would look essentially the same and be easy to confuse.\",\"lookalike\":true}",
-      "parsed_output": {
-        "error": false,
-        "reasoning": "Both images show nearly identical silver blister packs with 10 white oval tablets arranged in two vertical columns of five, same general tablet size and shape, and similar clear plastic blisters and embossed text only at the ends. No printed branding or coloring is visible on either side shown, so at a glance they would look essentially the same and be easy to confuse.",
+        "reasoning": "Both are Y.S.P. silver blisters with the same magenta color, logo, and overall text style. Brand names appear in solid magenta rectangles, positioned repeatedly along the strip, with similar font weight and size, and both state 10mg antihistamine tablets. Layout of repeated panels and placement of the Y.S.P. hexagon logo are very similar. Differences in product name (Loratadine vs Ceritec/Cetirizine) and some wording are not strong enough to prevent confusion at a glance, so they pose a realistic lookalike risk.",
         "lookalike": true
       }
     }

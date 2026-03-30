@@ -1,0 +1,81 @@
+{
+  "query_name": "35 Telmisartan",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\35 Telmisartan.PNG",
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 7,
+  "query_lookalike_count": 5,
+  "candidate_results": [
+    {
+      "candidate_name": "Tamsulosin HCl  (Tasulose) 400mcg PR Tab (Sandoz, Novartis, mfr_Lek Pharmaceuticals, Slovenia) v1 [9December2020]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Tamsulosin HCl  (Tasulose) 400mcg PR Tab (Sandoz, Novartis, mfr_Lek Pharmaceuticals, Slovenia) v1 [9December2020]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Sandoz silver-pink blisters with black text, same background texture, similar font, and repeated vertical text blocks. The main visible differences are the product names (Telmisartan vs Tasulose/Tamsulosin) and some layout details, but overall color scheme, branding, and structure are very similar and could plausibly be confused in practice.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Sandoz silver-pink blisters with black text, same background texture, similar font, and repeated vertical text blocks. The main visible differences are the product names (Telmisartan vs Tasulose/Tamsulosin) and some layout details, but overall color scheme, branding, and structure are very similar and could plausibly be confused in practice.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Entecavir (Sandoz) 0.5mg Tab (MA_Sandoz, mfr_Lek Pharmaceuticals, Slovenia) v1 [3March2021]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Entecavir (Sandoz) 0.5mg Tab (MA_Sandoz, mfr_Lek Pharmaceuticals, Slovenia) v1 [3March2021]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"The query image shows the printed foil side of a blister strip with clear black text (drug name, strength, Sandoz branding) arranged repeatedly. The candidate image shows the opposite, non-printed side of a silver blister strip with only raised tablet blisters and no text or branding visible. One side is text-heavy and white/silver, the other is uniformly metallic with circular domes and perforation lines. Their overall appearance, layout, and visual cues differ enough that confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "The query image shows the printed foil side of a blister strip with clear black text (drug name, strength, Sandoz branding) arranged repeatedly. The candidate image shows the opposite, non-printed side of a silver blister strip with only raised tablet blisters and no text or branding visible. One side is text-heavy and white/silver, the other is uniformly metallic with circular domes and perforation lines. Their overall appearance, layout, and visual cues differ enough that confusion risk is low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Rosuvastatin (Sandoz -Front Tab) 10mg Tab (Lek Pharma, Slovenia)[8Feb2019]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Rosuvastatin (Sandoz -Front Tab) 10mg Tab (Lek Pharma, Slovenia)[8Feb2019]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Sandoz blisters with very similar light beige/salmon foil color, black text, and a repeated vertical column layout of product name, strength, and Sandoz branding. Typography style and overall structure look nearly identical, differing mainly in the drug name and detailed wording, so they could realistically be confused at a glance.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Sandoz blisters with very similar light beige/salmon foil color, black text, and a repeated vertical column layout of product name, strength, and Sandoz branding. Typography style and overall structure look nearly identical, differing mainly in the drug name and detailed wording, so they could realistically be confused at a glance.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Rosuvastatin (Sandoz-Front Tab) 10mg Tab (Lek Pharma, Slovenia) v1 [31Jan2019]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Rosuvastatin (Sandoz-Front Tab) 10mg Tab (Lek Pharma, Slovenia) v1 [31Jan2019]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Sandoz-branded silver/beige blisters with black text, similar font, and a repeating rectangular cell layout. The main drug names (TELMISARTAN vs ROSUVASTATIN) appear in similar bold uppercase at the top of each cell, and overall typography and structure are closely matched. Despite different wording details, the shared color scheme, material, and layout create a realistic risk of confusion at a glance.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Sandoz-branded silver/beige blisters with black text, similar font, and a repeating rectangular cell layout. The main drug names (TELMISARTAN vs ROSUVASTATIN) appear in similar bold uppercase at the top of each cell, and overall typography and structure are closely matched. Despite different wording details, the shared color scheme, material, and layout create a realistic risk of confusion at a glance.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Desloratadine (Sandoz) Tab 5mg (MA&mfr_Sandoz Pte Ltd, India) v1 [10Dec2021]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Desloratadine (Sandoz) Tab 5mg (MA&mfr_Sandoz Pte Ltd, India) v1 [10Dec2021]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver Sandoz blisters with dark printed text, same manufacturer name, and similar repeated layout of drug name over strength. However, the query uses black vertical text blocks while the candidate uses bold blue horizontal branding and larger SANDOZ logo, giving a clearly different overall look and orientation. These differences reduce practical confusion risk despite shared Sandoz styling.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver Sandoz blisters with dark printed text, same manufacturer name, and similar repeated layout of drug name over strength. However, the query uses black vertical text blocks while the candidate uses bold blue horizontal branding and larger SANDOZ logo, giving a clearly different overall look and orientation. These differences reduce practical confusion risk despite shared Sandoz styling.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Ondansetron (Sandoz) Tab 8mg [21Dec16]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Ondansetron (Sandoz) Tab 8mg [21Dec16]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver Sandoz blisters with black printing, repeating vertical text blocks, and the Sandoz logo, giving a very similar overall appearance despite different drug names (telmisartan vs ondansetron) and slightly different layouts. At a quick glance in practice they could easily be confused.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver Sandoz blisters with black printing, repeating vertical text blocks, and the Sandoz logo, giving a very similar overall appearance despite different drug names (telmisartan vs ondansetron) and slightly different layouts. At a quick glance in practice they could easily be confused.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Ondansetron (Sandoz) Tab 8mg [22Sep17]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Ondansetron (Sandoz) Tab 8mg [22Sep17]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Sandoz silver blisters with black text. The query shows repeating vertical blocks with ‘TELMISARTAN’ and ‘SANDOZ’ in similar fonts and spacing; the candidate shows ‘ONDANSETRON’ and ‘SANDOZ’ in a repeated vertical pattern. Overall color, texture, typography style, and brand name presentation are very similar, making the packs easy to confuse at a glance despite different drug names.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Sandoz silver blisters with black text. The query shows repeating vertical blocks with ‘TELMISARTAN’ and ‘SANDOZ’ in similar fonts and spacing; the candidate shows ‘ONDANSETRON’ and ‘SANDOZ’ in a repeated vertical pattern. Overall color, texture, typography style, and brand name presentation are very similar, making the packs easy to confuse at a glance despite different drug names.",
+        "lookalike": true
+      }
+    }
+  ]
+}

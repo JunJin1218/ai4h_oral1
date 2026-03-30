@@ -11,21 +11,21 @@
   "candidate_results": [
     {
       "candidate_name": "Finasteride (Finas 1-Box) Tab 1mg (Intas Pharma, India)[13Dec2018]_3",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Finasteride (Finas 1-Box) Tab 1mg (Intas Pharma, India)[13Dec2018]_3.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Both are Intas boxes with nearly identical layout: large white upper area with drug name and strength in black, brand name in bold color below, “3 x 10 Tablets” at top right, Intas logo centered at bottom, and a diagonal colored band with a grey stripe across the left and bottom. The only major differences are the accent color (blue vs pink) and product text, which are not enough to prevent confusion, especially when stored together or viewed quickly.\",\"lookalike\":true}",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Finasteride (Finas 1-Box) Tab 1mg (Intas Pharma, India)[13Dec2018]_3.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Intas boxes with nearly identical layout: large cream upper area with product name and strength in black, brand name in bold color beneath, '3 x 10 Tablets' at top right, Intas logo centered in a colored bottom band, and diagonal colored stripes at the lower left corner. Main difference is blue/grey vs pink/grey color scheme, but overall design template is the same, so they could plausibly be confused at a glance.\",\"lookalike\":true}",
       "parsed_output": {
         "error": false,
-        "reasoning": "Both are Intas boxes with nearly identical layout: large white upper area with drug name and strength in black, brand name in bold color below, “3 x 10 Tablets” at top right, Intas logo centered at bottom, and a diagonal colored band with a grey stripe across the left and bottom. The only major differences are the accent color (blue vs pink) and product text, which are not enough to prevent confusion, especially when stored together or viewed quickly.",
+        "reasoning": "Both are Intas boxes with nearly identical layout: large cream upper area with product name and strength in black, brand name in bold color beneath, '3 x 10 Tablets' at top right, Intas logo centered in a colored bottom band, and diagonal colored stripes at the lower left corner. Main difference is blue/grey vs pink/grey color scheme, but overall design template is the same, so they could plausibly be confused at a glance.",
         "lookalike": true
       }
     },
     {
       "candidate_name": "Telmisartan (Teltas Intas India-Box) 40mg Tab [2Feb18]_3",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Telmisartan (Teltas Intas India-Box) 40mg Tab [2Feb18]_3.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Both are INTAS Teltas telmisartan boxes with nearly identical layout: same diagonal band structure on the left, same placement and style of product name and strength text, same ‘3 x10 Tablets’ line and INTAS logo position. The only major difference is color (blue vs magenta) and strength (80 vs 40 mg), which may not be enough to prevent confusion, especially at a glance or in poor lighting.\",\"lookalike\":true}",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Telmisartan (Teltas Intas India-Box) 40mg Tab [2Feb18]_3.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Intas Teltas telmisartan boxes with nearly identical layout: same diagonal band design on the left, same positioning and style of the main text, same INTAS logo placement, and same overall structure. The only major differences are color (blue vs. magenta) and strength (80 vs. 40 mg), which may not prevent confusion, especially at a glance or in poor lighting. Thus they present a realistic lookalike risk.\",\"lookalike\":true}",
       "parsed_output": {
         "error": false,
-        "reasoning": "Both are INTAS Teltas telmisartan boxes with nearly identical layout: same diagonal band structure on the left, same placement and style of product name and strength text, same ‘3 x10 Tablets’ line and INTAS logo position. The only major difference is color (blue vs magenta) and strength (80 vs 40 mg), which may not be enough to prevent confusion, especially at a glance or in poor lighting.",
+        "reasoning": "Both are Intas Teltas telmisartan boxes with nearly identical layout: same diagonal band design on the left, same positioning and style of the main text, same INTAS logo placement, and same overall structure. The only major differences are color (blue vs. magenta) and strength (80 vs. 40 mg), which may not prevent confusion, especially at a glance or in poor lighting. Thus they present a realistic lookalike risk.",
         "lookalike": true
       }
     }

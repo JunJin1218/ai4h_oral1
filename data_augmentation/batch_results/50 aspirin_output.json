@@ -1,0 +1,21 @@
+{
+  "query_name": "50 aspirin",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\50 aspirin.jpg",
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 1,
+  "query_lookalike_count": 1,
+  "candidate_results": [
+    {
+      "candidate_name": "Flecainide (Tambocor) 100mg Tab_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Flecainide (Tambocor) 100mg Tab_0.png",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show unprinted tablet blisters with small, round, white/off‑white scored tablets arranged in a dense grid. The tablet size, shape, and scoring are very similar, and the lack of distinct printed branding or color cues makes them hard to distinguish at a glance, especially in real‑world handling. Blister color differs slightly (rose-gold vs silver), but this is a subtle cue and may not prevent confusion.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show unprinted tablet blisters with small, round, white/off‑white scored tablets arranged in a dense grid. The tablet size, shape, and scoring are very similar, and the lack of distinct printed branding or color cues makes them hard to distinguish at a glance, especially in real‑world handling. Blister color differs slightly (rose-gold vs silver), but this is a subtle cue and may not prevent confusion.",
+        "lookalike": true
+      }
+    }
+  ]
+}

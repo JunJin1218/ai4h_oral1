@@ -1,80 +1,20 @@
 {
   "query_name": "13 Gliclazide sunward front",
-  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\13 Gliclazide sunward front.jpg",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\13 Gliclazide sunward front.PNG",
   "missing_candidates": [],
   "few_shots_count": 3,
   "model": "gpt-5.1",
-  "query_total_candidates": 7,
-  "query_lookalike_count": 5,
+  "query_total_candidates": 1,
+  "query_lookalike_count": 0,
   "candidate_results": [
     {
-      "candidate_name": "Benzhexol (Sunward New) 2mg Tab_2",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Benzhexol (Sunward New) 2mg Tab_2.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Both are narrow silver blister strips containing similar-sized round white tablets arranged in a single column, giving a broadly similar physical appearance. However, the candidate strip is part of a combined blister showing prominent printed branding and text on the attached half, and its tablets include embossed markings, while the query strip has plain unmarked tablets and no visible printing. These differences provide clear visual cues, so overall confusion risk is moderate to low and not enough to classify as lookalikes.\",\"lookalike\":false}",
-      "parsed_output": {
-        "error": false,
-        "reasoning": "Both are narrow silver blister strips containing similar-sized round white tablets arranged in a single column, giving a broadly similar physical appearance. However, the candidate strip is part of a combined blister showing prominent printed branding and text on the attached half, and its tablets include embossed markings, while the query strip has plain unmarked tablets and no visible printing. These differences provide clear visual cues, so overall confusion risk is moderate to low and not enough to classify as lookalikes.",
-        "lookalike": false
-      }
-    },
-    {
-      "candidate_name": "Benzhexol (Sunward) 2mg Tab_0",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Benzhexol (Sunward) 2mg Tab_0.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Both images show plain silver Sunward blister strips with 10 small white round tablets arranged in two rows of five, with minimal or no visible printed text on the foil front. The foil texture, tablet color/shape, and overall layout are highly similar, making them easy to confuse at a glance.\",\"lookalike\":true}",
-      "parsed_output": {
-        "error": false,
-        "reasoning": "Both images show plain silver Sunward blister strips with 10 small white round tablets arranged in two rows of five, with minimal or no visible printed text on the foil front. The foil texture, tablet color/shape, and overall layout are highly similar, making them easy to confuse at a glance.",
-        "lookalike": true
-      }
-    },
-    {
-      "candidate_name": "Benzhexol (Sunward) 2mg Tab_2",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Benzhexol (Sunward) 2mg Tab_2.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver Sunward blister strips with small round white tablets in a single column/row arrangement and similar pocket size and spacing. The query image shows only the tablet side without text, while the candidate top strip (tablet side) looks very similar in color, texture, and layout. Sunward products often share this generic blister style, so at a glance these could easily be confused when viewed from the tablet side only.\",\"lookalike\":true}",
-      "parsed_output": {
-        "error": false,
-        "reasoning": "Both are silver Sunward blister strips with small round white tablets in a single column/row arrangement and similar pocket size and spacing. The query image shows only the tablet side without text, while the candidate top strip (tablet side) looks very similar in color, texture, and layout. Sunward products often share this generic blister style, so at a glance these could easily be confused when viewed from the tablet side only.",
-        "lookalike": true
-      }
-    },
-    {
-      "candidate_name": "Benzhexol (Beahexol) 2mg Tab_2",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Benzhexol (Beahexol) 2mg Tab_2.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Query shows a plain silver blister front with 10 white round scored tablets and no visible printed text. Candidate shows a silver blister with 10 white round tablets but also a distinct printed back side with large BEAHEXOL branding and logos. From the tablet side alone they are similar silver blisters with the same tablet arrangement and appearance, which could easily be confused when seen in practice, especially if only the front is visible.\",\"lookalike\":true}",
-      "parsed_output": {
-        "error": false,
-        "reasoning": "Query shows a plain silver blister front with 10 white round scored tablets and no visible printed text. Candidate shows a silver blister with 10 white round tablets but also a distinct printed back side with large BEAHEXOL branding and logos. From the tablet side alone they are similar silver blisters with the same tablet arrangement and appearance, which could easily be confused when seen in practice, especially if only the front is visible.",
-        "lookalike": true
-      }
-    },
-    {
-      "candidate_name": "Diphenoxylate 2.5mg, Atropine 0.025mg (SunDianox-Sunward Singapore) Tab [24May2018]_2",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Diphenoxylate 2.5mg, Atropine 0.025mg (Dhamotil) Tab_0.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Both are narrow silver blister strips with 10 round tablets arranged in two vertical columns, likely from the same manufacturer. However, the tablet colors are completely different (white vs bright green), which is a strong, immediate visual cue. With the tablets clearly visible through the blister, this color contrast significantly reduces real-world confusion risk despite similar strip structure.\",\"lookalike\":false}",
-      "parsed_output": {
-        "error": false,
-        "reasoning": "Both are narrow silver blister strips with 10 round tablets arranged in two vertical columns, likely from the same manufacturer. However, the tablet colors are completely different (white vs bright green), which is a strong, immediate visual cue. With the tablets clearly visible through the blister, this color contrast significantly reduces real-world confusion risk despite similar strip structure.",
-        "lookalike": false
-      }
-    },
-    {
-      "candidate_name": "Diphenoxylate 2.5mg, Atropine 0.025mg (SunDianox-Sunward Singapore) Tab [24May2018]_0",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Diphenoxylate 2.5mg, Atropine 0.025mg (Dhamotil) Tab_0.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Both are narrow silver blister strips with a 2×5 tablet layout and no visible printed text on the foil, which makes pack-level cues very similar. The only clear difference is tablet color (white vs green), which may not always be obvious under some lighting or if viewed from the foil side. Overall blister structure and appearance are similar enough that they could be confused at a glance.\",\"lookalike\":true}",
-      "parsed_output": {
-        "error": false,
-        "reasoning": "Both are narrow silver blister strips with a 2×5 tablet layout and no visible printed text on the foil, which makes pack-level cues very similar. The only clear difference is tablet color (white vs green), which may not always be obvious under some lighting or if viewed from the foil side. Overall blister structure and appearance are similar enough that they could be confused at a glance.",
-        "lookalike": true
-      }
-    },
-    {
       "candidate_name": "Diphenoxylate 2.5mg, Atropine 0.025mg (SunDianox-Sunward Singapore) Tab [24May2018]_1",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Diphenoxylate 2.5mg, Atropine 0.025mg (Dhamotil) Tab_0.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Both images show plain silver blister strips with a 2x5 tablet layout and minimal/no visible text, which makes the overall packaging structure very similar. The main visual difference is the tablet color (white vs green), but in many use settings blisters are viewed from the foil side or in poor lighting, so color alone may not reliably prevent confusion. Overall the strips are similar enough in shape, layout, and style to pose a realistic lookalike risk.\",\"lookalike\":true}",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Diphenoxylate 2.5mg, Atropine 0.025mg (Dhamotil) Tab_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"The query shows a printed silver blister with prominent blue SUNWARD/SUNGLIZIDE text and logo repeated along the strip. The candidate shows the opposite side of a blister: only plain silver foil with exposed green tablets, no visible text or logo. The visible sides differ strongly in layout, color pattern, and typography (none on candidate), so confusion based on visual appearance is unlikely.\",\"lookalike\":false}",
       "parsed_output": {
         "error": false,
-        "reasoning": "Both images show plain silver blister strips with a 2x5 tablet layout and minimal/no visible text, which makes the overall packaging structure very similar. The main visual difference is the tablet color (white vs green), but in many use settings blisters are viewed from the foil side or in poor lighting, so color alone may not reliably prevent confusion. Overall the strips are similar enough in shape, layout, and style to pose a realistic lookalike risk.",
-        "lookalike": true
+        "reasoning": "The query shows a printed silver blister with prominent blue SUNWARD/SUNGLIZIDE text and logo repeated along the strip. The candidate shows the opposite side of a blister: only plain silver foil with exposed green tablets, no visible text or logo. The visible sides differ strongly in layout, color pattern, and typography (none on candidate), so confusion based on visual appearance is unlikely.",
+        "lookalike": false
       }
     }
   ]

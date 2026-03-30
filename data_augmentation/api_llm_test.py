@@ -8,6 +8,8 @@ import time
 from pathlib import Path
 from typing import Any
 import re
+import tempfile
+import shutil
 
 import pandas as pd
 from dotenv import load_dotenv
@@ -35,13 +37,13 @@ SCHEMA_PATH = PROJECT_ROOT / "data_augmentation" / "schema.json"
 FEW_SHOTS_PATH = PROJECT_ROOT / "data_augmentation" / "few_shots.jsonl"
 OUTPUT_DIR = PROJECT_ROOT / "data_augmentation" / "batch_results"
 QUERY_IMAGE_ROOT = PROJECT_ROOT / "data" / "images"
-CANDIDATE_IMAGE_ROOT = Path(r"C:\Users\Asus\T5 - SDS\T8-AI4H\Oral Dose Forms Clean")
+CANDIDATE_IMAGE_ROOT = Path(r"C:\Users\Asus\T5 - SDS\T8-AI4H\Cleaned Dataset v2")
 
 # Change this if your Excel file is elsewhere
 DEFAULT_EXCEL_PATH = Path(r"C:\Users\Asus\T5 - SDS\T8-AI4H\ai4h_oral1\data\Ground Truth Values.xlsx")
 
 # Your local image folder
-IMAGE_ROOT = Path(r"C:\Users\Asus\T5 - SDS\T8-AI4H\Oral Dose Forms Clean")
+IMAGE_ROOT = Path(r"C:\Users\Asus\T5 - SDS\T8-AI4H\Cleaned Dataset v2")
 
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tif", ".tiff"}
 
@@ -139,6 +141,29 @@ def load_queries_from_excel(excel_path: Path) -> list[dict[str, Any]]:
     if not excel_path.exists():
         raise FileNotFoundError(f"Excel file not found: {excel_path}")
 
+    # Required orientation for each sheet
+    required_orientations = {
+        "1 Acarbose tab front YSP": "back",
+        "2 Aciclovir Medovir Front": "back",
+        "3 Antacid Beacons front": "back",
+        "4 Folic acid sunward back": "front",
+        "5 Fluoxetine 10 APO bottle fron": "front-box",
+        "6 Clomipramine 25 front": "back",
+        "7 Amiodarone 200": "back",
+        "8 Loratadine 10 Front": "back",
+        "9 Thalidomide 50 back": "front",
+        "10 Telmisartan 80 Intas box": "front-box",
+        "11 Dextromethorphan ICM bottle": "front-box",
+        "12 Rifampicin 300 Medochemie ba": "front",
+        "13 Gliclazide sunward front": "back",
+        "14 Olanzapine 10 actavis box": "front-box",
+        "15 Panadeine Back": "front",
+        "16 Lacteol Forte sachet": "front",
+        "35 Telmisartan": "back",
+        "49 Rivaroxaban 2.5": "back",
+        "50 aspirin": "front",
+    }
+
     xl = pd.ExcelFile(excel_path)
     out: list[dict[str, Any]] = []
 
@@ -149,8 +174,20 @@ def load_queries_from_excel(excel_path: Path) -> list[dict[str, Any]]:
         if "drug" not in df.columns:
             continue
 
+        if sheet_name not in required_orientations:
+            continue
+
+        required_orientation = required_orientations[sheet_name].strip().lower()
+
+        if "orientation" not in df.columns:
+            continue
+
+        df["orientation"] = df["orientation"].astype(str).str.strip().str.lower()
+
+        filtered_df = df[df["orientation"] == required_orientation]
+
         candidate_names = []
-        for value in df["drug"].dropna().tolist():
+        for value in filtered_df["drug"].dropna().tolist():
             s = str(value).strip()
             if s:
                 candidate_names.append(s)
@@ -162,17 +199,36 @@ def load_queries_from_excel(excel_path: Path) -> list[dict[str, Any]]:
             {
                 "query_name": sheet_name.strip(),
                 "candidate_names": candidate_names,
+                "required_orientation": required_orientation,
             }
         )
-    return out
 
+    return out
 
 def upload_vision_file(client: OpenAI, path: Path) -> str:
     if not path.exists():
         raise FileNotFoundError(f"Image not found: {path}")
-    with path.open("rb") as f:
-        uploaded = client.files.create(file=f, purpose="vision")
-    return uploaded.id
+
+    suffix = path.suffix.lower()
+
+    # If extension is already lowercase, upload normally
+    if suffix == path.suffix:
+        with path.open("rb") as f:
+            uploaded = client.files.create(file=f, purpose="vision")
+        return uploaded.id
+
+    # Otherwise, create a temp file with lowercase extension
+    temp_path = Path(tempfile.gettempdir()) / (path.stem + suffix)
+
+    shutil.copyfile(path, temp_path)
+
+    try:
+        with temp_path.open("rb") as f:
+            uploaded = client.files.create(file=f, purpose="vision")
+        return uploaded.id
+    finally:
+        if temp_path.exists():
+            temp_path.unlink()
 
 
 def build_request_input(

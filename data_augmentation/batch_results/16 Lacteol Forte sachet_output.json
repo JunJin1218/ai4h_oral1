@@ -1,0 +1,41 @@
+{
+  "query_name": "16 Lacteol Forte sachet",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\16 Lacteol Forte sachet.PNG",
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 3,
+  "query_lookalike_count": 0,
+  "candidate_results": [
+    {
+      "candidate_name": "Dioctahedral Smectite (Smecta) 3g Sachet_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Dioctahedral Smectite (Smecta) 3g Sachet_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both products are white sachets with predominantly blue text, but the overall designs differ clearly. The query has purple brand name centered with multiple turquoise horizontal stripes at the bottom, while the candidate has a bold lowercase blue logo, a central blue rectangle graphic, and manufacturer text near the bottom without stripes. Typography, layout, and graphic elements are distinct enough that confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both products are white sachets with predominantly blue text, but the overall designs differ clearly. The query has purple brand name centered with multiple turquoise horizontal stripes at the bottom, while the candidate has a bold lowercase blue logo, a central blue rectangle graphic, and manufacturer text near the bottom without stripes. Typography, layout, and graphic elements are distinct enough that confusion risk is low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Dioctahedral Smectite (Smecta) 3g Sachet_v2_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Dioctahedral Smectite (Smecta) 3g Sachet_v2_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both use white backgrounds with blue elements, but the overall designs are quite different. The query sachet has minimal text, purple brand name centered with small blue word ‘sachets’ and three horizontal blue stripes at the bottom. The candidate shows a large blue wave graphic, additional yellow line, prominent dose and quantity text, and different typography and layout. These distinct visual features make confusion between them unlikely in practice.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both use white backgrounds with blue elements, but the overall designs are quite different. The query sachet has minimal text, purple brand name centered with small blue word ‘sachets’ and three horizontal blue stripes at the bottom. The candidate shows a large blue wave graphic, additional yellow line, prominent dose and quantity text, and different typography and layout. These distinct visual features make confusion between them unlikely in practice.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Dioctahedral Smectite (Smecta) Oral Powder 3G (Ipsen Pharma, Beaufour Ipsen Industrie, France) v1 [29June2020]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Dioctahedral Smectite (Smecta) Oral Powder 3G (Ipsen Pharma, Beaufour Ipsen Industrie, France) v1 [29June2020]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are single-dose sachets with predominantly white backgrounds and blue text elements, but the overall designs differ markedly. The query has very minimal layout with only the product name near the top and three horizontal turquoise stripes at the bottom, while the candidate has a large blue information block, an orange arc graphic, and extensive text. The branding fonts and color blocks are clearly distinct, so confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are single-dose sachets with predominantly white backgrounds and blue text elements, but the overall designs differ markedly. The query has very minimal layout with only the product name near the top and three horizontal turquoise stripes at the bottom, while the candidate has a large blue information block, an orange arc graphic, and extensive text. The branding fonts and color blocks are clearly distinct, so confusion risk is low.",
+        "lookalike": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "query_name": "15 Panadeine Back",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\15 Panadeine Back.PNG",
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 6,
+  "query_lookalike_count": 6,
+  "candidate_results": [
+    {
+      "candidate_name": "Paracetamol (Progesic Xepa) Tab 500mg_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Paracetamol (Progesic Xepa) Tab 500mg_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show nearly identical plain silver 2x5 blister strips with unprinted foil and the same arrangement of white round tablets, several with a single score line. There is no visible branding or text on either side shown. The size, layout, and tablet appearance are so similar that they could easily be confused in practice.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show nearly identical plain silver 2x5 blister strips with unprinted foil and the same arrangement of white round tablets, several with a single score line. There is no visible branding or text on either side shown. The size, layout, and tablet appearance are so similar that they could easily be confused in practice.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Nalidixic Acid (MC New2) 500mg Tab_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Nalidixic Acid (MC New2) 500mg Tab_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show plain silver blisters containing round white tablets with a single diagonal score line. The tablets are arranged in two vertical columns of five, capsule pockets are similar size and spacing, and there is no distinctive printing or color differentiation on the foil side visible. Overall, the presentation is highly similar and easily confusable at a glance.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show plain silver blisters containing round white tablets with a single diagonal score line. The tablets are arranged in two vertical columns of five, capsule pockets are similar size and spacing, and there is no distinctive printing or color differentiation on the foil side visible. Overall, the presentation is highly similar and easily confusable at a glance.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Metformin (DHA) 250mg Tab [05Feb13]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Metformin (DHA) 250mg Tab [05Feb13]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show nearly identical plain silver blister strips with 10 round white tablets arranged in two vertical columns of five. There is no visible printed branding or text on either side shown, and tablet size/shape and blister structure appear very similar. With no distinguishing color, markings, or layout differences, these strips could easily be confused in practice.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show nearly identical plain silver blister strips with 10 round white tablets arranged in two vertical columns of five. There is no visible printed branding or text on either side shown, and tablet size/shape and blister structure appear very similar. With no distinguishing color, markings, or layout differences, these strips could easily be confused in practice.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Tolbutamide (Tolmide) 500mg Tab_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Tolbutamide (Tolmide) 500mg Tab_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show very similar unprinted silver blisters with 10 round white tablets, each tablet having a single score line. The grid layout, color, and absence of branding or text are nearly identical, so they could easily be confused in practice.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show very similar unprinted silver blisters with 10 round white tablets, each tablet having a single score line. The grid layout, color, and absence of branding or text are nearly identical, so they could easily be confused in practice.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Pyrazinamide (PZA Ciba new) 500mg Tab_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Pyrazinamide (PZA Ciba new) 500mg Tab_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show silver blister strips with the same 2×5 layout of round white tablets, similar tablet size, and similar lighting and texture. No distinct branding or strong differentiating colors or markings are visible from this view, so at a glance they could easily be mistaken for each other.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show silver blister strips with the same 2×5 layout of round white tablets, similar tablet size, and similar lighting and texture. No distinct branding or strong differentiating colors or markings are visible from this view, so at a glance they could easily be mistaken for each other.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Calcium Carbonate (Beacons) Tab 625mg_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Calcium Carbonate (Beacons) Tab 625mg_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show unprinted silver blister packs with ten round white tablets arranged in two columns/rows, each tablet having a similar diagonal score line. There is no branding or color to differentiate them, and the blister well size/shape and foil texture appear very similar, so they could easily be confused in practice.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show unprinted silver blister packs with ten round white tablets arranged in two columns/rows, each tablet having a similar diagonal score line. There is no branding or color to differentiate them, and the blister well size/shape and foil texture appear very similar, so they could easily be confused in practice.",
+        "lookalike": true
+      }
+    }
+  ]
+}

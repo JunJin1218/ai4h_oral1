@@ -1,30 +1,20 @@
 {
   "query_name": "6 Clomipramine 25 front",
-  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\6 Clomipramine 25 front.jpg",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\6 Clomipramine 25 front.PNG",
   "missing_candidates": [],
   "few_shots_count": 3,
   "model": "gpt-5.1",
-  "query_total_candidates": 2,
+  "query_total_candidates": 1,
   "query_lookalike_count": 1,
   "candidate_results": [
     {
-      "candidate_name": "Promethazine Teoclate (Votazine) 25mg Tab [10Dec12]_0",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Promethazine Teoclate (Votazine) 25mg Tab [10Dec12]_0.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Both images are plain silver blisters with no printed branding visible, containing small round tablets arranged in two straight columns of five. The only prominent differentiator is tablet color (green vs yellow), which may not be obvious in poor lighting or to color‑impaired users. Given the identical blister structure, layout, and minimal labeling, they could plausibly be confused in practice.\",\"lookalike\":true}",
-      "parsed_output": {
-        "error": false,
-        "reasoning": "Both images are plain silver blisters with no printed branding visible, containing small round tablets arranged in two straight columns of five. The only prominent differentiator is tablet color (green vs yellow), which may not be obvious in poor lighting or to color‑impaired users. Given the identical blister structure, layout, and minimal labeling, they could plausibly be confused in practice.",
-        "lookalike": true
-      }
-    },
-    {
       "candidate_name": "Promethazine Teoclate (Votazine) 25mg Tab [10Dec12]_1",
-      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Oral Dose Forms Clean\\Promethazine Teoclate (Votazine) 25mg Tab [10Dec12]_1.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"The query shows a plain silver blister with exposed green round tablets and no printed text on the foil side, only embossed characters at the edges. The candidate shows a silver blister heavily printed with black diagonal brand text and logos, with tablets mostly covered. The overall appearance, text presence, and layout are clearly different, so confusion risk is low.\",\"lookalike\":false}",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Promethazine Teoclate (Votazine) 25mg Tab [10Dec12]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver CCM-branded blisters with identical black diagonal bands, same logo, same text style and placement, and both marked as 25 mg tablets. The only notable difference is the product name (Depranil vs Votazine), which is not visually emphasized enough to prevent confusion. Overall appearance is highly similar, creating strong lookalike risk.\",\"lookalike\":true}",
       "parsed_output": {
         "error": false,
-        "reasoning": "The query shows a plain silver blister with exposed green round tablets and no printed text on the foil side, only embossed characters at the edges. The candidate shows a silver blister heavily printed with black diagonal brand text and logos, with tablets mostly covered. The overall appearance, text presence, and layout are clearly different, so confusion risk is low.",
-        "lookalike": false
+        "reasoning": "Both are silver CCM-branded blisters with identical black diagonal bands, same logo, same text style and placement, and both marked as 25 mg tablets. The only notable difference is the product name (Depranil vs Votazine), which is not visually emphasized enough to prevent confusion. Overall appearance is highly similar, creating strong lookalike risk.",
+        "lookalike": true
       }
     }
   ]

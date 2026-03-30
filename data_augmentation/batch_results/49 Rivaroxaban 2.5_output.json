@@ -1,0 +1,51 @@
+{
+  "query_name": "49 Rivaroxaban 2.5",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\49 Rivaroxaban 2.5.jpg",
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 4,
+  "query_lookalike_count": 2,
+  "candidate_results": [
+    {
+      "candidate_name": "Rivaroxaban (Xarelto) 20mg Tab [24July17]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Rivaroxaban (Xarelto) 20mg Tab [24July17]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Xarelto rivaroxaban blisters but the visual appearance is markedly different. The query blister is a light grey/silver color with small, repeated horizontal Xarelto 10 mg text bands, while the candidate blister is a solid bright red/orange with large vertical Xarelto 20 mg text and prominent weekday labels (MON–SUN). Color, layout, and typography emphasis differ enough that confusion risk at a glance is low despite the shared brand name.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Xarelto rivaroxaban blisters but the visual appearance is markedly different. The query blister is a light grey/silver color with small, repeated horizontal Xarelto 10 mg text bands, while the candidate blister is a solid bright red/orange with large vertical Xarelto 20 mg text and prominent weekday labels (MON–SUN). Color, layout, and typography emphasis differ enough that confusion risk at a glance is low despite the shared brand name.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Rivaroxaban (Xarelto) 20mg Tab [10Dec12]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Rivaroxaban (Xarelto) 20mg Tab [10Dec12]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both blisters are Xarelto brand rivaroxaban with the same logo, font style, and repeated text layout (“Xarelto”, strength, ‘Film‑coated tablets’, ‘Rivaroxaban’) arranged in similar rows. The main difference is background color (grey vs brown/red), but overall branding and structure are close enough that they could easily be confused in practice, especially in a busy setting.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both blisters are Xarelto brand rivaroxaban with the same logo, font style, and repeated text layout (“Xarelto”, strength, ‘Film‑coated tablets’, ‘Rivaroxaban’) arranged in similar rows. The main difference is background color (grey vs brown/red), but overall branding and structure are close enough that they could easily be confused in practice, especially in a busy setting.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Rivaroxaban (Xarelto) 15mg Tab [10Dec12]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Rivaroxaban (Xarelto) 15mg Tab [10Dec12]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Xarelto rivaroxaban blisters with the same brand name, similar black typography, and repeated layout elements, but the background colors are very different (grey vs bright orange). Despite the color difference, a user familiar with Xarelto blisters could plausibly confuse strengths at a glance, as branding and structure are highly similar.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Xarelto rivaroxaban blisters with the same brand name, similar black typography, and repeated layout elements, but the background colors are very different (grey vs bright orange). Despite the color difference, a user familiar with Xarelto blisters could plausibly confuse strengths at a glance, as branding and structure are highly similar.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Rivaroxaban (Xarelto) 15mg Tab [19Jun17]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Rivaroxaban (Xarelto) 15mg Tab [19Jun17]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Xarelto (rivaroxaban) blisters from the same brand, but the visual presentations are very different. The query blister is grey/silver with small repeated text blocks, while the candidate blister is bright orange with large vertical text and days-of-week labels down the sides. The striking color and layout differences make confusion between these specific packs unlikely at a glance.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Xarelto (rivaroxaban) blisters from the same brand, but the visual presentations are very different. The query blister is grey/silver with small repeated text blocks, while the candidate blister is bright orange with large vertical text and days-of-week labels down the sides. The striking color and layout differences make confusion between these specific packs unlikely at a glance.",
+        "lookalike": false
+      }
+    }
+  ]
+}
