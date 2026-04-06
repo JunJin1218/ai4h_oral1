@@ -3,53 +3,72 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
+import shutil
 import sys
+import tempfile
 import time
+import warnings
 from pathlib import Path
 from typing import Any
-import re
-import tempfile
-import shutil
 
 import pandas as pd
 from dotenv import load_dotenv
 from openai import APIStatusError, InternalServerError, OpenAI
 
-
 # Allow imports from project root if needed later
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
-import warnings
+from utils import get_vector_id_by_file_name, reconstruct_vector_by_id, search_similar_with_metadata
+
 warnings.filterwarnings(
     "ignore",
     message="Data Validation extension is not supported and will be removed",
     category=UserWarning,
 )
 
-
-
 DEFAULT_MODEL = "gpt-5.1"
-DEFAULT_MAX_CANDIDATES = 0
+TOP_K = 50
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PROMPT_PATH = PROJECT_ROOT / "data_augmentation" / "prompt.txt"
 SCHEMA_PATH = PROJECT_ROOT / "data_augmentation" / "schema.json"
 FEW_SHOTS_PATH = PROJECT_ROOT / "data_augmentation" / "few_shots.jsonl"
-OUTPUT_DIR = PROJECT_ROOT / "data_augmentation" / "batch_results"
-QUERY_IMAGE_ROOT = PROJECT_ROOT / "data" / "images"
+DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data_augmentation" / "batch_results_faiss_eval"
+
+DB_PATH = PROJECT_ROOT / "data" / "sqlite" / "ai4h.db"
+INDEX_PATH = PROJECT_ROOT / "data" / "faiss" / "embeddings.index"
+
+QUERY_IMAGE_ROOT = Path(r"C:\Users\Asus\T5 - SDS\T8-AI4H\ai4h_oral1\data\images")
 CANDIDATE_IMAGE_ROOT = Path(r"C:\Users\Asus\T5 - SDS\T8-AI4H\Cleaned Dataset v2")
-
-# Change this if your Excel file is elsewhere
 DEFAULT_EXCEL_PATH = Path(r"C:\Users\Asus\T5 - SDS\T8-AI4H\ai4h_oral1\data\Ground Truth Values.xlsx")
-
-# Your local image folder
-IMAGE_ROOT = Path(r"C:\Users\Asus\T5 - SDS\T8-AI4H\Cleaned Dataset v2")
 
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tif", ".tiff"}
 
 
 def norm_name(s: str) -> str:
     return " ".join(Path(str(s)).stem.strip().lower().split())
+
+
+def norm_sheet_name(s: str) -> str:
+    return " ".join(str(s).strip().lower().split())
+
+
+def safe_div(a: float, b: float) -> float:
+    return a / b if b else 0.0
+
+
+def compute_metrics(tp: int, fp: int, tn: int, fn: int) -> dict[str, float]:
+    precision = safe_div(tp, tp + fp)
+    recall = safe_div(tp, tp + fn)
+    f1 = safe_div(2 * precision * recall, precision + recall) if (precision + recall) else 0.0
+    accuracy = safe_div(tp + tn, tp + tn + fp + fn)
+    return {
+        "precision": precision,
+        "recall": recall,
+        "f1": f1,
+        "accuracy": accuracy,
+    }
 
 
 def load_prompt() -> str:
@@ -137,33 +156,35 @@ def resolve_image_path(name: str, image_index: dict[str, Path]) -> Path | None:
     return image_index.get(norm_name(name))
 
 
+def get_single_required_orientations() -> dict[str, list[str]]:
+    return {
+        norm_sheet_name("1 Acarbose tab front YSP"): ["back"],
+        norm_sheet_name("2 Aciclovir Medovir Front"): ["back"],
+        norm_sheet_name("3 Antacid Beacons front"): ["back"],
+        norm_sheet_name("4 Folic acid sunward back"): ["front"],
+        norm_sheet_name("5 Fluoxetine 10 APO bottle fron"): ["front-box"],
+        norm_sheet_name("6 Clomipramine 25 front"): ["back"],
+        norm_sheet_name("7 Amiodarone 200"): ["back"],
+        norm_sheet_name("8 Loratadine 10 Front"): ["back"],
+        norm_sheet_name("9 Thalidomide 50 back"): ["front"],
+        norm_sheet_name("10 Telmisartan 80 Intas box"): ["front-box"],
+        norm_sheet_name("11 Dextromethorphan ICM bottle"): ["front-box"],
+        norm_sheet_name("12 Rifampicin 300 Medochemie ba"): ["front"],
+        norm_sheet_name("13 Gliclazide sunward front"): ["back"],
+        norm_sheet_name("14 Olanzapine 10 actavis box"): ["front-box"],
+        norm_sheet_name("15 Panadeine Back"): ["front"],
+        norm_sheet_name("16 Lacteol Forte sachet"): ["front"],
+        norm_sheet_name("35 Telmisartan"): ["back"],
+        norm_sheet_name("49 Rivaroxaban 2.5"): ["back"],
+        norm_sheet_name("50 aspirin"): ["front"],
+    }
+
+
 def load_queries_from_excel(excel_path: Path) -> list[dict[str, Any]]:
     if not excel_path.exists():
         raise FileNotFoundError(f"Excel file not found: {excel_path}")
 
-    # Required orientation for each sheet
-    required_orientations = {
-        "1 Acarbose tab front YSP": "back",
-        "2 Aciclovir Medovir Front": "back",
-        "3 Antacid Beacons front": "back",
-        "4 Folic acid sunward back": "front",
-        "5 Fluoxetine 10 APO bottle fron": "front-box",
-        "6 Clomipramine 25 front": "back",
-        "7 Amiodarone 200": "back",
-        "8 Loratadine 10 Front": "back",
-        "9 Thalidomide 50 back": "front",
-        "10 Telmisartan 80 Intas box": "front-box",
-        "11 Dextromethorphan ICM bottle": "front-box",
-        "12 Rifampicin 300 Medochemie ba": "front",
-        "13 Gliclazide sunward front": "back",
-        "14 Olanzapine 10 actavis box": "front-box",
-        "15 Panadeine Back": "front",
-        "16 Lacteol Forte sachet": "front",
-        "35 Telmisartan": "back",
-        "49 Rivaroxaban 2.5": "back",
-        "50 aspirin": "front",
-    }
-
+    required_orientations = get_single_required_orientations()
     xl = pd.ExcelFile(excel_path)
     out: list[dict[str, Any]] = []
 
@@ -171,39 +192,37 @@ def load_queries_from_excel(excel_path: Path) -> list[dict[str, Any]]:
         df = pd.read_excel(excel_path, sheet_name=sheet_name)
         df.columns = [str(c).strip().lower() for c in df.columns]
 
-        if "drug" not in df.columns:
+        if "drug" not in df.columns or "orientation" not in df.columns:
             continue
 
-        if sheet_name not in required_orientations:
+        sheet_key = norm_sheet_name(sheet_name)
+        if sheet_key not in required_orientations:
             continue
 
-        required_orientation = required_orientations[sheet_name].strip().lower()
-
-        if "orientation" not in df.columns:
-            continue
-
+        allowed_orientations = [x.strip().lower() for x in required_orientations[sheet_key]]
         df["orientation"] = df["orientation"].astype(str).str.strip().str.lower()
 
-        filtered_df = df[df["orientation"] == required_orientation]
+        filtered_df = df[df["orientation"].isin(allowed_orientations)]
 
-        candidate_names = []
+        ground_truth_candidate_names: list[str] = []
         for value in filtered_df["drug"].dropna().tolist():
             s = str(value).strip()
             if s:
-                candidate_names.append(s)
+                ground_truth_candidate_names.append(s)
 
-        if not candidate_names:
+        if not ground_truth_candidate_names:
             continue
 
         out.append(
             {
                 "query_name": sheet_name.strip(),
-                "candidate_names": candidate_names,
-                "required_orientation": required_orientation,
+                "ground_truth_candidate_names": ground_truth_candidate_names,
+                "required_orientations": allowed_orientations,
             }
         )
 
     return out
+
 
 def upload_vision_file(client: OpenAI, path: Path) -> str:
     if not path.exists():
@@ -211,15 +230,12 @@ def upload_vision_file(client: OpenAI, path: Path) -> str:
 
     suffix = path.suffix.lower()
 
-    # If extension is already lowercase, upload normally
     if suffix == path.suffix:
         with path.open("rb") as f:
             uploaded = client.files.create(file=f, purpose="vision")
         return uploaded.id
 
-    # Otherwise, create a temp file with lowercase extension
     temp_path = Path(tempfile.gettempdir()) / (path.stem + suffix)
-
     shutil.copyfile(path, temp_path)
 
     try:
@@ -255,7 +271,6 @@ def build_request_input(
             ),
         },
     ]
-
     return [{"role": "user", "content": content}]
 
 
@@ -267,7 +282,6 @@ def call_openai_with_retries(
     max_retries: int,
 ):
     last_error: Exception | None = None
-    response = None
 
     for attempt in range(max_retries + 1):
         try:
@@ -306,57 +320,56 @@ def parse_json_output(text: str) -> Any:
 def main() -> None:
     load_dotenv(PROJECT_ROOT / ".env")
 
-    parser = argparse.ArgumentParser(description="LLM image comparison test from Excel sheets")
+    parser = argparse.ArgumentParser(
+        description="FAISS top-50 L2 retrieval + teacher LLM evaluation for 19 drug queries"
+    )
     parser.add_argument("--excel-path", type=str, default=str(DEFAULT_EXCEL_PATH))
     parser.add_argument("--model", default=os.environ.get("OPENAI_MODEL", DEFAULT_MODEL))
     parser.add_argument("--max-retries", type=int, default=2)
-    parser.add_argument("--max-candidates", type=int, default=0)
-    parser.add_argument("--sheet-name", type=str, default=None, help="Run only one sheet/query")
-    parser.add_argument("--limit-queries", type=int, default=0, help="Run only first N queries, 0 = all")
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        default=str(DEFAULT_OUTPUT_DIR),
+        help="Folder to save per-query JSON results and summary",
+    )
     args = parser.parse_args()
 
     if not os.environ.get("OPENAI_API_KEY"):
         raise RuntimeError("OPENAI_API_KEY is missing in .env")
 
     excel_path = Path(args.excel_path)
+    output_dir = Path(args.output_dir)
 
     prompt = load_prompt()
     text_config = load_schema_format()
     few_shots = load_few_shots()
     few_shot_content = build_few_shot_content(few_shots)
+
     query_image_index = build_image_index(QUERY_IMAGE_ROOT)
     candidate_image_index = build_image_index(CANDIDATE_IMAGE_ROOT)
     all_queries = load_queries_from_excel(excel_path)
-    print("Loaded queries:", len(all_queries))
-
-    if args.sheet_name:
-        all_queries = [q for q in all_queries if q["query_name"] == args.sheet_name]
-        if not all_queries:
-            raise RuntimeError(f"Sheet not found or invalid: {args.sheet_name}")
-
-    if args.limit_queries > 0:
-        all_queries = all_queries[: args.limit_queries]
 
     if not all_queries:
         raise RuntimeError("No valid queries loaded from Excel.")
 
     client = OpenAI()
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    overall_tp = 0
+    overall_fp = 0
+    overall_tn = 0
+    overall_fn = 0
 
     summary: list[dict[str, Any]] = []
-    total_candidate_comparisons = 0
-    total_lookalikes = 0
 
-    for q_idx, item in enumerate(all_queries, start=1):
+    for item in all_queries:
         query_name = item["query_name"]
-        candidate_names = item["candidate_names"] if args.max_candidates <= 0 else item["candidate_names"][: args.max_candidates]
-
-        print(f"\n=== Query {q_idx}/{len(all_queries)} ===")
-        print("candidate_count:", len(candidate_names))
+        required_orientations = item["required_orientations"]
+        ground_truth_names = item["ground_truth_candidate_names"]
+        ground_truth_norm = {norm_name(x) for x in ground_truth_names}
 
         query_path = resolve_image_path(query_name, query_image_index)
         if query_path is None:
-            print(f"[skip] query image not found for sheet name: {query_name}")
             summary.append(
                 {
                     "query_name": query_name,
@@ -366,111 +379,209 @@ def main() -> None:
             )
             continue
 
-        resolved_candidates: list[tuple[str, Path]] = []
-        missing_candidates: list[str] = []
+        # Use actual resolved image filename for DB / FAISS lookup
+        query_lookup_name = query_path.name
 
-        for name in candidate_names:
-            path = resolve_image_path(name, candidate_image_index)
-            if path is None:
-                missing_candidates.append(name)
-            else:
-                resolved_candidates.append((name, path))
+        try:
+            query_vector_id = get_vector_id_by_file_name(query_lookup_name, db_path=DB_PATH)
+            query_vector = reconstruct_vector_by_id(query_vector_id, index_path=INDEX_PATH)
 
-        if not resolved_candidates:
-            print(f"[skip] no candidate images found for query: {query_name}")
+            retrieved_candidates = search_similar_with_metadata(
+                query_vector=query_vector,
+                similarity_type="l2",
+                top_n=TOP_K,
+                index_path=INDEX_PATH,
+                db_path=DB_PATH,
+                exclude_vector_id=query_vector_id,
+            )
+        except Exception as exc:
             summary.append(
                 {
                     "query_name": query_name,
                     "status": "skipped",
-                    "reason": "no candidate images found",
+                    "reason": f"FAISS retrieval failed: {exc}",
+                }
+            )
+            continue
+
+        if not retrieved_candidates:
+            summary.append(
+                {
+                    "query_name": query_name,
+                    "status": "skipped",
+                    "reason": "no FAISS candidates retrieved",
                 }
             )
             continue
 
         query_file_id = upload_vision_file(client, query_path)
 
+        query_tp = 0
+        query_fp = 0
+        query_tn = 0
+        query_fn = 0
         candidate_results: list[dict[str, Any]] = []
-        query_lookalike_count = 0
 
-        for candidate_name, candidate_path in resolved_candidates:
-            candidate_file_id = upload_vision_file(client, candidate_path)
+        for rank, candidate in enumerate(retrieved_candidates, start=1):
+            candidate_file_name = getattr(candidate, "file_name", None)
+            candidate_vector_id = getattr(candidate, "vector_id", None)
+            candidate_score = getattr(candidate, "score", None)
 
-            request_input = build_request_input(
-                prompt=prompt,
-                few_shot_content=few_shot_content,
-                query_name=query_name,
-                query_file_id=query_file_id,
-                candidate_name=candidate_name,
-                candidate_file_id=candidate_file_id,
-            )
+            if not candidate_file_name:
+                candidate_results.append(
+                    {
+                        "rank": rank,
+                        "error": True,
+                        "reason": "candidate missing file_name",
+                    }
+                )
+                continue
 
-            response = call_openai_with_retries(
-                client=client,
-                model=args.model,
-                request_input=request_input,
-                text_config=text_config,
-                max_retries=args.max_retries,
-            )
+            candidate_path = resolve_image_path(candidate_file_name, candidate_image_index)
+            if candidate_path is None:
+                candidate_results.append(
+                    {
+                        "rank": rank,
+                        "candidate_file_name": candidate_file_name,
+                        "candidate_vector_id": candidate_vector_id,
+                        "candidate_score_l2": candidate_score,
+                        "error": True,
+                        "reason": "candidate image path not found",
+                    }
+                )
+                continue
 
-            output_text = response.output_text
-            parsed_output = parse_json_output(output_text)
+            actual_positive = norm_name(candidate_file_name) in ground_truth_norm
 
-            is_lookalike = bool(parsed_output.get("lookalike", False))
-            if is_lookalike:
-                query_lookalike_count += 1
+            try:
+                candidate_file_id = upload_vision_file(client, candidate_path)
 
-            candidate_results.append(
-                {
-                    "candidate_name": candidate_name,
-                    "candidate_path": str(candidate_path),
-                    "output_text": output_text,
-                    "parsed_output": parsed_output,
-                }
-            )
+                request_input = build_request_input(
+                    prompt=prompt,
+                    few_shot_content=few_shot_content,
+                    query_name=query_name,
+                    query_file_id=query_file_id,
+                    candidate_name=candidate_file_name,
+                    candidate_file_id=candidate_file_id,
+                )
+
+                response = call_openai_with_retries(
+                    client=client,
+                    model=args.model,
+                    request_input=request_input,
+                    text_config=text_config,
+                    max_retries=args.max_retries,
+                )
+
+                output_text = response.output_text
+                parsed_output = parse_json_output(output_text)
+                predicted_positive = bool(parsed_output.get("lookalike", False))
+
+                if predicted_positive and actual_positive:
+                    query_tp += 1
+                elif predicted_positive and not actual_positive:
+                    query_fp += 1
+                elif not predicted_positive and actual_positive:
+                    query_fn += 1
+                else:
+                    query_tn += 1
+
+                candidate_results.append(
+                    {
+                        "rank": rank,
+                        "candidate_file_name": candidate_file_name,
+                        "candidate_path": str(candidate_path),
+                        "candidate_vector_id": candidate_vector_id,
+                        "candidate_score_l2": candidate_score,
+                        "actual_positive": actual_positive,
+                        "predicted_positive": predicted_positive,
+                        "output_text": output_text,
+                        "parsed_output": parsed_output,
+                    }
+                )
+
+            except Exception as exc:
+                candidate_results.append(
+                    {
+                        "rank": rank,
+                        "candidate_file_name": candidate_file_name,
+                        "candidate_path": str(candidate_path),
+                        "candidate_vector_id": candidate_vector_id,
+                        "candidate_score_l2": candidate_score,
+                        "actual_positive": actual_positive,
+                        "error": True,
+                        "reason": str(exc),
+                    }
+                )
+
+        metrics = compute_metrics(query_tp, query_fp, query_tn, query_fn)
 
         result = {
             "query_name": query_name,
             "query_path": str(query_path),
-            "missing_candidates": missing_candidates,
+            "query_lookup_name": query_lookup_name,
+            "required_orientations": required_orientations,
+            "ground_truth_candidate_names": ground_truth_names,
+            "faiss_top_k": TOP_K,
+            "similarity_type": "l2",
             "few_shots_count": len(few_shots),
             "model": args.model,
-            "query_total_candidates": len(resolved_candidates),
-            "query_lookalike_count": query_lookalike_count,
+            "tp": query_tp,
+            "fp": query_fp,
+            "tn": query_tn,
+            "fn": query_fn,
+            "precision": metrics["precision"],
+            "recall": metrics["recall"],
+            "f1": metrics["f1"],
+            "accuracy": metrics["accuracy"],
             "candidate_results": candidate_results,
-        
-}
-        total_candidate_comparisons += len(resolved_candidates)
-        total_lookalikes += query_lookalike_count
+        }
+
+        overall_tp += query_tp
+        overall_fp += query_fp
+        overall_tn += query_tn
+        overall_fn += query_fn
+
         safe_name = re.sub(r"[\\/]", "_", query_name)
-        out_path = OUTPUT_DIR / f"{safe_name}_output.json"
+        out_path = output_dir / f"{safe_name}_output.json"
         out_path.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
-
         print("saved:", out_path)
-
 
         summary.append(
             {
                 "query_name": query_name,
                 "status": "ok",
+                "required_orientations": required_orientations,
                 "output_file": str(out_path),
-                "resolved_candidates": len(resolved_candidates),
-                "missing_candidates": len(missing_candidates),
-                "query_lookalike_count": query_lookalike_count,
+                "tp": query_tp,
+                "fp": query_fp,
+                "tn": query_tn,
+                "fn": query_fn,
+                "precision": metrics["precision"],
+                "recall": metrics["recall"],
+                "f1": metrics["f1"],
+                "accuracy": metrics["accuracy"],
             }
         )
 
+    overall_metrics = compute_metrics(overall_tp, overall_fp, overall_tn, overall_fn)
+
     overall_summary = {
-    "total_queries_run": len(summary),
-    "total_candidate_comparisons": total_candidate_comparisons,
-    "total_lookalikes": total_lookalikes,
-    "lookalike_rate": (
-        total_lookalikes / total_candidate_comparisons
-        if total_candidate_comparisons > 0 else 0
-    ),
-    "queries": summary,
+        "faiss_top_k": TOP_K,
+        "similarity_type": "l2",
+        "total_queries_run": len(summary),
+        "overall_tp": overall_tp,
+        "overall_fp": overall_fp,
+        "overall_tn": overall_tn,
+        "overall_fn": overall_fn,
+        "overall_precision": overall_metrics["precision"],
+        "overall_recall": overall_metrics["recall"],
+        "overall_f1": overall_metrics["f1"],
+        "overall_accuracy": overall_metrics["accuracy"],
+        "queries": summary,
     }
 
-    summary_path = OUTPUT_DIR / "summary.json"
+    summary_path = output_dir / "summary.json"
     summary_path.write_text(json.dumps(overall_summary, indent=2, ensure_ascii=False), encoding="utf-8")
     print("summary:", summary_path)
 

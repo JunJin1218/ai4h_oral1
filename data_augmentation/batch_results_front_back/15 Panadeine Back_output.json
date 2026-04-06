@@ -1,0 +1,75 @@
+{
+  "query_name": "15 Panadeine Back",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\15 Panadeine Back.PNG",
+  "required_orientations": [
+    "front + back",
+    "front"
+  ],
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 6,
+  "query_lookalike_count": 6,
+  "candidate_results": [
+    {
+      "candidate_name": "Paracetamol (Progesic Xepa) Tab 500mg_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Paracetamol (Progesic Xepa) Tab 500mg_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show nearly identical unprinted silver 2x5 blisters containing white round scored tablets in the same arrangement. No branding or distinct markings are visible to differentiate them, so they would be very easy to confuse in practice.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show nearly identical unprinted silver 2x5 blisters containing white round scored tablets in the same arrangement. No branding or distinct markings are visible to differentiate them, so they would be very easy to confuse in practice.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Nalidixic Acid (MC New2) 500mg Tab_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Nalidixic Acid (MC New2) 500mg Tab_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show unprinted silver blister strips containing ten round white tablets laid out in two columns of five, with similar tablet size, shape, and score line. There is no branding, color, or text differentiation visible on the blister backs, so they would be very easy to confuse in practice.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show unprinted silver blister strips containing ten round white tablets laid out in two columns of five, with similar tablet size, shape, and score line. There is no branding, color, or text differentiation visible on the blister backs, so they would be very easy to confuse in practice.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Metformin (DHA) 250mg Tab [05Feb13]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Metformin (DHA) 250mg Tab [05Feb13]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show nearly identical plain silver 2x5 blister strips with ten round white tablets, no visible printed text or branding on the foil, and very similar tablet size and spacing. With no strong distinguishing visual cues, they could easily be confused in practice.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show nearly identical plain silver 2x5 blister strips with ten round white tablets, no visible printed text or branding on the foil, and very similar tablet size and spacing. With no strong distinguishing visual cues, they could easily be confused in practice.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Tolbutamide (Tolmide) 500mg Tab_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Tolbutamide (Tolmide) 500mg Tab_0.jpg",
+      "output_text": "{\"error\": false, \"reasoning\": \"Both images show plain silver 10-tablet blisters with identical white round tablets, some with a single score line. There is no printing or color differentiation on the foil, and the tablet layout and appearance are highly similar, making them easy to confuse in practice.\", \"lookalike\": true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show plain silver 10-tablet blisters with identical white round tablets, some with a single score line. There is no printing or color differentiation on the foil, and the tablet layout and appearance are highly similar, making them easy to confuse in practice.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Pyrazinamide (PZA Ciba new) 500mg Tab_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Pyrazinamide (PZA Ciba new) 500mg Tab_0.jpg",
+      "output_text": "{\"error\": false, \"reasoning\": \"Both images show nearly identical plain silver blister strips with two columns of round white tablets, same approximate tablet size, spacing, and no visible printed text or branding on the foil. Any small differences in embossing are subtle, so at a glance they are highly confusable.\", \"lookalike\": true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show nearly identical plain silver blister strips with two columns of round white tablets, same approximate tablet size, spacing, and no visible printed text or branding on the foil. Any small differences in embossing are subtle, so at a glance they are highly confusable.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Calcium Carbonate (Beacons) Tab 625mg_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Calcium Carbonate (Beacons) Tab 625mg_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show unprinted silver blisters containing ten round white tablets with an identical diagonal score line, in a 2x5 arrangement; orientation (portrait vs landscape) is the only notable difference. With no printed text or color cues to distinguish them, they would be easily confused in practice.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show unprinted silver blisters containing ten round white tablets with an identical diagonal score line, in a 2x5 arrangement; orientation (portrait vs landscape) is the only notable difference. With no printed text or color cues to distinguish them, they would be easily confused in practice.",
+        "lookalike": true
+      }
+    }
+  ]
+}

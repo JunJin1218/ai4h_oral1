@@ -1,0 +1,45 @@
+{
+  "query_name": "14 Olanzapine 10 actavis box",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\14 Olanzapine 10 actavis box.PNG",
+  "required_orientations": [
+    "front-box",
+    "front + back"
+  ],
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 3,
+  "query_lookalike_count": 3,
+  "candidate_results": [
+    {
+      "candidate_name": "Telmisartan (Actelsar-Front box) 80mg Tab (Actavis, Malta)[12March2019]_3",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Telmisartan (Actelsar-Front box) 80mg Tab (Actavis, Malta)[12March2019]_3.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Actavis tablet boxes with nearly identical overall design: white main background, bold black brand name centered, red rounded corner block with white strength text (“10 mg” vs “80 mg”), grey tablet icon and tablet count at bottom right, and the Actavis logo on a colored swoosh band at the top left. The only major differences are color shade (purple vs red) and product names/strengths, which are easy to miss at a glance. This shared layout and branding create a high risk of confusion.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Actavis tablet boxes with nearly identical overall design: white main background, bold black brand name centered, red rounded corner block with white strength text (“10 mg” vs “80 mg”), grey tablet icon and tablet count at bottom right, and the Actavis logo on a colored swoosh band at the top left. The only major differences are color shade (purple vs red) and product names/strengths, which are easy to miss at a glance. This shared layout and branding create a high risk of confusion.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Olanzapine (Actavis Onzapin-Box) 5mg Orodispersible Tab v1 [23Apr14]_3",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Olanzapine (Actavis Onzapin-Box) 5mg Orodispersible Tab v1 [23Apr14]_3.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Actavis Onzapin Olanzapine boxes with the same brand logo, purple/grey swoosh design, cream background, identical font style, and similar layout of product name and tablet count. The main differences are strength (10 mg vs 5 mg) and ODT wording, but these are small compared with the overall matching design, so they could easily be confused.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Actavis Onzapin Olanzapine boxes with the same brand logo, purple/grey swoosh design, cream background, identical font style, and similar layout of product name and tablet count. The main differences are strength (10 mg vs 5 mg) and ODT wording, but these are small compared with the overall matching design, so they could easily be confused.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Pregabalin (Breika-Front Box) 25mg Cap (Actaivs, Balkanpharma-Dupnitsa AD, Bulgaria, Europe) v1 [30November2020]_3",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Pregabalin (Breika-Front Box) 25mg Cap (Actaivs, Balkanpharma-Dupnitsa AD, Bulgaria, Europe) v1 [30November2020]_3.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Actavis boxes with nearly identical branding and layout: same purple arc on the left with grey border, white/off‑white main panel on the right, Actavis logo in the same position, large black product name text, and a colored box around the strength (“10 mg” red vs “25 mg” purple). The capsule/tablet icon and quantity text are similarly placed. Despite different drug names and strengths, the overall design is highly similar and could easily be confused in practice.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Actavis boxes with nearly identical branding and layout: same purple arc on the left with grey border, white/off‑white main panel on the right, Actavis logo in the same position, large black product name text, and a colored box around the strength (“10 mg” red vs “25 mg” purple). The capsule/tablet icon and quantity text are similarly placed. Despite different drug names and strengths, the overall design is highly similar and could easily be confused in practice.",
+        "lookalike": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "query_name": "50 aspirin",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\50 aspirin.jpg",
+  "required_orientations": [
+    "front + back",
+    "front"
+  ],
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 1,
+  "query_lookalike_count": 1,
+  "candidate_results": [
+    {
+      "candidate_name": "Flecainide (Tambocor) 100mg Tab_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Flecainide (Tambocor) 100mg Tab_0.png",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show unprinted blister strips with multiple small round, scored tablets in a tight grid pattern. The main visible difference is the foil color (rose-gold vs silver), but overall layout, tablet size/shape, and lack of branding or text are very similar. At a glance, especially in real-world lighting, these could easily be confused.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show unprinted blister strips with multiple small round, scored tablets in a tight grid pattern. The main visible difference is the foil color (rose-gold vs silver), but overall layout, tablet size/shape, and lack of branding or text are very similar. At a glance, especially in real-world lighting, these could easily be confused.",
+        "lookalike": true
+      }
+    }
+  ]
+}

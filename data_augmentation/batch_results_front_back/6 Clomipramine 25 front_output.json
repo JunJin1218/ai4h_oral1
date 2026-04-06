@@ -1,0 +1,25 @@
+{
+  "query_name": "6 Clomipramine 25 front",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\6 Clomipramine 25 front.PNG",
+  "required_orientations": [
+    "front + back",
+    "back"
+  ],
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 1,
+  "query_lookalike_count": 1,
+  "candidate_results": [
+    {
+      "candidate_name": "Promethazine Teoclate (Votazine) 25mg Tab [10Dec12]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Promethazine Teoclate (Votazine) 25mg Tab [10Dec12]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver blisters from the same manufacturer with identical diagonal black bands, same logo, similar font style and text layout, and the same strength (25 mg) prominently printed. The only major difference is the product name, but overall appearance is highly similar and could easily be confused in practice.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver blisters from the same manufacturer with identical diagonal black bands, same logo, similar font style and text layout, and the same strength (25 mg) prominently printed. The only major difference is the product name, but overall appearance is highly similar and could easily be confused in practice.",
+        "lookalike": true
+      }
+    }
+  ]
+}

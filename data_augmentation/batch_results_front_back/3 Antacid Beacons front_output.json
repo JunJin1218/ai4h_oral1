@@ -1,0 +1,55 @@
+{
+  "query_name": "3 Antacid Beacons front",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\3 Antacid Beacons front.PNG",
+  "required_orientations": [
+    "front + back",
+    "back"
+  ],
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 4,
+  "query_lookalike_count": 3,
+  "candidate_results": [
+    {
+      "candidate_name": "Anarex tab (Paracetamol 450mg, Orphenadrine 35mg) Tab (MA&mfr_Beacons Pharmaceuticals Pte Ltd, Sinagpore) v1 [19Jan2022]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Anarex tab (Paracetamol 450mg, Orphenadrine 35mg) Tab (MA&mfr_Beacons Pharmaceuticals Pte Ltd, Sinagpore) v1 [19Jan2022]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver Beacons Pharmaceuticals blisters with a repeating pattern of dark blue rectangular name blocks (ALUMAG PLUS vs ANAREX) alongside the same Beacons logo. Text layout, color scheme, font style, and overall structure are very similar, differing mainly in the product name and details. At a glance they could easily be confused, especially in a mixed blister stack.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver Beacons Pharmaceuticals blisters with a repeating pattern of dark blue rectangular name blocks (ALUMAG PLUS vs ANAREX) alongside the same Beacons logo. Text layout, color scheme, font style, and overall structure are very similar, differing mainly in the product name and details. At a glance they could easily be confused, especially in a mixed blister stack.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Folic Acid (Beacons) 5mg Tab_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Folic Acid (Beacons) 5mg Tab_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Beacons-branded tablet blisters using the same dark-blue logo and similar blue rectangular name blocks repeated across the strip. However, the query has a metallic pink/salmon foil background with more detailed dosage text, while the candidate has a white printed backing with denser repeated name blocks. Despite background color differences, the strong shared branding, typography, and repeating blue-panel layout could plausibly cause confusion at a glance, especially in a busy setting.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Beacons-branded tablet blisters using the same dark-blue logo and similar blue rectangular name blocks repeated across the strip. However, the query has a metallic pink/salmon foil background with more detailed dosage text, while the candidate has a white printed backing with denser repeated name blocks. Despite background color differences, the strong shared branding, typography, and repeating blue-panel layout could plausibly cause confusion at a glance, especially in a busy setting.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Tolbutamide (Tolmide) 500mg Tab_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Tolbutamide (Tolmide) 500mg Tab_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Beacons products with the same logo and use silver blisters with colored bands and repeated name text. However, the query has a copper/salmon background with blue panels and white text, while the candidate’s visible printed side is white with teal bands and different overall color balance. The layouts and typography style differ enough that, despite shared branding, they are distinguishable and unlikely to be confused at a glance.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Beacons products with the same logo and use silver blisters with colored bands and repeated name text. However, the query has a copper/salmon background with blue panels and white text, while the candidate’s visible printed side is white with teal bands and different overall color balance. The layouts and typography style differ enough that, despite shared branding, they are distinguishable and unlikely to be confused at a glance.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Chlorpromazine (Largo) 100mg Tab_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Chlorpromazine (Largo) 100mg Tab_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Beacons-branded blister packs with the same logo icon, repeating logo blocks along the strip, and similar font style and layout of brand name plus strength/info underneath. Although the background colors differ (peach vs white/green) and text color changes (blue vs green), the shared branding elements and repeated block pattern make them plausibly confusable at a glance, especially in a busy setting.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Beacons-branded blister packs with the same logo icon, repeating logo blocks along the strip, and similar font style and layout of brand name plus strength/info underneath. Although the background colors differ (peach vs white/green) and text color changes (blue vs green), the shared branding elements and repeated block pattern make them plausibly confusable at a glance, especially in a busy setting.",
+        "lookalike": true
+      }
+    }
+  ]
+}

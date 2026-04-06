@@ -1,0 +1,75 @@
+{
+  "query_name": "9 Thalidomide 50 back",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\9 Thalidomide 50 back.jpg",
+  "required_orientations": [
+    "front + back",
+    "front"
+  ],
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 6,
+  "query_lookalike_count": 6,
+  "candidate_results": [
+    {
+      "candidate_name": "Tetracycline (Medochemie New) 250mg Cap_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Tetracycline (Medochemie New) 250mg Cap_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show identical-looking red-and-yellow hard gelatin capsules arranged in a 2×5 blister on a silver foil background. The capsule color pattern, orientation, and blister structure are the same; the only major difference is that the candidate also shows printed text on part of the foil. At a glance, especially from the back without text visible, these could easily be confused, so there is a high lookalike risk.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show identical-looking red-and-yellow hard gelatin capsules arranged in a 2×5 blister on a silver foil background. The capsule color pattern, orientation, and blister structure are the same; the only major difference is that the candidate also shows printed text on part of the foil. At a glance, especially from the back without text visible, these could easily be confused, so there is a high lookalike risk.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Tetracycline (MC) 250mg Cap_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Tetracycline (MC) 250mg Cap_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both blister packs contain identical-looking red-and-yellow hard gelatin capsules, with the same two-tone color split and glossy appearance. The capsules are arranged similarly in clear blisters on a silver foil background. There is no distinguishing print or marking visible from this side, so at a practical level they would be very easy to confuse.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both blister packs contain identical-looking red-and-yellow hard gelatin capsules, with the same two-tone color split and glossy appearance. The capsules are arranged similarly in clear blisters on a silver foil background. There is no distinguishing print or marking visible from this side, so at a practical level they would be very easy to confuse.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Tetracycline (MC) 250mg Cap_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Tetracycline (MC) 250mg Cap_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show identical-looking two-tone red and yellow hard gelatin capsules arranged in a 2×5 blister strip. Capsule color pattern, orientation, and blister structure closely match, and the candidate’s strip of capsules is visually almost the same as the query’s when viewed from the capsule side, despite additional printed foil on the candidate pack. This similarity could easily cause confusion between products.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show identical-looking two-tone red and yellow hard gelatin capsules arranged in a 2×5 blister strip. Capsule color pattern, orientation, and blister structure closely match, and the candidate’s strip of capsules is visually almost the same as the query’s when viewed from the capsule side, despite additional printed foil on the candidate pack. This similarity could easily cause confusion between products.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Amoxycillin (AMYN) 250mg Cap_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Amoxycillin (AMYN) 250mg Cap_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show silver blisters containing the same style of two‑tone hard capsules: one half red/dark maroon and the other half yellow, in a similar size and orientation. The candidate image’s left blister (capsule side) closely matches the query blister, and in real use the printed foil on the right could be folded away, leaving nearly identical capsule appearance. This makes confusion between the two plausible.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show silver blisters containing the same style of two‑tone hard capsules: one half red/dark maroon and the other half yellow, in a similar size and orientation. The candidate image’s left blister (capsule side) closely matches the query blister, and in real use the printed foil on the right could be folded away, leaving nearly identical capsule appearance. This makes confusion between the two plausible.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Amoxycillin (Amyn-India) 250mg Cap [4July17]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Amoxycillin (Amyn-India) 250mg Cap [4July17]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are 10-capsule silver blisters with identical layout (two columns of five). The capsules in both are bicolored yellow/red, with the same color halves orientation. The candidate has some printed text on the capsule and a slightly darker red, but at a glance the appearance is very similar and could easily be confused.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are 10-capsule silver blisters with identical layout (two columns of five). The capsules in both are bicolored yellow/red, with the same color halves orientation. The candidate has some printed text on the capsule and a slightly darker red, but at a glance the appearance is very similar and could easily be confused.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Amoxycillin (Amyn-India) 250mg Cap [4July17]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Amoxycillin (Amyn-India) 250mg Cap [4July17]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show 10 two‑tone hard capsules in a silver blister, arranged in a 2×5 grid. The capsule colors are very similar warm tones (red–yellow vs maroon–yellow), yielding a comparable overall appearance. The candidate’s blister is attached to printed foil on the left, but when separated or viewed from the capsule side only, the strips would look highly alike, making confusion between these packs plausible.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show 10 two‑tone hard capsules in a silver blister, arranged in a 2×5 grid. The capsule colors are very similar warm tones (red–yellow vs maroon–yellow), yielding a comparable overall appearance. The candidate’s blister is attached to printed foil on the left, but when separated or viewed from the capsule side only, the strips would look highly alike, making confusion between these packs plausible.",
+        "lookalike": true
+      }
+    }
+  ]
+}

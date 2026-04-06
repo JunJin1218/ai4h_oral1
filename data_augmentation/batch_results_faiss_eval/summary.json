@@ -1,0 +1,110 @@
+{
+  "faiss_top_k": 50,
+  "similarity_type": "l2",
+  "total_queries_run": 19,
+  "overall_tp": 0,
+  "overall_fp": 0,
+  "overall_tn": 0,
+  "overall_fn": 0,
+  "overall_precision": 0.0,
+  "overall_recall": 0.0,
+  "overall_f1": 0.0,
+  "overall_accuracy": 0.0,
+  "queries": [
+    {
+      "query_name": "1 Acarbose tab front YSP",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "2 Aciclovir Medovir Front",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "3 Antacid Beacons front",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "4 Folic acid sunward back",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "5 Fluoxetine 10 APO bottle fron",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "6 Clomipramine 25 front",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "7 Amiodarone 200",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "8 Loratadine 10 Front",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "9 Thalidomide 50 back",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "10 Telmisartan 80 Intas box",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "11 Dextromethorphan ICM bottle",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "12 Rifampicin 300 Medochemie ba",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "13 Gliclazide sunward front",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "14 Olanzapine 10 actavis box",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "15 Panadeine Back",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "16 Lacteol Forte sachet",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "35 Telmisartan",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "49 Rivaroxaban 2.5",
+      "status": "skipped",
+      "reason": "query image not found"
+    },
+    {
+      "query_name": "50 aspirin",
+      "status": "skipped",
+      "reason": "query image not found"
+    }
+  ]
+}

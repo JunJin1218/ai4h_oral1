@@ -1,6 +1,10 @@
 {
   "query_name": "1 Acarbose tab front YSP",
   "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\1 Acarbose tab front YSP.jpg",
+  "required_orientations": [
+    "front + back",
+    "back"
+  ],
   "missing_candidates": [],
   "few_shots_count": 3,
   "model": "gpt-5.1",
@@ -10,40 +14,40 @@
     {
       "candidate_name": "Allopurinol (YSP) Tab 100mg [13July17]_1",
       "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Allopurinol (YSP) Tab 100mg [13July17]_1.jpg",
-      "output_text": "{\"error\": false, \"reasoning\": \"Both are Y.S.P. silver blisters with identical blue typography style, repeated panel layout, same logo placement, same strength (Tablet 100mg), and barcode at the bottom. Only the drug names differ (GARBOSE vs ALLOPURINOL), but overall appearance is highly similar and easily confusable at a glance.\", \"lookalike\": true}",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Y.S.P. silver blisters with identical blue typography style, boxed drug name at the left, “Tablet 100mg” text, repeated vertical layout, same Y.S.P. hexagon logo placement, and barcode at the bottom. Only the drug names differ. Overall appearance is highly similar and easily confusable at a glance.\",\"lookalike\":true}",
       "parsed_output": {
         "error": false,
-        "reasoning": "Both are Y.S.P. silver blisters with identical blue typography style, repeated panel layout, same logo placement, same strength (Tablet 100mg), and barcode at the bottom. Only the drug names differ (GARBOSE vs ALLOPURINOL), but overall appearance is highly similar and easily confusable at a glance.",
+        "reasoning": "Both are Y.S.P. silver blisters with identical blue typography style, boxed drug name at the left, “Tablet 100mg” text, repeated vertical layout, same Y.S.P. hexagon logo placement, and barcode at the bottom. Only the drug names differ. Overall appearance is highly similar and easily confusable at a glance.",
         "lookalike": true
       }
     },
     {
       "candidate_name": "Acarbose (Garbose) 50mg Tab (YSP Industrial, Malaysia) [13November2019]_1",
       "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Acarbose (Garbose) 50mg Tab (YSP Industrial, Malaysia) [13November2019]_1.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Both are Y.S.P. Garbose acarbose blisters with identical silver foil background, repeating vertical layout, same brand name position and size, same Y.S.P. logo placement, and barcode at the bottom. The only major difference is print color (blue vs red) and strength (100 mg vs 50 mg), which are not strong enough to prevent confusion, so they pose a realistic lookalike risk.\",\"lookalike\":true}",
+      "output_text": "{\"error\": false, \"reasoning\": \"Both are Y.S.P. Garbose acarbose blisters with identical silver background, repeated brand name, same logo position, barcode at the bottom, and nearly identical layout and text structure. The main difference is ink color (blue vs red) and strength (100mg vs 50mg), which may not prevent confusion at a glance, especially in a busy setting.\", \"lookalike\": true}",
       "parsed_output": {
         "error": false,
-        "reasoning": "Both are Y.S.P. Garbose acarbose blisters with identical silver foil background, repeating vertical layout, same brand name position and size, same Y.S.P. logo placement, and barcode at the bottom. The only major difference is print color (blue vs red) and strength (100 mg vs 50 mg), which are not strong enough to prevent confusion, so they pose a realistic lookalike risk.",
+        "reasoning": "Both are Y.S.P. Garbose acarbose blisters with identical silver background, repeated brand name, same logo position, barcode at the bottom, and nearly identical layout and text structure. The main difference is ink color (blue vs red) and strength (100mg vs 50mg), which may not prevent confusion at a glance, especially in a busy setting.",
         "lookalike": true
       }
     },
     {
       "candidate_name": "Clomiphene (YSP) 50mg Tab_1",
       "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Clomiphene (YSP) 50mg Tab_1.jpg",
-      "output_text": "{\"error\":false,\"reasoning\":\"Both are Y.S.P. silver blisters with blue print, using the same bold white-on-blue name blocks, similar font, repeated vertical layout, and identical Y.S.P. hexagon logo and ‘Tablet’ text. The only major difference is the drug name and strength, but overall appearance is highly similar and could easily be confused at a glance.\",\"lookalike\":true}",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Y.S.P. silver blisters with blue print, using the same bold drug name in a solid blue rectangle, same repeated vertical layout, same Y.S.P. hexagon logo and similar barcode area. Only the drug name and some text details differ; overall appearance is highly similar and could easily be confused in practice.\",\"lookalike\":true}",
       "parsed_output": {
         "error": false,
-        "reasoning": "Both are Y.S.P. silver blisters with blue print, using the same bold white-on-blue name blocks, similar font, repeated vertical layout, and identical Y.S.P. hexagon logo and ‘Tablet’ text. The only major difference is the drug name and strength, but overall appearance is highly similar and could easily be confused at a glance.",
+        "reasoning": "Both are Y.S.P. silver blisters with blue print, using the same bold drug name in a solid blue rectangle, same repeated vertical layout, same Y.S.P. hexagon logo and similar barcode area. Only the drug name and some text details differ; overall appearance is highly similar and could easily be confused in practice.",
         "lookalike": true
       }
     },
     {
       "candidate_name": "Frusemide (Rasitol) 40mg Tab [16Dec13]_1",
       "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Frusemide (Rasitol) 40mg Tab [16Dec13]_1.jpg",
-      "output_text": "{\"error\": false, \"reasoning\": \"Both are Y.S.P. silver blisters with identical blue typography style, logo placement, repeated block layout, and barcode strip at the bottom. The only major difference is the product name and strength text, so at a glance they are easy to confuse.\", \"lookalike\": true}",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Y.S.P. silver blisters with the same blue logo, bold white drug name in a blue rectangle, identical vertical layout with repeated panels of text and a barcode at the bottom. Typography, color scheme, and overall structure closely match, making them easy to confuse at a glance despite different product names and strengths.\",\"lookalike\":true}",
       "parsed_output": {
         "error": false,
-        "reasoning": "Both are Y.S.P. silver blisters with identical blue typography style, logo placement, repeated block layout, and barcode strip at the bottom. The only major difference is the product name and strength text, so at a glance they are easy to confuse.",
+        "reasoning": "Both are Y.S.P. silver blisters with the same blue logo, bold white drug name in a blue rectangle, identical vertical layout with repeated panels of text and a barcode at the bottom. Typography, color scheme, and overall structure closely match, making them easy to confuse at a glance despite different product names and strengths.",
         "lookalike": true
       }
     }

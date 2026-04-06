@@ -1,0 +1,85 @@
+{
+  "query_name": "7 Amiodarone 200",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\7 Amiodarone 200.PNG",
+  "required_orientations": [
+    "front + back",
+    "back"
+  ],
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 7,
+  "query_lookalike_count": 6,
+  "candidate_results": [
+    {
+      "candidate_name": "Alfuzosin (Xatral) XL 10mg Tab [06Jun13]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Alfuzosin (Xatral) XL 10mg Tab [06Jun13]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver Sanofi blisters with dense black text in French/English and prominent red horizontal warning bands saying “USE THE DOSE AS PRESCRIBED / RESPECTER LES DOSES PRESCRITES,” repeated across the strip. Overall color scheme, font style, and text‑band layout are very similar, and the candidate even shows the same warning pattern on the lower part of the card. Despite different product names (Cordarone vs Xatral XL) and some logo differences, the shared design makes them easy to confuse at a glance.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver Sanofi blisters with dense black text in French/English and prominent red horizontal warning bands saying “USE THE DOSE AS PRESCRIBED / RESPECTER LES DOSES PRESCRITES,” repeated across the strip. Overall color scheme, font style, and text‑band layout are very similar, and the candidate even shows the same warning pattern on the lower part of the card. Despite different product names (Cordarone vs Xatral XL) and some logo differences, the shared design makes them easy to confuse at a glance.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Alfuzosin (Xatral) XL 10mg Tab [06Jun13]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Alfuzosin (Xatral) XL 10mg Tab [06Jun13]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver Sanofi Winthrop blisters with dense black text in multiple lines, repeating brand names (Cordarone vs Xatral) diagonally/tilted across the foil, and identical bold red bands stating “USE THE DOSE AS PRESCRIBED / RESPECTER LES DOSES PRESCRITES.” The overall color scheme, typography style, and layout are very similar, making them easy to confuse at a glance despite different product names and strengths.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver Sanofi Winthrop blisters with dense black text in multiple lines, repeating brand names (Cordarone vs Xatral) diagonally/tilted across the foil, and identical bold red bands stating “USE THE DOSE AS PRESCRIBED / RESPECTER LES DOSES PRESCRITES.” The overall color scheme, typography style, and layout are very similar, making them easy to confuse at a glance despite different product names and strengths.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Amisulpride (Solian) Tab 20mg [26May16]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Amisulpride (Solian) Tab 20mg [26May16]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver Sanofi blister packs with dense black text and repeated orange banner strips reading similar French wording, arranged diagonally in a comparable pattern. Branding style, colors, typography, and overall layout are very similar, so the two blisters could easily be confused despite different product names.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver Sanofi blister packs with dense black text and repeated orange banner strips reading similar French wording, arranged diagonally in a comparable pattern. Branding style, colors, typography, and overall layout are very similar, so the two blisters could easily be confused despite different product names.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Zolpiderm (Stilnox CR) Tab 6.25 mg v1 [9April2018]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Zolpiderm (Stilnox CR) Tab 6.25 mg v1 [9April2018]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"The query is a printed silver blister with dense black text and red warning bands (CORDARONE 200 mg) covering most of the surface. The candidate is the reverse side of a blister with only circular brown tablets visible in silver wells and no printed text or colored bands. Overall layout, color accents, and presence/absence of printing are clearly different, so confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "The query is a printed silver blister with dense black text and red warning bands (CORDARONE 200 mg) covering most of the surface. The candidate is the reverse side of a blister with only circular brown tablets visible in silver wells and no printed text or colored bands. Overall layout, color accents, and presence/absence of printing are clearly different, so confusion risk is low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Zolpidem (Stilnox red) 10mg Tab_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Zolpidem (Stilnox red) 10mg Tab_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver blisters from the same manufacturer (Sanofi), using black text and prominent red diagonal bands, with similar font style and repeated slanted layout. Brand names differ but are in comparable positions and typography. At a quick glance they could easily be mistaken for each other, especially in a pharmacy or patient setting.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver blisters from the same manufacturer (Sanofi), using black text and prominent red diagonal bands, with similar font style and repeated slanted layout. Brand names differ but are in comparable positions and typography. At a quick glance they could easily be mistaken for each other, especially in a pharmacy or patient setting.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Diacerein (Biogaran-Rear) 50mg Cap (E)(Laboratoires Biogaran, France)[13May2020]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Diacerein (Biogaran-Rear) 50mg Cap (E)(Laboratoires Biogaran, France)[13May2020]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver blister packs printed diagonally with dense French text in dark blue and repeated red warning bands. The overall layout, color scheme (silver background, navy text, red bars), and diagonal repetition pattern are very similar, making them easy to confuse at a glance despite different product names and manufacturers.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver blister packs printed diagonally with dense French text in dark blue and repeated red warning bands. The overall layout, color scheme (silver background, navy text, red bars), and diagonal repetition pattern are very similar, making them easy to confuse at a glance despite different product names and manufacturers.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Amiloride (Modamide) 5mg tab [14Feb14]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Amiloride (Modamide) 5mg tab [14Feb14]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver blisters with dense diagonal black French text and repeated red highlighted strips containing safety messages. Brand names appear in bold dark font, strengths in red, and overall layout and color scheme (silver, black, red) are highly similar. At a glance they could easily be confused, despite different brand names and strengths.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver blisters with dense diagonal black French text and repeated red highlighted strips containing safety messages. Brand names appear in bold dark font, strengths in red, and overall layout and color scheme (silver, black, red) are highly similar. At a glance they could easily be confused, despite different brand names and strengths.",
+        "lookalike": true
+      }
+    }
+  ]
+}

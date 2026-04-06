@@ -1,0 +1,37 @@
+{
+  "query_name": "10 Telmisartan 80 Intas box",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\10 Telmisartan 80 Intas box.jpg",
+  "required_orientations": [
+    "front-box",
+    "front + back"
+  ],
+  "missing_candidates": [
+    "Enalapril (Enapril Intas-Box) 5mg Tab [21March2017] _3"
+  ],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 2,
+  "query_lookalike_count": 2,
+  "candidate_results": [
+    {
+      "candidate_name": "Finasteride (Finas 1-Box) Tab 1mg (Intas Pharma, India)[13Dec2018]_3",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Finasteride (Finas 1-Box) Tab 1mg (Intas Pharma, India)[13Dec2018]_3.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Intas boxes with nearly identical design templates: white upper background, diagonal colored bands with a grey stripe at the lower left, a solid colored band along the bottom, the same INTAS logo position, and similar typography and placement of strength and tablet-count text. The only major differences are color (blue vs pink) and product name, so at a glance they could easily be confused.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Intas boxes with nearly identical design templates: white upper background, diagonal colored bands with a grey stripe at the lower left, a solid colored band along the bottom, the same INTAS logo position, and similar typography and placement of strength and tablet-count text. The only major differences are color (blue vs pink) and product name, so at a glance they could easily be confused.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Telmisartan (Teltas Intas India-Box) 40mg Tab [2Feb18]_3",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Telmisartan (Teltas Intas India-Box) 40mg Tab [2Feb18]_3.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are INTAS TELTAS telmisartan tablet boxes with nearly identical layout: same brand name position, same \\\"TELMISARTAN TABLETS USP\\\" line, same \\\"For Oral Use\\\" text, same INTAS logo position, and identical diagonal stripe motif on the left. The only major differences are color (blue vs magenta) and strength (80 vs 40 mg). Overall design is so similar that they could easily be confused at a glance.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are INTAS TELTAS telmisartan tablet boxes with nearly identical layout: same brand name position, same \"TELMISARTAN TABLETS USP\" line, same \"For Oral Use\" text, same INTAS logo position, and identical diagonal stripe motif on the left. The only major differences are color (blue vs magenta) and strength (80 vs 40 mg). Overall design is so similar that they could easily be confused at a glance.",
+        "lookalike": true
+      }
+    }
+  ]
+}

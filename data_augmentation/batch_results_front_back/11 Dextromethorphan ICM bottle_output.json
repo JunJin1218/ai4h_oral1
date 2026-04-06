@@ -1,0 +1,65 @@
+{
+  "query_name": "11 Dextromethorphan ICM bottle",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\11 Dextromethorphan ICM bottle.jpg",
+  "required_orientations": [
+    "front-box",
+    "front + back"
+  ],
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 5,
+  "query_lookalike_count": 5,
+  "candidate_results": [
+    {
+      "candidate_name": "Guaiphenesin (Cofen) 100mg,5ml Syrup 100ml_3",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Guaiphenesin (Cofen) 100mg,5ml Syrup 100ml_3.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are brown 100 mL cough bottles from ICM with the same white cap style, similar label layout, and a large bold product name at the top, plus a stylized silhouette of a person using a spoon at the bottom right. The main difference is color tone (pink vs purple) and wording, but overall branding, structure, and iconography are very similar, creating a realistic risk of confusion.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are brown 100 mL cough bottles from ICM with the same white cap style, similar label layout, and a large bold product name at the top, plus a stylized silhouette of a person using a spoon at the bottom right. The main difference is color tone (pink vs purple) and wording, but overall branding, structure, and iconography are very similar, creating a realistic risk of confusion.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Guaiphenesin (Cofen-Front Bottle) 100mg in 5ml Syrup (100ml)(ICM Pharma, Singapore)[31October2019]_3",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Guaiphenesin (Cofen-Front Bottle) 100mg in 5ml Syrup (100ml)(ICM Pharma, Singapore)[31October2019]_3.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are 100 mL brown glass cough-syrup bottles from ICM Pharma with identical white child-resistant caps and very similar pale-pink labels. The layouts are closely matched: large product name in bold colored capitals at the top, “Cough Syrup/Mixture” beneath, bilingual text, and the same stylized side-profile person coughing into a tissue at the bottom right. The main difference is accent color (bright pink vs purple) and some wording, but overall branding, illustration, and structure are so similar that confusion between the two is very plausible.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are 100 mL brown glass cough-syrup bottles from ICM Pharma with identical white child-resistant caps and very similar pale-pink labels. The layouts are closely matched: large product name in bold colored capitals at the top, “Cough Syrup/Mixture” beneath, bilingual text, and the same stylized side-profile person coughing into a tissue at the bottom right. The main difference is accent color (bright pink vs purple) and some wording, but overall branding, illustration, and structure are so similar that confusion between the two is very plausible.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Aluminium Hydroxide (Alutacid) Mixt 200ml_3",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Aluminium Hydroxide (Alutacid) Mixt 200ml_3.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are brown liquid-medicine bottles with white caps from the same ICM Pharma brand, using large bold red product names on white backgrounds and similar lower graphics (stylized body/throat/stomach illustration in red). Overall color scheme (red/white label on brown bottle), typography style, and layout structure are close enough that they could plausibly be confused at a glance despite different indications and label details.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are brown liquid-medicine bottles with white caps from the same ICM Pharma brand, using large bold red product names on white backgrounds and similar lower graphics (stylized body/throat/stomach illustration in red). Overall color scheme (red/white label on brown bottle), typography style, and layout structure are close enough that they could plausibly be confused at a glance despite different indications and label details.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Diphenhydramine (Diphen 10) syrup 100ml_3",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Diphenhydramine (Diphen 10) syrup 100ml_3.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are 100 mL brown glass cough syrup bottles from the same ICM Pharma brand, with identical white caps, similar label layout, and the same silhouette graphic of a person using a spoon in the lower left. Only the main color (pink vs green) and product name text differ. Overall design, typography style, and imagery are close enough that they could easily be confused in practice.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are 100 mL brown glass cough syrup bottles from the same ICM Pharma brand, with identical white caps, similar label layout, and the same silhouette graphic of a person using a spoon in the lower left. Only the main color (pink vs green) and product name text differ. Overall design, typography style, and imagery are close enough that they could easily be confused in practice.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Diphenhydramine Expectorant (Diphen 10) 10mg,5ml 200ml [08May15]_3",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Diphenhydramine Expectorant (Diphen 10) 10mg,5ml 200ml [08May15]_3.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are ICM Pharma cough preparations in similar brown bottles with white child‑resistant caps and nearly identical label layouts: large bold product name at top, indication line below, bilingual vertical divider, silhouette of a person using a spoon in a colored rectangle, and volume at bottom right. The main difference is the dominant color (pink vs green) and text content, but the overall design and structure are very similar, creating realistic risk of confusion, especially in a busy setting.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are ICM Pharma cough preparations in similar brown bottles with white child‑resistant caps and nearly identical label layouts: large bold product name at top, indication line below, bilingual vertical divider, silhouette of a person using a spoon in a colored rectangle, and volume at bottom right. The main difference is the dominant color (pink vs green) and text content, but the overall design and structure are very similar, creating realistic risk of confusion, especially in a busy setting.",
+        "lookalike": true
+      }
+    }
+  ]
+}

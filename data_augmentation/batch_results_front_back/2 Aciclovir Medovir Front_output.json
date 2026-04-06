@@ -1,0 +1,95 @@
+{
+  "query_name": "2 Aciclovir Medovir Front",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\2 Aciclovir Medovir Front.PNG",
+  "required_orientations": [
+    "front + back",
+    "back"
+  ],
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 8,
+  "query_lookalike_count": 8,
+  "candidate_results": [
+    {
+      "candidate_name": "Lisinopril (Dapril) 20mg Tab_1.jpg",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Lisinopril (Dapril) 20mg Tab_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver blister strips from the same manufacturer with repeating green/teal text, similar font, and logo placement. The layout of the drug name and strength, orientation of text, and overall visual style are very close, so they could easily be confused at a glance despite different product names and strengths.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver blister strips from the same manufacturer with repeating green/teal text, similar font, and logo placement. The layout of the drug name and strength, orientation of text, and overall visual style are very close, so they could easily be confused at a glance despite different product names and strengths.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Lisinopril (Dapril) 20mg Tab_2.jpg",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Lisinopril (Dapril) 20mg Tab_2.jpg",
+      "output_text": "{\"error\": false, \"reasoning\": \"Both are silver Medochemie blisters with the same green text color, repeating horizontal brand/strength lines, and identical ITC/Medochemie logo style. Even though the candidate photo shows tablets and a slightly different layout, the overall appearance and branding are very similar, creating a realistic risk of confusion.\", \"lookalike\": true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver Medochemie blisters with the same green text color, repeating horizontal brand/strength lines, and identical ITC/Medochemie logo style. Even though the candidate photo shows tablets and a slightly different layout, the overall appearance and branding are very similar, creating a realistic risk of confusion.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Lisinopril (Dapril) 20mg Tab (Medochemie Ltd, Cyprus) v1 [3September2020]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Lisinopril (Dapril) 20mg Tab (Medochemie Ltd, Cyprus) v1 [3September2020]_2.jpg",
+      "output_text": "{\"error\": false, \"reasoning\": \"Both are silver Medochemie blister packs with the same green text color, similar repeating brand logo, and similar layout of large product name plus strength (MEDOVIR 200 vs DAPRIL 20). The background texture, printing style, and overall visual impression are very close, creating a realistic risk of confusion at a glance despite different names and an extra visible blister strip in the candidate image.\", \"lookalike\": true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver Medochemie blister packs with the same green text color, similar repeating brand logo, and similar layout of large product name plus strength (MEDOVIR 200 vs DAPRIL 20). The background texture, printing style, and overall visual impression are very close, creating a realistic risk of confusion at a glance despite different names and an extra visible blister strip in the candidate image.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Lorazepam (Lorans) 1mg Tab_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Lorazepam (Lorans) 1mg Tab_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Medochemie silver blisters with the same teal-green text color, repeating product name and strength across the foil, and identical manufacturer logo style and layout. Tablet size/arrangement differs slightly but overall appearance at a glance is very similar, creating a realistic risk of confusion.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Medochemie silver blisters with the same teal-green text color, repeating product name and strength across the foil, and identical manufacturer logo style and layout. Tablet size/arrangement differs slightly but overall appearance at a glance is very similar, creating a realistic risk of confusion.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Lorazepam (Lorans) 1mg Tab [1July16]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Lorazepam (Lorans) 1mg Tab [1July16]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Medochemie silver blister strips on a teal background, using repeating green text with the same company logo and similar font style. The overall layout, color scheme, and branding are nearly identical despite different drug names and strengths, so they could easily be confused at a glance.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Medochemie silver blister strips on a teal background, using repeating green text with the same company logo and similar font style. The overall layout, color scheme, and branding are nearly identical despite different drug names and strengths, so they could easily be confused at a glance.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Aciclovir (Medovir) Tab 400mg [5Apr16]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Aciclovir (Medovir) Tab 400mg [5Apr16]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are Medovir Acyclovir BP blister packs from the same manufacturer, with identical silver foil texture, repeating MEDOVIR branding, and similar typography and logo layout. The only major difference is the strength (200 vs 400) and print color (green vs black), but overall visual appearance is very close, so they could easily be confused at a glance.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are Medovir Acyclovir BP blister packs from the same manufacturer, with identical silver foil texture, repeating MEDOVIR branding, and similar typography and logo layout. The only major difference is the strength (200 vs 400) and print color (green vs black), but overall visual appearance is very close, so they could easily be confused at a glance.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Spironolactone (Medochemie Cyprus) 25mg Tab [22March18]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Spironolactone (Medochemie Cyprus) 25mg Tab [22March18]_1.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver Medochemie blisters with repeating horizontal text bands and the same Medochemie logo, giving a similar overall structure and branding style. The main difference is text color (green vs orange) and product name, but at a glance they share enough layout and manufacturer design cues to be plausibly confused.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver Medochemie blisters with repeating horizontal text bands and the same Medochemie logo, giving a similar overall structure and branding style. The main difference is text color (green vs orange) and product name, but at a glance they share enough layout and manufacturer design cues to be plausibly confused.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Spironolactone (Medochemie Cyprus) 25mg Tab [22March18]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Spironolactone (Medochemie Cyprus) 25mg Tab [22March18]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver Medochemie blister strips with repeating diagonal logo/text pattern, same metallic background texture, and similar font style. Key difference is text color (green vs orange) and drug name, but at a quick glance in a drawer or dispenser they share strong branding and layout similarities that could plausibly cause confusion.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver Medochemie blister strips with repeating diagonal logo/text pattern, same metallic background texture, and similar font style. Key difference is text color (green vs orange) and drug name, but at a quick glance in a drawer or dispenser they share strong branding and layout similarities that could plausibly cause confusion.",
+        "lookalike": true
+      }
+    }
+  ]
+}

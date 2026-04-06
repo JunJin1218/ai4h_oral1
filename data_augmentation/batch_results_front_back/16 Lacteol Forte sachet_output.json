@@ -1,0 +1,45 @@
+{
+  "query_name": "16 Lacteol Forte sachet",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\16 Lacteol Forte sachet.PNG",
+  "required_orientations": [
+    "front + back",
+    "front"
+  ],
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 3,
+  "query_lookalike_count": 0,
+  "candidate_results": [
+    {
+      "candidate_name": "Dioctahedral Smectite (Smecta) 3g Sachet_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Dioctahedral Smectite (Smecta) 3g Sachet_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are small white sachets with predominantly blue text and minimal graphics, but the visual details differ notably: the query has purple brand name text and three bold turquoise stripes at the bottom, while the candidate has dark blue lowercase text, a central blue rectangle, and additional logo text at the bottom. The layouts, fonts, and graphic elements are distinct enough that confusion risk is relatively low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are small white sachets with predominantly blue text and minimal graphics, but the visual details differ notably: the query has purple brand name text and three bold turquoise stripes at the bottom, while the candidate has dark blue lowercase text, a central blue rectangle, and additional logo text at the bottom. The layouts, fonts, and graphic elements are distinct enough that confusion risk is relatively low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Dioctahedral Smectite (Smecta) 3g Sachet_v2_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Dioctahedral Smectite (Smecta) 3g Sachet_v2_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are sachet-related packages with white backgrounds and blue typography, but the overall designs differ markedly. The query sachet is a plain vertical pouch with small purple and blue text at the top and three thin turquoise stripes at the bottom. The candidate is a box face with a large blue brand name, a prominent blue gradient block, yellow line accent, and more detailed text. Layout, color blocking, and branding style are clearly distinct, so confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are sachet-related packages with white backgrounds and blue typography, but the overall designs differ markedly. The query sachet is a plain vertical pouch with small purple and blue text at the top and three thin turquoise stripes at the bottom. The candidate is a box face with a large blue brand name, a prominent blue gradient block, yellow line accent, and more detailed text. Layout, color blocking, and branding style are clearly distinct, so confusion risk is low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Dioctahedral Smectite (Smecta) Oral Powder 3G (Ipsen Pharma, Beaufour Ipsen Industrie, France) v1 [29June2020]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Dioctahedral Smectite (Smecta) Oral Powder 3G (Ipsen Pharma, Beaufour Ipsen Industrie, France) v1 [29June2020]_0.jpg",
+      "output_text": "{\"error\": false, \"reasoning\": \"Both are medicine sachets but the designs differ clearly: the query is mostly plain white with small purple brand name and light blue horizontal stripes at the bottom, while the candidate has a large dark blue panel, orange crescent and text, and much denser information. Overall color blocking, layout, and typography are distinct enough that confusion risk is low.\", \"lookalike\": false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are medicine sachets but the designs differ clearly: the query is mostly plain white with small purple brand name and light blue horizontal stripes at the bottom, while the candidate has a large dark blue panel, orange crescent and text, and much denser information. Overall color blocking, layout, and typography are distinct enough that confusion risk is low.",
+        "lookalike": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "query_name": "4 Folic acid sunward back",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\4 Folic acid sunward back.PNG",
+  "required_orientations": [
+    "front + back",
+    "front"
+  ],
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 11,
+  "query_lookalike_count": 8,
+  "candidate_results": [
+    {
+      "candidate_name": "Chlorpheniramine (DHA) 4mg tab_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Chlorpheniramine (DHA) 4mg tab_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both show silver blisters with small round yellow tablets in a 2×5 layout, so the tablet side alone looks similar. However, the candidate image clearly displays extensive black text and branding printed diagonally over much of the blister, while the query blister back is completely plain with only embossed codes. These prominent printed graphics provide a strong differentiating cue, so overall confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both show silver blisters with small round yellow tablets in a 2×5 layout, so the tablet side alone looks similar. However, the candidate image clearly displays extensive black text and branding printed diagonally over much of the blister, while the query blister back is completely plain with only embossed codes. These prominent printed graphics provide a strong differentiating cue, so overall confusion risk is low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Chlorpheniramine (Allersin-F Sunward Singapore) 4mg Tab [20Dec17]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Chlorpheniramine (Allersin-F Sunward Singapore) 4mg Tab [20Dec17]_0.jpg",
+      "output_text": "{\"error\": false, \"reasoning\": \"Both images are silver blisters of 10 small round yellow tablets in a 2x5 layout, with no printed text or branding visible on the foil side, only embossed edge text. Tablet size, color, and arrangement are very similar, making them easy to confuse in practice when viewed from this side.\", \"lookalike\": true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images are silver blisters of 10 small round yellow tablets in a 2x5 layout, with no printed text or branding visible on the foil side, only embossed edge text. Tablet size, color, and arrangement are very similar, making them easy to confuse in practice when viewed from this side.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Chlorpheniramine (Allersin-F Sunward Singapore) 4mg Tab [20Dec17]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Chlorpheniramine (Allersin-F Sunward Singapore) 4mg Tab [20Dec17]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both show silver 10-tablet blisters with small round yellow tablets in a 2x5 layout. The query image only shows the tablet side of the blister, while the candidate image’s top blister (also tablet side) looks very similar in color, size, and foil texture, with only subtle debossing on the tablets and edge text as differentiators. At a quick glance, these could easily be confused when viewed from the tablet side, so there is realistic lookalike risk.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both show silver 10-tablet blisters with small round yellow tablets in a 2x5 layout. The query image only shows the tablet side of the blister, while the candidate image’s top blister (also tablet side) looks very similar in color, size, and foil texture, with only subtle debossing on the tablets and edge text as differentiators. At a quick glance, these could easily be confused when viewed from the tablet side, so there is realistic lookalike risk.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Vitamin B Complex (DHA B-plex) [16May12]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Vitamin B Complex (DHA B-plex) [16May12]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show unprinted silver blisters with small round yellow tablets in a 2-column layout. The foil texture, lack of colored text/branding, and similar tablet color/shape create a very similar overall appearance, making them easy to confuse at a glance, especially when viewed from the tablet side only.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show unprinted silver blisters with small round yellow tablets in a 2-column layout. The foil texture, lack of colored text/branding, and similar tablet color/shape create a very similar overall appearance, making them easy to confuse at a glance, especially when viewed from the tablet side only.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Methotrexate (Emthexate) Tab 2.5mg (MA&mfr_Teva Czech Industries, Czech Republic) v1 [9Mar2022]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Methotrexate (Emthexate) Tab 2.5mg (MA&mfr_Teva Czech Industries, Czech Republic) v1 [7Dec2022]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver blister strips with small round yellow tablets arranged in two columns of five, which is inherently similar. However, the candidate has a very prominent magenta strip with repeated white “Methotrexate” text down the center and embossed tablet markings, while the query side shown is plain foil with no printed branding or color band visible. This strong colored central label and marked tablets create clear visual distinction, so overall confusion risk is moderate to low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver blister strips with small round yellow tablets arranged in two columns of five, which is inherently similar. However, the candidate has a very prominent magenta strip with repeated white “Methotrexate” text down the center and embossed tablet markings, while the query side shown is plain foil with no printed branding or color band visible. This strong colored central label and marked tablets create clear visual distinction, so overall confusion risk is moderate to low.",
+        "lookalike": false
+      }
+    },
+    {
+      "candidate_name": "Hydralazine (Beacons Singapore) 50mg Tab [26Jan18]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Hydralazine (Beacons Singapore) 50mg Tab [26Jan18]_0.jpg",
+      "output_text": "{\"error\": false, \"reasoning\": \"Both images show silver blisters with 10 round yellow tablets arranged 2×5, viewed from the non-printed foil side. Tablet color, size, and layout are extremely similar, and there is no distinguishing print visible on either front face, making them very easy to confuse in practice.\", \"lookalike\": true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show silver blisters with 10 round yellow tablets arranged 2×5, viewed from the non-printed foil side. Tablet color, size, and layout are extremely similar, and there is no distinguishing print visible on either front face, making them very easy to confuse in practice.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Diclofenac (Voren YSP Malaysia) 25mg Tab [2Feb18]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Diclofenac (Voren YSP Malaysia) 25mg Tab [2Feb18]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show silver blister packs containing small round yellow tablets arranged in two parallel rows. The tablet color, size, and layout (2x5) are very similar, and the visible foil side on the candidate’s right strip closely matches the plain foil of the query, with only subtle embossed text. At a quick glance, especially when viewed from the tablet side in practice, these would be easy to confuse despite different products and the presence of printed branding on the other side of the candidate blister.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show silver blister packs containing small round yellow tablets arranged in two parallel rows. The tablet color, size, and layout (2x5) are very similar, and the visible foil side on the candidate’s right strip closely matches the plain foil of the query, with only subtle embossed text. At a quick glance, especially when viewed from the tablet side in practice, these would be easy to confuse despite different products and the presence of printed branding on the other side of the candidate blister.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Diclofenac (Voren YSP Malaysia) 25mg Tab [2Feb18]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Diclofenac (Voren YSP Malaysia) 25mg Tab [2Feb18]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show the back of silver blisters with identical-looking small round yellow tablets, in clear domed blisters, with minimal/no visible printing. The foil texture and overall appearance are highly similar; orientation and tablet count differ but are minor cues. This could easily cause confusion in practice.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show the back of silver blisters with identical-looking small round yellow tablets, in clear domed blisters, with minimal/no visible printing. The foil texture and overall appearance are highly similar; orientation and tablet count differ but are minor cues. This could easily cause confusion in practice.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Diclofenac (Voren) 25mg Tab_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Diclofenac (Voren) 25mg Tab_0.jpg",
+      "output_text": "{\"error\": false, \"reasoning\": \"Both are silver blisters containing small round yellow tablets arranged in two straight columns of five, with minimal or no printed text visible on the foil side. The tablet color, shape, and blister appearance are highly similar, and size/ratio differences are minor, so they could easily be confused at a glance.\", \"lookalike\": true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver blisters containing small round yellow tablets arranged in two straight columns of five, with minimal or no printed text visible on the foil side. The tablet color, shape, and blister appearance are highly similar, and size/ratio differences are minor, so they could easily be confused at a glance.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Promethazine Teoclate (Votazine) 25mg Tab [10Dec12]_0",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Promethazine Teoclate (Votazine) 25mg Tab [10Dec12]_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both images show unprinted silver blisters containing small round yellow tablets, with no branding or colored text visible. The tablets are of similar size and color, and the blister foil texture appears alike. Orientation (2x5 vs 1x10) is a minor difference; overall appearance is close enough that users could easily confuse them.\",\"lookalike\":true}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both images show unprinted silver blisters containing small round yellow tablets, with no branding or colored text visible. The tablets are of similar size and color, and the blister foil texture appears alike. Orientation (2x5 vs 1x10) is a minor difference; overall appearance is close enough that users could easily confuse them.",
+        "lookalike": true
+      }
+    },
+    {
+      "candidate_name": "Letrozole (Sandoz) 2.5mg Tab [1July16]_2",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Letrozole (Sandoz) 2.5mg Tab [1July16]_2.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both contain small round yellow tablets in a silver blister, but the query shows only a plain, unprinted silver backing, while the candidate has a distinct grid structure and prominent red printed text with branding and strength information. These strong layout and marking differences make them readily distinguishable despite similar tablet color and blister material.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both contain small round yellow tablets in a silver blister, but the query shows only a plain, unprinted silver backing, while the candidate has a distinct grid structure and prominent red printed text with branding and strength information. These strong layout and marking differences make them readily distinguishable despite similar tablet color and blister material.",
+        "lookalike": false
+      }
+    }
+  ]
+}

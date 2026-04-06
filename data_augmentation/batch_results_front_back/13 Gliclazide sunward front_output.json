@@ -1,0 +1,25 @@
+{
+  "query_name": "13 Gliclazide sunward front",
+  "query_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data\\images\\13 Gliclazide sunward front.PNG",
+  "required_orientations": [
+    "front + back",
+    "back"
+  ],
+  "missing_candidates": [],
+  "few_shots_count": 3,
+  "model": "gpt-5.1",
+  "query_total_candidates": 1,
+  "query_lookalike_count": 0,
+  "candidate_results": [
+    {
+      "candidate_name": "Diphenoxylate 2.5mg, Atropine 0.025mg (SunDianox-Sunward Singapore) Tab [24May2018]_1",
+      "candidate_path": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\Cleaned Dataset v2\\Diphenoxylate 2.5mg, Atropine 0.025mg (Dhamotil) Tab_0.jpg",
+      "output_text": "{\"error\":false,\"reasoning\":\"Both are silver blisters from Sunward, but the query shows dense blue printed branding and text across the foil, while the candidate side shown has no visible printing and instead displays solid green tablets in each cavity. The visual focus, color accents, and overall appearance differ enough that confusion risk is low.\",\"lookalike\":false}",
+      "parsed_output": {
+        "error": false,
+        "reasoning": "Both are silver blisters from Sunward, but the query shows dense blue printed branding and text across the foil, while the candidate side shown has no visible printing and instead displays solid green tablets in each cavity. The visual focus, color accents, and overall appearance differ enough that confusion risk is low.",
+        "lookalike": false
+      }
+    }
+  ]
+}

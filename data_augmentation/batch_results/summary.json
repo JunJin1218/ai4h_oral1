@@ -1,154 +1,21 @@
 {
-  "total_queries_run": 19,
-  "total_candidate_comparisons": 61,
-  "total_lookalikes": 50,
-  "lookalike_rate": 0.819672131147541,
+  "orientation_mode": "front_back",
+  "total_queries_run": 1,
+  "total_candidate_comparisons": 4,
+  "total_lookalikes": 4,
+  "lookalike_rate": 1.0,
   "queries": [
     {
       "query_name": "1 Acarbose tab front YSP",
       "status": "ok",
       "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\1 Acarbose tab front YSP_output.json",
+      "required_orientations": [
+        "front + back",
+        "back"
+      ],
       "resolved_candidates": 4,
       "missing_candidates": 0,
       "query_lookalike_count": 4
-    },
-    {
-      "query_name": "2 Aciclovir Medovir Front",
-      "status": "ok",
-      "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\2 Aciclovir Medovir Front_output.json",
-      "resolved_candidates": 2,
-      "missing_candidates": 0,
-      "query_lookalike_count": 2
-    },
-    {
-      "query_name": "3 Antacid Beacons front",
-      "status": "ok",
-      "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\3 Antacid Beacons front_output.json",
-      "resolved_candidates": 3,
-      "missing_candidates": 0,
-      "query_lookalike_count": 3
-    },
-    {
-      "query_name": "4 Folic acid sunward back",
-      "status": "ok",
-      "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\4 Folic acid sunward back_output.json",
-      "resolved_candidates": 7,
-      "missing_candidates": 0,
-      "query_lookalike_count": 6
-    },
-    {
-      "query_name": "5 Fluoxetine 10 APO bottle fron",
-      "status": "skipped",
-      "reason": "query image not found"
-    },
-    {
-      "query_name": "6 Clomipramine 25 front",
-      "status": "ok",
-      "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\6 Clomipramine 25 front_output.json",
-      "resolved_candidates": 1,
-      "missing_candidates": 0,
-      "query_lookalike_count": 1
-    },
-    {
-      "query_name": "7 Amiodarone 200",
-      "status": "ok",
-      "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\7 Amiodarone 200_output.json",
-      "resolved_candidates": 5,
-      "missing_candidates": 0,
-      "query_lookalike_count": 4
-    },
-    {
-      "query_name": "8 Loratadine 10 Front",
-      "status": "ok",
-      "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\8 Loratadine 10 Front_output.json",
-      "resolved_candidates": 5,
-      "missing_candidates": 0,
-      "query_lookalike_count": 5
-    },
-    {
-      "query_name": "9 Thalidomide 50 back",
-      "status": "ok",
-      "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\9 Thalidomide 50 back_output.json",
-      "resolved_candidates": 2,
-      "missing_candidates": 0,
-      "query_lookalike_count": 2
-    },
-    {
-      "query_name": "10 Telmisartan 80 Intas box",
-      "status": "ok",
-      "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\10 Telmisartan 80 Intas box_output.json",
-      "resolved_candidates": 2,
-      "missing_candidates": 1,
-      "query_lookalike_count": 2
-    },
-    {
-      "query_name": "11 Dextromethorphan ICM bottle",
-      "status": "ok",
-      "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\11 Dextromethorphan ICM bottle_output.json",
-      "resolved_candidates": 5,
-      "missing_candidates": 0,
-      "query_lookalike_count": 4
-    },
-    {
-      "query_name": "12 Rifampicin 300 Medochemie ba",
-      "status": "skipped",
-      "reason": "query image not found"
-    },
-    {
-      "query_name": "13 Gliclazide sunward front",
-      "status": "ok",
-      "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\13 Gliclazide sunward front_output.json",
-      "resolved_candidates": 1,
-      "missing_candidates": 0,
-      "query_lookalike_count": 0
-    },
-    {
-      "query_name": "14 Olanzapine 10 actavis box",
-      "status": "ok",
-      "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\14 Olanzapine 10 actavis box_output.json",
-      "resolved_candidates": 3,
-      "missing_candidates": 0,
-      "query_lookalike_count": 3
-    },
-    {
-      "query_name": "15 Panadeine Back",
-      "status": "ok",
-      "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\15 Panadeine Back_output.json",
-      "resolved_candidates": 6,
-      "missing_candidates": 0,
-      "query_lookalike_count": 6
-    },
-    {
-      "query_name": "16 Lacteol Forte sachet",
-      "status": "ok",
-      "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\16 Lacteol Forte sachet_output.json",
-      "resolved_candidates": 3,
-      "missing_candidates": 0,
-      "query_lookalike_count": 0
-    },
-    {
-      "query_name": "35 Telmisartan",
-      "status": "ok",
-      "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\35 Telmisartan_output.json",
-      "resolved_candidates": 7,
-      "missing_candidates": 0,
-      "query_lookalike_count": 5
-    },
-    {
-      "query_name": "49 Rivaroxaban 2.5",
-      "status": "ok",
-      "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\49 Rivaroxaban 2.5_output.json",
-      "resolved_candidates": 4,
-      "missing_candidates": 0,
-      "query_lookalike_count": 2
-    },
-    {
-      "query_name": "50 aspirin",
-      "status": "ok",
-      "output_file": "C:\\Users\\Asus\\T5 - SDS\\T8-AI4H\\ai4h_oral1\\data_augmentation\\batch_results\\50 aspirin_output.json",
-      "resolved_candidates": 1,
-      "missing_candidates": 0,
-      "query_lookalike_count": 1
     }
   ]
 }
