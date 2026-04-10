@@ -12,6 +12,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import json
 import random
 import sqlite3
 from collections import Counter, defaultdict
@@ -178,6 +179,39 @@ def label_counts(rows: list[AIFeedbackRow]) -> Counter:
     return Counter(int(row.label) for row in rows)
 
 
+def parse_hidden_sizes(value: str | None) -> tuple[int, ...] | None:
+    if value is None:
+        return None
+    parts = [x.strip() for x in value.split(",") if x.strip()]
+    if not parts:
+        raise ValueError("--hidden-sizes must contain at least one integer")
+    hidden_sizes = tuple(int(x) for x in parts)
+    if any(x <= 0 for x in hidden_sizes):
+        raise ValueError("--hidden-sizes values must be > 0")
+    return hidden_sizes
+
+
+def model_param_count(model: torch.nn.Module) -> int:
+    return sum(p.numel() for p in model.parameters())
+
+
+def save_metric_checkpoint(
+    *,
+    model: torch.nn.Module,
+    cfg: AssessorConfig,
+    out_dir: Path,
+    metric_name: str,
+    epoch: int,
+    metric_value: float,
+) -> None:
+    filename = f"assessor_best_{metric_name}.pt"
+    save_assessor(model, cfg, out_dir=out_dir, filename=filename)
+    print(
+        f"  saved best-{metric_name} checkpoint: epoch={epoch} "
+        f"{metric_name}={metric_value:.4f} -> {out_dir / filename}"
+    )
+
+
 @torch.no_grad()
 def evaluate(
     model: torch.nn.Module,
@@ -253,10 +287,26 @@ def main() -> None:
     parser.add_argument("--balance-weights", action="store_true")
     parser.add_argument("--include-identical", action="store_true")
     parser.add_argument("--min-rows-per-query", type=int, default=1)
+    parser.add_argument(
+        "--hidden-sizes",
+        type=str,
+        default=None,
+        help="Comma-separated hidden sizes override, e.g. 2048,1024,256",
+    )
+    parser.add_argument(
+        "--dropout",
+        type=float,
+        default=None,
+        help="Override dropout in AssessorConfig",
+    )
     args = parser.parse_args()
 
     if not 0.0 < args.train_ratio < 1.0:
         raise ValueError("--train-ratio must be between 0 and 1")
+    if args.dropout is not None and not 0.0 <= args.dropout < 1.0:
+        raise ValueError("--dropout must be in [0, 1)")
+    if args.resume and (args.hidden_sizes is not None or args.dropout is not None):
+        raise ValueError("--resume cannot be combined with --hidden-sizes or --dropout")
 
     db_path = Path(args.db_path)
     index_path = Path(args.index_path)
@@ -266,11 +316,17 @@ def main() -> None:
 
     cfg_path = out_dir / "config.json"
     if cfg_path.exists():
-        import json
-
         cfg = AssessorConfig(**json.loads(cfg_path.read_text(encoding="utf-8")))
     else:
         cfg = AssessorConfig()
+
+    hidden_sizes_override = parse_hidden_sizes(args.hidden_sizes)
+    if hidden_sizes_override is not None or args.dropout is not None:
+        cfg = AssessorConfig(
+            embedding_size=cfg.embedding_size,
+            hidden_sizes=hidden_sizes_override if hidden_sizes_override is not None else cfg.hidden_sizes,
+            dropout=args.dropout if args.dropout is not None else cfg.dropout,
+        )
 
     if args.resume and (out_dir / "assessor.pt").exists():
         model, _ = load_assessor(device=device, in_dir=out_dir)
@@ -278,6 +334,12 @@ def main() -> None:
     else:
         model = AssessorMLP(cfg).to(device)
         print("Training from scratch")
+
+    print(
+        f"Model config: embedding_size={cfg.embedding_size} "
+        f"hidden_sizes={cfg.hidden_sizes} dropout={cfg.dropout}"
+    )
+    print(f"Model parameters: {model_param_count(model):,}")
 
     rows = load_ai_feedback_rows(
         db_path=db_path,
@@ -325,8 +387,11 @@ def main() -> None:
     criterion = torch.nn.BCELoss(reduction="none")
 
     model.train()
-    best_val_f1 = float("-inf")
-    best_epoch: int | None = None
+    best_metrics: dict[str, tuple[float, int] | None] = {
+        "accuracy": None,
+        "f1": None,
+        "recall": None,
+    }
     for epoch in range(args.epochs):
         total_loss = 0.0
         n_batches = 0
@@ -367,27 +432,38 @@ def main() -> None:
             cm = metrics["cm"]
             print(
                 f"  val: n={metrics['n']} loss={metrics['loss']:.4f} "
-                f"acc={metrics['accuracy']:.4f} f1={metrics['f1']:.4f} "
+                f"acc={metrics['accuracy']:.4f} "
+                f"precision={metrics['precision']:.4f} "
+                f"recall={metrics['recall']:.4f} "
+                f"f1={metrics['f1']:.4f} "
                 f"cm=[[{cm[0][0]},{cm[0][1]}],[{cm[1][0]},{cm[1][1]}]]"
             )
-            val_f1 = float(metrics["f1"])
-            if val_f1 > best_val_f1:
-                best_val_f1 = val_f1
-                best_epoch = epoch + 1
-                save_assessor(model, cfg, out_dir=out_dir, filename="assessor_best.pt")
-                print(
-                    f"  saved best checkpoint: epoch={best_epoch} "
-                    f"f1={best_val_f1:.4f} -> {out_dir / 'assessor_best.pt'}"
-                )
+            epoch_num = epoch + 1
+            for metric_name in ("accuracy", "f1", "recall"):
+                metric_value = float(metrics[metric_name])
+                best = best_metrics[metric_name]
+                if best is None or metric_value > best[0]:
+                    best_metrics[metric_name] = (metric_value, epoch_num)
+                    save_metric_checkpoint(
+                        model=model,
+                        cfg=cfg,
+                        out_dir=out_dir,
+                        metric_name=metric_name,
+                        epoch=epoch_num,
+                        metric_value=metric_value,
+                    )
 
     out_dir.mkdir(parents=True, exist_ok=True)
     save_assessor(model, cfg, out_dir=out_dir)
     print(f"Saved model to {out_dir}")
-    if best_epoch is not None:
-        print(
-            f"Best validation checkpoint: epoch={best_epoch} "
-            f"f1={best_val_f1:.4f} -> {out_dir / 'assessor_best.pt'}"
-        )
+    for metric_name in ("accuracy", "f1", "recall"):
+        best = best_metrics[metric_name]
+        if best is not None:
+            best_value, best_epoch = best
+            print(
+                f"Best validation checkpoint ({metric_name}): epoch={best_epoch} "
+                f"{metric_name}={best_value:.4f} -> {out_dir / f'assessor_best_{metric_name}.pt'}"
+            )
 
 
 if __name__ == "__main__":

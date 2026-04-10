@@ -218,3 +218,14 @@ log/
 
 batches/
 batch_results/
+
+summary/
+teacher_eval/
+
+model_ai_feedback_h2048_1024_512/
+model_ai_feedback_mlp/
+model_ai_feedback_test/
+
+assessor/*.csv
+
+.codex

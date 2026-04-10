@@ -142,6 +142,7 @@ function InferencePage({ backendActive }) {
   const [loading, setLoading] = useState(false)
   const [similarityType, setSimilarityType] = useState('l2')
   const [topK, setTopK] = useState(20)
+  const [threshold, setThreshold] = useState(0.5)
   const [result, setResult] = useState(null)
 
   useEffect(() => {
@@ -167,6 +168,7 @@ function InferencePage({ backendActive }) {
       const params = new URLSearchParams({
         top_k: String(Number(topK)),
         similarity_type: similarityType,
+        threshold: String(Number(threshold)),
       })
       const res = await fetch(`${API_BASE}/inference/predict?${params.toString()}`, {
         method: 'POST',
@@ -182,13 +184,13 @@ function InferencePage({ backendActive }) {
     } finally {
       setLoading(false)
     }
-  }, [file, topK, similarityType])
+  }, [file, topK, similarityType, threshold])
 
   return (
     <Shell title="Inference" subtitle="Medication Similarity Inference" backendActive={backendActive}>
       <ol className="instructions-list">
         <li>Upload a query image.</li>
-        <li>Choose retrieval mode and top-k.</li>
+        <li>Choose retrieval mode, top-k, and threshold.</li>
         <li>Click <strong>Run Inference</strong> to retrieve candidates and classify by assessor score.</li>
       </ol>
 
@@ -224,6 +226,17 @@ function InferencePage({ backendActive }) {
           <label className="setting-item">
             <span>Top-K</span>
             <input type="number" value={topK} min={1} max={200} onChange={(e) => setTopK(e.target.value)} />
+          </label>
+          <label className="setting-item">
+            <span>Threshold</span>
+            <input
+              type="number"
+              value={threshold}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={(e) => setThreshold(e.target.value)}
+            />
           </label>
         </div>
         <div className="actions">
