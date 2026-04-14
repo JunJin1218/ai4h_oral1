@@ -100,6 +100,7 @@ def _get_trainer() -> OnlineTrainer:
             index_path=INDEX_PATH,
         )
         print(f"[web_ui.api] assessor model dir: {_trainer.model_dir}")
+        print(f"[web_ui.api] assessor checkpoint: {_trainer.model_checkpoint}")
     return _trainer
 
 
@@ -197,7 +198,13 @@ def _make_batch_payload() -> dict:
     }
 
 
-def _predict_candidates_from_image(image: Image.Image, *, top_k: int, similarity_type: str) -> dict:
+def _predict_candidates_from_image(
+    image: Image.Image,
+    *,
+    top_k: int,
+    similarity_type: str,
+    threshold: float,
+) -> dict:
     trainer = _get_trainer()
     processor, vit_model, vit_device = _get_vit_bundle()
     query_vector_t = get_image_embedding(
@@ -223,15 +230,16 @@ def _predict_candidates_from_image(image: Image.Image, *, top_k: int, similarity
     non_lookalikes = []
     for cand, score in zip(candidates, scores):
         img = _resolve_image_path_from_embedding_file(cand.file_name or "")
+        is_lookalike = float(score) >= threshold
         item = {
             "vector_id": cand.vector_id,
             "file_name": cand.file_name,
             "retrieval_score": round(float(cand.score), 6),
             "model_score": round(float(score), 6),
-            "is_lookalike": bool(float(score) >= 0.5),
+            "is_lookalike": is_lookalike,
             "image_url": f"/online/image/{cand.vector_id}" if img else None,
         }
-        if float(score) >= 0.5:
+        if is_lookalike:
             lookalikes.append(item)
         else:
             non_lookalikes.append(item)
@@ -242,7 +250,7 @@ def _predict_candidates_from_image(image: Image.Image, *, top_k: int, similarity
         "meta": {
             "top_k": top_k,
             "similarity_type": similarity_type,
-            "threshold": 0.5,
+            "threshold": threshold,
         },
     }
 
@@ -282,9 +290,12 @@ async def inference_predict(
     image: UploadFile = File(...),
     top_k: int = 20,
     similarity_type: str = "l2",
+    threshold: float = 0.5,
 ) -> dict:
     if top_k <= 0 or top_k > 200:
         raise HTTPException(400, "top_k must be between 1 and 200.")
+    if threshold < 0.0 or threshold > 1.0:
+        raise HTTPException(400, "threshold must be between 0.0 and 1.0.")
     try:
         metric = similarity_type.lower()
         if metric not in {"l2", "euclidean", "ip", "inner_product", "dot", "cosine", "cos", "cos_sim"}:
@@ -303,6 +314,7 @@ async def inference_predict(
             pil_image,
             top_k=top_k,
             similarity_type=similarity_type,
+            threshold=threshold,
         )
 
 
@@ -510,6 +522,7 @@ def get_ai_feedback_by_query(query_vector_id: int) -> dict:
                 candidate_vector_id,
                 candidate_image_name,
                 label,
+                COALESCE(identical, 0),
                 reasoning
             FROM {AI_AUGMENT_TABLE}
             WHERE query_vector_id = ?
@@ -530,7 +543,7 @@ def get_ai_feedback_by_query(query_vector_id: int) -> dict:
     batch_ids: list[str] = []
     seen_batches: set[str] = set()
 
-    for batch_id, _, candidate_vector_id, candidate_image_name, label, reasoning in rows:
+    for batch_id, _, candidate_vector_id, candidate_image_name, label, identical, reasoning in rows:
         batch_id = str(batch_id)
         if batch_id not in seen_batches:
             seen_batches.add(batch_id)
@@ -542,6 +555,7 @@ def get_ai_feedback_by_query(query_vector_id: int) -> dict:
             "vector_id": candidate_vector_id,
             "file_name": candidate_image_name,
             "label": int(label),
+            "identical": bool(int(identical)),
             "reasoning": reasoning,
             "batch_id": batch_id,
             "image_url": f"/online/image/{candidate_vector_id}" if cand_img else None,

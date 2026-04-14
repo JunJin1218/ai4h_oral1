@@ -155,9 +155,10 @@ class OnlineTrainer:
         lr: float = 1e-4,
         index_path: str | Path = "data/faiss/embeddings.index",
     ) -> None:
-        if model_dir is None:
-            model_dir = os.environ.get("ASSESSOR_MODEL_DIR", "assessor/model")
-        self.model_dir = Path(model_dir)
+        hardcoded_model_dir = Path("assessor/model_ai_feedback_h2048_1024_512")
+        hardcoded_checkpoint = "assessor_best_f1.pt"
+        self.model_dir = hardcoded_model_dir
+        self.model_checkpoint = self.model_dir / hardcoded_checkpoint
         self.db_path = Path(db_path)
         self.index_path = Path(index_path)
         self.log_dir = Path(os.environ.get("TENSORBOARD_LOG_DIR", "log")) / "online"
@@ -170,11 +171,17 @@ class OnlineTrainer:
         self.writer = SummaryWriter(log_dir=str(self.log_dir))
         self.train_step_count = 0
 
-        if (self.model_dir / "assessor.pt").exists() and (self.model_dir / "config.json").exists():
-            self.model, self.cfg = load_assessor(device=self.device, in_dir=self.model_dir)
+        if self.model_checkpoint.exists() and (self.model_dir / "config.json").exists():
+            self.model, self.cfg = load_assessor(
+                device=self.device,
+                in_dir=self.model_dir,
+                filename=hardcoded_checkpoint,
+            )
         else:
-            self.cfg = AssessorConfig()
-            self.model = AssessorMLP(self.cfg).to(self.device)
+            raise FileNotFoundError(
+                f"Expected assessor checkpoint at {self.model_checkpoint} "
+                f"with config {(self.model_dir / 'config.json')}, but it was not found."
+            )
 
         self.model.train()
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=lr)

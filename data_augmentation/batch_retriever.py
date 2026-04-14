@@ -56,6 +56,7 @@ def ensure_table() -> None:
                 candidate_vector_id INTEGER NOT NULL,
                 label INTEGER NOT NULL,
                 error INTEGER NOT NULL DEFAULT 0,
+                identical INTEGER NOT NULL DEFAULT 0,
                 reasoning TEXT NOT NULL,
                 response_id TEXT,
                 request_id TEXT,
@@ -84,7 +85,7 @@ def get_file_name_by_vector_id(vector_id: int) -> str:
     return str(row[0])
 
 
-def extract_output_payload(record: dict) -> tuple[str | None, str, int, int]:
+def extract_output_payload(record: dict) -> tuple[str | None, str, int, int, int]:
     response = record.get("response") or {}
     body = response.get("body") or {}
     response_id = body.get("id")
@@ -103,13 +104,15 @@ def extract_output_payload(record: dict) -> tuple[str | None, str, int, int]:
             reasoning = payload.get("reasoning")
             lookalike = payload.get("lookalike")
             error = payload.get("error", False)
+            identical = payload.get("identical", False)
             if (
                 not isinstance(reasoning, str)
                 or not isinstance(lookalike, bool)
                 or not isinstance(error, bool)
+                or not isinstance(identical, bool)
             ):
                 raise RuntimeError(f"Invalid output payload for custom_id={record.get('custom_id')}")
-            return response_id, reasoning, int(lookalike), int(error)
+            return response_id, reasoning, int(lookalike), int(error), int(identical)
 
     raise RuntimeError(f"No output_text found for custom_id={record.get('custom_id')}")
 
@@ -141,7 +144,7 @@ def import_output_jsonl(batch_id: str, output_path: Path, log_record: dict | Non
 
             candidate_vector_id = parse_candidate_vector_id(custom_id)
             candidate_image_name = get_file_name_by_vector_id(candidate_vector_id)
-            response_id, reasoning, label, error = extract_output_payload(record)
+            response_id, reasoning, label, error, identical = extract_output_payload(record)
             response = record.get("response") or {}
             request_id = response.get("request_id")
 
@@ -155,6 +158,7 @@ def import_output_jsonl(batch_id: str, output_path: Path, log_record: dict | Non
                     candidate_vector_id,
                     label,
                     error,
+                    identical,
                     reasoning,
                     response_id,
                     request_id,
@@ -174,16 +178,63 @@ def import_output_jsonl(batch_id: str, output_path: Path, log_record: dict | Non
                 candidate_vector_id,
                 label,
                 error,
+                identical,
                 reasoning,
                 response_id,
                 request_id
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             rows,
         )
         conn.commit()
     return len(rows)
+
+
+def retrieve_batch(
+    batch_id: str,
+    *,
+    client: OpenAI | None = None,
+    download_output: bool = DOWNLOAD_OUTPUT,
+    download_error: bool = DOWNLOAD_ERROR,
+) -> dict:
+    own_client = client is None
+    if own_client:
+        load_dotenv()
+        if not os.environ.get("OPENAI_API_KEY"):
+            raise RuntimeError("OPENAI_API_KEY is missing in .env")
+        client = OpenAI()
+
+    assert client is not None
+    batch = client.batches.retrieve(batch_id)
+    log_record = find_batch_log(batch_id)
+
+    result = {
+        "batch_id": batch.id,
+        "status": batch.status,
+        "input_file_id": batch.input_file_id,
+        "output_file_id": batch.output_file_id,
+        "error_file_id": batch.error_file_id,
+        "log_record": log_record,
+        "output_path": None,
+        "error_path": None,
+        "imported_rows": 0,
+        "table_name": TABLE_NAME,
+    }
+
+    if download_output and batch.output_file_id:
+        output_path = OUTPUT_DIR / f"{batch.id}_output.jsonl"
+        download_file(client, batch.output_file_id, output_path)
+        imported = import_output_jsonl(batch.id, output_path, log_record)
+        result["output_path"] = str(output_path)
+        result["imported_rows"] = imported
+
+    if download_error and batch.error_file_id:
+        error_path = OUTPUT_DIR / f"{batch.id}_error.jsonl"
+        download_file(client, batch.error_file_id, error_path)
+        result["error_path"] = str(error_path)
+
+    return result
 
 
 def main() -> None:
@@ -217,18 +268,18 @@ def main() -> None:
         print("logged_candidate_count:", len(log_record.get("candidate_image_names", [])))
         print("logged_jsonl_path:", log_record.get("jsonl_path"))
 
-    if DOWNLOAD_OUTPUT and batch.output_file_id:
-        output_path = OUTPUT_DIR / f"{batch.id}_output.jsonl"
-        download_file(client, batch.output_file_id, output_path)
-        print("saved_output_path:", output_path)
-        imported = import_output_jsonl(batch.id, output_path, log_record)
-        print("imported_rows:", imported)
-        print("imported_table:", TABLE_NAME)
-
-    if DOWNLOAD_ERROR and batch.error_file_id:
-        error_path = OUTPUT_DIR / f"{batch.id}_error.jsonl"
-        download_file(client, batch.error_file_id, error_path)
-        print("saved_error_path:", error_path)
+    retrieved = retrieve_batch(
+        BATCH_ID,
+        client=client,
+        download_output=DOWNLOAD_OUTPUT,
+        download_error=DOWNLOAD_ERROR,
+    )
+    if retrieved["output_path"] is not None:
+        print("saved_output_path:", retrieved["output_path"])
+        print("imported_rows:", retrieved["imported_rows"])
+        print("imported_table:", retrieved["table_name"])
+    if retrieved["error_path"] is not None:
+        print("saved_error_path:", retrieved["error_path"])
 
 
 if __name__ == "__main__":
