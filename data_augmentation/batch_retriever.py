@@ -4,10 +4,16 @@ import json
 import os
 import re
 import sqlite3
+import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
 from openai import OpenAI
+
+_root = Path(__file__).resolve().parent.parent
+if str(_root) not in sys.path:
+    sys.path.insert(0, str(_root))
+
 from utils import get_vector_id_by_file_name
 
 

@@ -1,7 +1,11 @@
+"""
+Claude version of api_test.py - Minimal Claude image comparison test.
+Migrated from OpenAI to Anthropic Claude.
+"""
+
 from __future__ import annotations
 
 import argparse
-import base64
 import json
 import os
 import sqlite3
@@ -10,14 +14,15 @@ import time
 from pathlib import Path
 from typing import Any
 
-from anthropic import Anthropic
 from dotenv import load_dotenv
+from anthropic import Anthropic, APIStatusError
 
 _root = Path(__file__).resolve().parent.parent
 if str(_root) not in sys.path:
     sys.path.insert(0, str(_root))
 
 from utils import get_vector_id_by_file_name, reconstruct_vector_by_id, search_similar_with_metadata
+from claude_helpers import build_few_shot_content_claude, build_vision_content, create_claude_batch_request
 
 
 DEFAULT_MODEL = "anthropic/claude-3-5-sonnet"
@@ -71,37 +76,6 @@ def load_few_shots() -> list[dict[str, Any]]:
     return out
 
 
-def build_few_shot_content(few_shots: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    # Temporarily disable few_shots as they use OpenAI file_id but script uses Claude
-    # content: list[dict[str, str]] = []
-    # for idx, shot in enumerate(few_shots, start=1):
-    #     query_file_id = shot.get("Query image")
-    #     candidate_file_id = shot.get("Candidate image")
-    #     query_file_name = shot.get("Query file name", "unknown_query")
-    #     candidate_file_name = shot.get("Candidate file name", "unknown_candidate")
-    #     output = shot.get("Output")
-
-    #     if not isinstance(query_file_id, str) or not query_file_id.startswith("file-"):
-    #         raise RuntimeError(f"few_shots[{idx}] is missing a valid 'Query image' file id.")
-    #     if not isinstance(candidate_file_id, str) or not candidate_file_id.startswith("file-"):
-    #         raise RuntimeError(f"few_shots[{idx}] is missing a valid 'Candidate image' file id.")
-    #     if not isinstance(output, dict):
-    #         raise RuntimeError(f"few_shots[{idx}] is missing an object 'Output'.")
-
-    #     content.extend(
-    #         [
-    #             {"type": "input_text", "text": f"Example {idx}"},
-    #             {"type": "input_text", "text": f"Example Query file name: {query_file_name}"},
-    #             {"type": "input_image", "file_id": query_file_id},
-    #             {"type": "input_text", "text": f"Example Candidate file name: {candidate_file_name}"},
-    #             {"type": "input_image", "file_id": candidate_file_id},
-    #             {"type": "input_text", "text": f"Example Output: {json.dumps(output, ensure_ascii=True)}"},
-    #         ]
-    #     )
-    # return content
-    return []
-
-
 def build_image_index() -> dict[str, Path]:
     index: dict[str, Path] = {}
     exts = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tif", ".tiff"}
@@ -130,33 +104,12 @@ def choose_random_query_file_name() -> str:
     return str(row[0])
 
 
-def encode_image_base64(path: Path) -> str:
-    if not path.exists():
-        raise FileNotFoundError(f"Image not found: {path}")
-    with path.open("rb") as f:
-        return base64.b64encode(f.read()).decode()
-
-
-def get_image_media_type(path: Path) -> str:
-    suffix = path.suffix.lower()
-    if suffix in {".jpg", ".jpeg"}:
-        return "image/jpeg"
-    elif suffix == ".png":
-        return "image/png"
-    elif suffix == ".webp":
-        return "image/webp"
-    elif suffix in {".gif"}:
-        return "image/gif"
-    else:
-        return "image/jpeg"  # default
-
-
 def main() -> None:
     load_dotenv()
 
-    parser = argparse.ArgumentParser(description="Minimal Anthropic image comparison test")
+    parser = argparse.ArgumentParser(description="Minimal Claude image comparison test")
     parser.add_argument("--model", default=os.environ.get("ANTHROPIC_MODEL", DEFAULT_MODEL))
-    parser.add_argument("--max-retries", type=int, default=2, help="Retry count for 5xx errors")
+    parser.add_argument("--max-retries", type=int, default=2, help="Retry count for errors")
     args = parser.parse_args()
 
     if not os.environ.get("ANTHROPIC_API_KEY"):
@@ -194,47 +147,51 @@ def main() -> None:
     if candidate_path is None:
         raise RuntimeError(f"Could not resolve candidate image path for {candidate.file_name}")
 
-    client = Anthropic( 
-        api_key=os.getenv("ANTHROPIC_API_KEY"),
-        base_url=os.getenv("ANTHROPIC_BASE_URL", "https://openrouter.ai/api"),
-    )
-    print("Base URL:", os.getenv("ANTHROPIC_BASE_URL", "https://openrouter.ai/api"))
-    print("Model:", args.model)
-    query_data = encode_image_base64(query_path)
-    query_media_type = get_image_media_type(query_path)
-    candidate_data = encode_image_base64(candidate_path)
-    candidate_media_type = get_image_media_type(candidate_path)
+    # Build few-shot content for Claude
+    few_shot_content = build_few_shot_content_claude(few_shots, image_index) if few_shots else None
 
-    few_shot_content = build_few_shot_content(few_shots)
-
-    content: list[dict[str, Any]] = [
+    # Build content for Claude
+    content = [
         {"type": "text", "text": prompt},
-        *few_shot_content,
-        {"type": "text", "text": f"Query file name: {query_file_name}"},
-        {"type": "image", "source": {"type": "base64", "media_type": query_media_type, "data": query_data}},
-        {"type": "text", "text": f"Candidate file name: {candidate.file_name}"},
-        {"type": "image", "source": {"type": "base64", "media_type": candidate_media_type, "data": candidate_data}},
     ]
 
+    if few_shot_content:
+        content.extend(few_shot_content)
+
+    content.extend([
+        {"type": "text", "text": f"Query file name: {query_file_name}"},
+        *build_vision_content("", query_path),
+        {"type": "text", "text": f"Candidate file name: {candidate.file_name}"},
+        *build_vision_content("", candidate_path),
+    ])
+
+    client = Anthropic()
     last_error: Exception | None = None
     response = None
+
     for attempt in range(args.max_retries + 1):
         try:
             response = client.messages.create(
                 model=args.model,
-                max_tokens=2000,
-                messages=[{"role": "user", "content": content}],
+                max_tokens=1024,
+                messages=[{
+                    "role": "user",
+                    "content": content
+                }]
             )
             break
-        except Exception as exc:  # Anthropic exceptions
+        except APIStatusError as exc:
             last_error = exc
-            print(f"[attempt {attempt + 1}] Anthropic error: {exc}")
+            print(f"[attempt {attempt + 1}] Claude API error")
+            print("status:", exc.status_code)
+            print("request_id:", exc.request_id)
+            print("body:", exc.body)
             if attempt >= args.max_retries:
                 raise
             time.sleep(min(2 ** attempt, 4))
 
     if response is None:
-        raise RuntimeError(f"Anthropic request failed after retries: {last_error}")
+        raise RuntimeError(f"Claude request failed after retries: {last_error}")
 
     print("model:", response.model)
     print("query_file_name:", query_file_name)
