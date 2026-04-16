@@ -36,7 +36,7 @@ INDEX_PATH = Path("data/faiss/embeddings.index")
 IMAGE_ROOTS = [Path("input_img"), Path("processed_img"), Path("test_query_img")]
 PROMPT_PATH = Path("data_augmentation/prompt.txt")
 SCHEMA_PATH = Path("data_augmentation/schema.json")
-FEW_SHOTS_PATH = Path("data_augmentation/few_shots.jsonl")
+FEW_SHOTS_PATH = Path("data_augmentation_claude/few_shots_claude.jsonl")
 OUTPUT_DIR = Path("data_augmentation/batches_claude")
 BATCH_LOG_PATH = Path("data_augmentation/batch_id_logs_claude.jsonl")
 
@@ -44,11 +44,6 @@ BATCH_LOG_PATH = Path("data_augmentation/batch_id_logs_claude.jsonl")
 def sanitize_name(value: str) -> str:
     cleaned = re.sub(r"[^A-Za-z0-9._-]+", "_", value).strip("_")
     return cleaned or "query"
-
-
-def clean_stem(stem: str) -> str:
-    """Clean stem by removing leading digits and spaces."""
-    return stem.lstrip('0123456789 ').strip()
 
 
 def build_image_index() -> dict[str, Path]:
@@ -59,13 +54,12 @@ def build_image_index() -> dict[str, Path]:
             continue
         for path in sorted(root.rglob("*")):
             if path.is_file() and path.suffix.lower() in exts:
-                clean_key = clean_stem(path.stem)
-                index.setdefault(clean_key, path)
+                index.setdefault(path.stem, path)
     return index
 
 
 def resolve_image_path(file_name: str, image_index: dict[str, Path]) -> Path | None:
-    return image_index.get(clean_stem(Path(file_name).stem))
+    return image_index.get(Path(file_name).stem)
 
 
 def is_excluded_query_file_name(file_name: str) -> bool:

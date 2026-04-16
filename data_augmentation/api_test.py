@@ -75,33 +75,33 @@ def load_few_shots() -> list[dict[str, Any]]:
 
 def build_few_shot_content(few_shots: list[dict[str, Any]]) -> list[dict[str, Any]]:
     # Temporarily disable few_shots as they use OpenAI file_id but script uses Claude
-    # content: list[dict[str, str]] = []
-    # for idx, shot in enumerate(few_shots, start=1):
-    #     query_file_id = shot.get("Query image")
-    #     candidate_file_id = shot.get("Candidate image")
-    #     query_file_name = shot.get("Query file name", "unknown_query")
-    #     candidate_file_name = shot.get("Candidate file name", "unknown_candidate")
-    #     output = shot.get("Output")
+    content: list[dict[str, str]] = []
+    for idx, shot in enumerate(few_shots, start=1):
+        query_file_id = shot.get("Query image")
+        candidate_file_id = shot.get("Candidate image")
+        query_file_name = shot.get("Query file name", "unknown_query")
+        candidate_file_name = shot.get("Candidate file name", "unknown_candidate")
+        output = shot.get("Output")
 
-    #     if not isinstance(query_file_id, str) or not query_file_id.startswith("file-"):
-    #         raise RuntimeError(f"few_shots[{idx}] is missing a valid 'Query image' file id.")
-    #     if not isinstance(candidate_file_id, str) or not candidate_file_id.startswith("file-"):
-    #         raise RuntimeError(f"few_shots[{idx}] is missing a valid 'Candidate image' file id.")
-    #     if not isinstance(output, dict):
-    #         raise RuntimeError(f"few_shots[{idx}] is missing an object 'Output'.")
+        if not isinstance(query_file_id, str) or not query_file_id.startswith("file-"):
+            raise RuntimeError(f"few_shots[{idx}] is missing a valid 'Query image' file id.")
+        if not isinstance(candidate_file_id, str) or not candidate_file_id.startswith("file-"):
+            raise RuntimeError(f"few_shots[{idx}] is missing a valid 'Candidate image' file id.")
+        if not isinstance(output, dict):
+            raise RuntimeError(f"few_shots[{idx}] is missing an object 'Output'.")
 
-    #     content.extend(
-    #         [
-    #             {"type": "input_text", "text": f"Example {idx}"},
-    #             {"type": "input_text", "text": f"Example Query file name: {query_file_name}"},
-    #             {"type": "input_image", "file_id": query_file_id},
-    #             {"type": "input_text", "text": f"Example Candidate file name: {candidate_file_name}"},
-    #             {"type": "input_image", "file_id": candidate_file_id},
-    #             {"type": "input_text", "text": f"Example Output: {json.dumps(output, ensure_ascii=True)}"},
-    #         ]
-    #     )
-    # return content
-    return []
+        content.extend(
+            [
+                {"type": "input_text", "text": f"Example {idx}"},
+                {"type": "input_text", "text": f"Example Query file name: {query_file_name}"},
+                {"type": "input_image", "file_id": query_file_id},
+                {"type": "input_text", "text": f"Example Candidate file name: {candidate_file_name}"},
+                {"type": "input_image", "file_id": candidate_file_id},
+                {"type": "input_text", "text": f"Example Output: {json.dumps(output, ensure_ascii=True)}"},
+            ]
+        )
+    return content
+    # return []
 
 
 def build_image_index() -> dict[str, Path]:

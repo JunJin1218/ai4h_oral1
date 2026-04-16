@@ -12,6 +12,7 @@ from typing import Any, Dict, List
 
 from anthropic import Anthropic
 
+CLAUDE_FEW_SHOT_CACHE_PATH = Path("data_augmentation_claude/few_shots_claude.json")
 
 def encode_image_to_base64(image_path: Path) -> str:
     """Convert image file to base64 for Claude vision API."""
@@ -66,19 +67,22 @@ def build_few_shot_content_claude(few_shots, image_index):
         if not isinstance(output, dict):
             raise RuntimeError(f"few_shots[{idx}] is missing an object 'Output'.")
 
-        query_key = clean_stem(Path(query_file_name).stem)
-        candidate_key = clean_stem(Path(candidate_file_name).stem)
+        # query_key = clean_stem(Path(query_file_name).stem)
+        # candidate_key = clean_stem(Path(candidate_file_name).stem)
 
-        query_path = image_index.get(query_key)
-        candidate_path = image_index.get(candidate_key)
+        # query_path = image_index.get(query_key)
+        # candidate_path = image_index.get(candidate_key)
+
+        query_path = resolve_few_shot_image_path(query_file_name, image_index)
+        candidate_path = resolve_few_shot_image_path(candidate_file_name, image_index)
 
         if query_path is None:
             raise RuntimeError(
-                f"Query image not found in index: {query_file_name} (lookup key: {query_key})"
+                f"Query image not found in index: {query_file_name} (lookup path: {query_path})"
             )
         if candidate_path is None:
             raise RuntimeError(
-                f"Candidate image not found in index: {candidate_file_name} (lookup key: {candidate_key})"
+                f"Candidate image not found in index: {candidate_file_name} (lookup path: {candidate_path})"
             )
 
         content.extend([
@@ -151,3 +155,54 @@ def extract_claude_response(result: Any) -> Dict[str, Any]:
             "identical": False,
             "reasoning": f"Failed to parse response: {str(e)}",
         }
+
+def save_claude_few_shot_cache(content: List[Dict[str, Any]], cache_path: Path = CLAUDE_FEW_SHOT_CACHE_PATH) -> None:
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    with cache_path.open("w", encoding="utf-8") as f:
+        json.dump(content, f, ensure_ascii=True, indent=2)
+
+
+def load_claude_few_shot_cache(cache_path: Path = CLAUDE_FEW_SHOT_CACHE_PATH) -> List[Dict[str, Any]]:
+    if not cache_path.exists():
+        raise FileNotFoundError(f"Claude few-shot cache not found: {cache_path}")
+    with cache_path.open("r", encoding="utf-8") as f:
+        data = json.load(f)
+    if not isinstance(data, list):
+        raise RuntimeError(f"Claude few-shot cache must contain a list: {cache_path}")
+    return data
+
+
+def get_or_build_claude_few_shots(
+    few_shots: list[dict[str, Any]],
+    image_index: dict[str, Path],
+    *,
+    cache_path: Path = CLAUDE_FEW_SHOT_CACHE_PATH,
+    force_rebuild: bool = False,
+) -> List[Dict[str, Any]]:
+    if not force_rebuild and cache_path.exists():
+        return load_claude_few_shot_cache(cache_path)
+
+    content = build_few_shot_content_claude(few_shots, image_index)
+    save_claude_few_shot_cache(content, cache_path)
+    return content
+
+def resolve_few_shot_image_path(file_name: str, image_index: dict[Path, Path] | dict[str, Path]) -> Path | None:
+    raw_stem = Path(file_name).stem
+    cleaned_stem = clean_stem(raw_stem)
+
+    # 1. exact raw match
+    path = image_index.get(raw_stem)
+    if path is not None:
+        return path
+
+    # 2. exact cleaned match
+    path = image_index.get(cleaned_stem)
+    if path is not None:
+        return path
+
+    # 3. compare against cleaned indexed stems
+    for stem, candidate_path in image_index.items():
+        if clean_stem(stem) == cleaned_stem:
+            return candidate_path
+
+    return None

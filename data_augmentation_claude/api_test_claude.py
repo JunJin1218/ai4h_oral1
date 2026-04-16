@@ -22,7 +22,7 @@ if str(_root) not in sys.path:
     sys.path.insert(0, str(_root))
 
 from utils import get_vector_id_by_file_name, reconstruct_vector_by_id, search_similar_with_metadata
-from claude_helpers import build_few_shot_content_claude, build_vision_content, create_claude_batch_request
+from claude_helpers import build_few_shot_content_claude, build_vision_content, clean_stem, create_claude_batch_request
 
 
 DEFAULT_MODEL = "anthropic/claude-3-5-sonnet"
@@ -30,7 +30,7 @@ TOP_K = 50
 CANDIDATE_RANK = 3
 DB_PATH = Path("data/sqlite/ai4h.db")
 INDEX_PATH = Path("data/faiss/embeddings.index")
-IMAGE_ROOTS = [Path("input_img"), Path("processed_img")]
+IMAGE_ROOTS = [Path("input_img"), Path("processed_img"), Path("test_query_img")]
 PROMPT_PATH = Path("data_augmentation/prompt.txt")
 SCHEMA_PATH = Path("data_augmentation/schema.json")
 FEW_SHOTS_PATH = Path("data_augmentation/few_shots.jsonl")
@@ -84,12 +84,12 @@ def build_image_index() -> dict[str, Path]:
             continue
         for path in sorted(root.rglob("*")):
             if path.is_file() and path.suffix.lower() in exts:
-                index.setdefault(path.stem, path)
+                index.setdefault(clean_stem(path.stem), path)
     return index
 
 
 def resolve_image_path(file_name: str, image_index: dict[str, Path]) -> Path | None:
-    return image_index.get(Path(file_name).stem)
+    return image_index.get(clean_stem(Path(file_name).stem))
 
 
 def choose_random_query_file_name() -> str:
