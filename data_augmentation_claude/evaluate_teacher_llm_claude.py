@@ -18,7 +18,6 @@ from pathlib import Path
 from typing import Any
 
 from dotenv import load_dotenv
-from anthropic import Anthropic, APIStatusError
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
 _root = Path(__file__).resolve().parent.parent
@@ -26,7 +25,19 @@ if str(_root) not in sys.path:
     sys.path.insert(0, str(_root))
 
 from assessor.evaluate import IMAGE_EXTS, QueryGroundTruth, load_ground_truth
-from claude_helpers import build_few_shot_content_claude, build_vision_content, create_claude_batch_request, extract_claude_response
+from data_augmentation.batch_generator import (
+    build_image_index,
+    load_few_shots,
+    load_prompt,
+    load_schema_format,
+    resolve_image_path,
+)
+from data_augmentation_claude.claude_helpers import (
+    build_few_shot_content_claude,
+    build_vision_content,
+    create_claude_batch_request,
+    extract_claude_response,
+)
 from image_embedding.vit import get_image_embedding, load_vit_model
 from utils import get_vector_id_by_file_name, search_similar_with_metadata
 
@@ -55,6 +66,14 @@ TERMINAL_STATUSES = {
     "expired",
     "cancelled",
 }
+
+
+def _ts() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+
+
+def _log(message: str) -> None:
+    print(f"[{_ts()}] {message}")
 
 
 @dataclass(frozen=True)
@@ -223,32 +242,45 @@ def build_request_content(
 
 
 def submit(args: argparse.Namespace) -> None:
+    started_at = time.time()
     load_dotenv()
     if not args.dry_run and not os.environ.get("ANTHROPIC_API_KEY"):
         raise RuntimeError("ANTHROPIC_API_KEY is missing in .env")
+    if not args.dry_run:
+        from anthropic import Anthropic
 
     run_name = args.run_name or make_run_name()
     jsonl_path = INPUT_DIR / f"{run_name}.jsonl"
     manifest_path = MANIFEST_DIR / f"{run_name}.jsonl"
     ensure_parent(jsonl_path)
     ensure_parent(manifest_path)
-
-    # Import Claude-specific functions
-    from data_augmentation.batch_generator import (
-        load_prompt,
-        load_schema_format,
-        load_few_shots,
-        build_image_index,
-        resolve_image_path,
-    )
+    _log(f"[teacher_eval_claude.submit] run_name={run_name} model={args.model}")
 
     prompt = load_prompt()
     text_config = load_schema_format()
     few_shots = load_few_shots()
-    few_shot_content = build_few_shot_content_claude(few_shots, build_image_index())
+    few_shot_content: list[dict[str, Any]] = []
+    if args.no_few_shots:
+        _log("[teacher_eval_claude.submit] skipping few-shots (--no-few-shots)")
+    else:
+        try:
+            few_shot_content = build_few_shot_content_claude(few_shots, build_image_index())
+        except RuntimeError as exc:
+            if args.skip_missing_few_shots:
+                _log(
+                    "[teacher_eval_claude.submit] warning: failed to resolve few-shots; "
+                    f"continuing without few-shots. error={exc}"
+                )
+                few_shot_content = []
+            else:
+                raise
     image_index = build_image_index()
     ground_truth = load_ground_truth(Path(args.gt_csv), Path(args.query_dir), Path(args.data_dir))
     query_image_map = build_query_image_map(Path(args.query_dir))
+    _log(
+        f"[teacher_eval_claude.submit] loaded_ground_truth={len(ground_truth)} "
+        f"query_images={len(query_image_map)}"
+    )
 
     processor, vit_model, vit_device = load_vit_model()
     client = None if args.dry_run else Anthropic()
@@ -257,7 +289,13 @@ def submit(args: argparse.Namespace) -> None:
     batch_requests: list[dict[str, Any]] = []
     written_requests = 0
 
-    for item in ground_truth:
+    total_queries = len(ground_truth)
+    for query_idx, item in enumerate(ground_truth, start=1):
+        elapsed_s = time.time() - started_at
+        _log(
+            f"[teacher_eval_claude.submit] query_progress={query_idx}/{total_queries} "
+            f"query_id={item.query_id} elapsed_s={elapsed_s:.1f}"
+        )
         query_image_path = query_image_map.get(item.query_id, item.query_image_path)
         query_vector_t = get_image_embedding(
             vit_model,
@@ -328,21 +366,21 @@ def submit(args: argparse.Namespace) -> None:
     unresolved_positive_count = sum(
         1 for row in manifest_records if row["true_label"] == 1 and row["status"] != "submitted"
     )
-    print(
+    _log(
         f"[teacher_eval_claude.submit] run_name={run_name} queries={len(ground_truth)} "
         f"manifest_rows={len(manifest_records)} submitted_pairs={submitted_count} "
         f"written_requests={written_requests} gt_extra_rows={gt_extra_count} "
         f"unresolved_positive_rows={unresolved_positive_count}"
     )
-    print(f"[teacher_eval_claude.submit] jsonl_path={jsonl_path}")
-    print(f"[teacher_eval_claude.submit] manifest_path={manifest_path}")
+    _log(f"[teacher_eval_claude.submit] jsonl_path={jsonl_path}")
+    _log(f"[teacher_eval_claude.submit] manifest_path={manifest_path}")
 
     if args.dry_run:
-        print("[teacher_eval_claude.submit] dry-run enabled; batch upload skipped")
+        _log("[teacher_eval_claude.submit] dry-run enabled; batch upload skipped")
         return
 
     if written_requests == 0:
-        print("[teacher_eval_claude.submit] no new requests were written; skipping batch creation")
+        _log("[teacher_eval_claude.submit] no new requests were written; skipping batch creation")
         return
 
     assert client is not None
@@ -363,14 +401,19 @@ def submit(args: argparse.Namespace) -> None:
         "query_dir": str(args.query_dir),
     }
     append_jsonl(ACTIVE_LOG_PATH, [record])
-    print(f"[teacher_eval_claude.submit] batch_id={batch.id}")
-    print(f"[teacher_eval_claude.submit] active_log={ACTIVE_LOG_PATH}")
+    total_elapsed_s = time.time() - started_at
+    _log(f"[teacher_eval_claude.submit] batch_id={batch.id}")
+    _log(f"[teacher_eval_claude.submit] active_log={ACTIVE_LOG_PATH}")
+    _log(f"[teacher_eval_claude.submit] completed elapsed_s={total_elapsed_s:.1f}")
 
 
 def poll(args: argparse.Namespace) -> None:
+    poll_started_at = time.time()
     load_dotenv()
     if not os.environ.get("ANTHROPIC_API_KEY"):
         raise RuntimeError("ANTHROPIC_API_KEY is missing in .env")
+
+    from anthropic import Anthropic
 
     client = Anthropic()
     active_records = read_jsonl(ACTIVE_LOG_PATH)
@@ -383,7 +426,31 @@ def poll(args: argparse.Namespace) -> None:
             continue
         batch = client.messages.batch.retrieve(batch_id)
         status = batch.processing_status
-        print(f"[teacher_eval_claude.poll] batch_id={batch_id} status={status}")
+        request_counts = batch.request_counts
+        # Anthropic returns request_counts as an object. Convert defensively so
+        # we can print progress even if SDK fields change slightly.
+        if hasattr(request_counts, "model_dump"):
+            counts = request_counts.model_dump()
+        elif isinstance(request_counts, dict):
+            counts = request_counts
+        else:
+            counts = {}
+
+        processing = int(counts.get("processing", 0) or 0)
+        succeeded = int(counts.get("succeeded", 0) or 0)
+        errored = int(counts.get("errored", 0) or 0)
+        canceled = int(counts.get("canceled", 0) or 0)
+        expired = int(counts.get("expired", 0) or 0)
+        total = processing + succeeded + errored + canceled + expired
+        done = succeeded + errored + canceled + expired
+        pct = (done / total * 100.0) if total > 0 else 0.0
+
+        _log(
+            f"[teacher_eval_claude.poll] batch_id={batch_id} status={status} "
+            f"progress={done}/{total} ({pct:.1f}%) "
+            f"processing={processing} succeeded={succeeded} errored={errored} "
+            f"canceled={canceled} expired={expired}"
+        )
 
         if status in ACTIVE_STATUSES:
             remaining_records.append(record)
@@ -416,9 +483,9 @@ def poll(args: argparse.Namespace) -> None:
 
     write_jsonl(ACTIVE_LOG_PATH, remaining_records)
     append_jsonl(DONE_LOG_PATH, completed_records)
-    print(
+    _log(
         f"[teacher_eval_claude.poll] remaining_active={len(remaining_records)} "
-        f"archived={len(completed_records)}"
+        f"archived={len(completed_records)} elapsed_s={time.time() - poll_started_at:.1f}"
     )
 
     if args.watch and remaining_records:
@@ -450,6 +517,7 @@ def find_done_record(batch_id: str | None) -> dict[str, Any]:
 
 
 def report(args: argparse.Namespace) -> None:
+    started_at = time.time()
     done_record = find_done_record(args.batch_id)
     output_path = Path(done_record["output_path"]) if done_record.get("output_path") else None
     manifest_path = Path(done_record["manifest_path"])
@@ -574,19 +642,20 @@ def report(args: argparse.Namespace) -> None:
         for row in missing_rows:
             writer.writerow(row)
 
-    print(
+    _log(
         f"[teacher_eval_claude.report] batch_id={metrics['batch_id']} queries={metrics['n_queries']} "
         f"eval_pairs={metrics['n_eval_pairs']} submitted_pairs={metrics['n_submitted_pairs']} "
         f"response_errors={metrics['n_response_errors']} "
         f"unresolved_positive_rows={metrics['n_unresolved_positive_rows']}"
     )
-    print(
+    _log(
         f"[teacher_eval_claude.report] accuracy={metrics['accuracy']:.4f} "
         f"precision={metrics['precision']:.4f} recall={metrics['recall']:.4f} "
         f"f1={metrics['f1']:.4f}"
     )
-    print(f"[teacher_eval_claude.report] report_csv={REPORT_CSV_PATH}")
-    print(f"[teacher_eval_claude.report] missing_csv={MISSING_CSV_PATH}")
+    _log(f"[teacher_eval_claude.report] report_csv={REPORT_CSV_PATH}")
+    _log(f"[teacher_eval_claude.report] missing_csv={MISSING_CSV_PATH}")
+    _log(f"[teacher_eval_claude.report] completed elapsed_s={time.time() - started_at:.1f}")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -603,6 +672,16 @@ def build_parser() -> argparse.ArgumentParser:
     submit_parser.add_argument("--model", type=str, default=os.environ.get("ANTHROPIC_MODEL", "claude-3-5-sonnet-20241022"))
     submit_parser.add_argument("--run-name", type=str, default=None)
     submit_parser.add_argument("--dry-run", action="store_true")
+    submit_parser.add_argument(
+        "--no-few-shots",
+        action="store_true",
+        help="Disable few-shot examples entirely",
+    )
+    submit_parser.add_argument(
+        "--skip-missing-few-shots",
+        action="store_true",
+        help="If few-shot image resolution fails, continue with zero few-shots",
+    )
 
     poll_parser = subparsers.add_parser("poll", help="Poll active teacher-eval batches and download outputs")
     poll_parser.add_argument("--watch", action="store_true")

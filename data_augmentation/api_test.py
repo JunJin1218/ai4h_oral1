@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+from datetime import datetime, timezone
 import json
 import os
 import sqlite3
@@ -29,6 +30,7 @@ IMAGE_ROOTS = [Path("input_img"), Path("processed_img")]
 PROMPT_PATH = Path("data_augmentation/prompt.txt")
 SCHEMA_PATH = Path("data_augmentation/schema.json")
 FEW_SHOTS_PATH = Path("data_augmentation/few_shots.jsonl")
+RUNS_LOG_PATH = Path("data_augmentation/runs/api_test_runs.jsonl")
 
 
 def load_prompt() -> str:
@@ -151,12 +153,44 @@ def get_image_media_type(path: Path) -> str:
         return "image/jpeg"  # default
 
 
+def serialize_content_blocks(content_blocks: list[Any]) -> list[dict[str, Any]]:
+    serialized: list[dict[str, Any]] = []
+    for block in content_blocks:
+        if hasattr(block, "model_dump"):
+            serialized.append(block.model_dump())
+        elif isinstance(block, dict):
+            serialized.append(block)
+        else:
+            serialized.append({"type": type(block).__name__, "value": str(block)})
+    return serialized
+
+
+def extract_response_text(content_blocks: list[Any]) -> str:
+    parts: list[str] = []
+    for block in content_blocks:
+        text = getattr(block, "text", None)
+        if isinstance(text, str) and text.strip():
+            parts.append(text)
+    return "\n\n".join(parts)
+
+
+def append_run_log(record: dict[str, Any], path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(record, ensure_ascii=True) + "\n")
+
+
 def main() -> None:
     load_dotenv()
 
     parser = argparse.ArgumentParser(description="Minimal Anthropic image comparison test")
     parser.add_argument("--model", default=os.environ.get("ANTHROPIC_MODEL", DEFAULT_MODEL))
     parser.add_argument("--max-retries", type=int, default=2, help="Retry count for 5xx errors")
+    parser.add_argument(
+        "--save-path",
+        default=str(RUNS_LOG_PATH),
+        help="Append run outputs to this JSONL file",
+    )
     args = parser.parse_args()
 
     if not os.environ.get("ANTHROPIC_API_KEY"):
@@ -247,7 +281,31 @@ def main() -> None:
     print("candidate_retrieval_score:", candidate.score)
     print("few_shots:", len(few_shots))
     print()
-    print(response.content[0].text)
+    response_text = extract_response_text(response.content)
+    serialized_content = serialize_content_blocks(response.content)
+    if response_text:
+        print(response_text)
+    else:
+        print("[No text block found in response content. Full content saved in run log.]")
+
+    run_record = {
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "model_requested": args.model,
+        "model_used": response.model,
+        "query_file_name": query_file_name,
+        "query_path": str(query_path),
+        "query_vector_id": query_vector_id,
+        "candidate_rank": CANDIDATE_RANK,
+        "candidate_file_name": candidate.file_name,
+        "candidate_path": str(candidate_path),
+        "candidate_vector_id": candidate.vector_id,
+        "candidate_retrieval_score": candidate.score,
+        "few_shots_count": len(few_shots),
+        "response_text": response_text,
+        "response_content": serialized_content,
+    }
+    append_run_log(run_record, Path(args.save_path))
+    print(f"saved_run_log: {args.save_path}")
 
 
 if __name__ == "__main__":

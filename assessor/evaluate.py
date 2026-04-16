@@ -5,6 +5,7 @@ import csv
 import re
 import sqlite3
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 
 import faiss
@@ -49,7 +50,62 @@ def extract_leading_query_id(path: Path) -> str | None:
 
 def canonical_candidate_name(raw_name: str, data_dir: Path) -> str | None:
     resolved = find_embedding_path(raw_name, data_dir)
-    return None if resolved is None else resolved.name
+    if resolved is not None:
+        return resolved.name
+    return _canonical_candidate_name_from_db(raw_name, DB_PATH)
+
+
+def _stem_base(name: str) -> str:
+    return re.sub(r"_\d+$", "", name)
+
+
+def _normalize_name(name: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "", name.lower())
+
+
+@lru_cache(maxsize=1)
+def _load_db_name_indexes(db_path_str: str) -> tuple[set[str], set[str], dict[str, str]]:
+    db_path = Path(db_path_str)
+    if not db_path.exists():
+        return set(), set(), {}
+
+    exact_stems: set[str] = set()
+    base_stems: set[str] = set()
+    normalized_to_file_name: dict[str, str] = {}
+
+    with sqlite3.connect(db_path) as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT file_name FROM image_db")
+        for (file_name,) in cur.fetchall():
+            if not isinstance(file_name, str):
+                continue
+            stem = Path(file_name).stem
+            stem_lower = stem.lower()
+            base_lower = _stem_base(stem).lower()
+            exact_stems.add(stem_lower)
+            base_stems.add(base_lower)
+            normalized_to_file_name.setdefault(_normalize_name(stem_lower), file_name)
+            normalized_to_file_name.setdefault(_normalize_name(base_lower), file_name)
+
+    return exact_stems, base_stems, normalized_to_file_name
+
+
+def _canonical_candidate_name_from_db(raw_name: str, db_path: Path) -> str | None:
+    exact_stems, base_stems, normalized_to_file_name = _load_db_name_indexes(str(db_path))
+    if not exact_stems and not base_stems and not normalized_to_file_name:
+        return None
+
+    query_stem = Path(raw_name).stem
+    query_stem_lower = query_stem.lower()
+    query_base_lower = _stem_base(query_stem).lower()
+
+    if query_stem_lower in exact_stems or query_stem_lower in base_stems:
+        # Keep original style from DB, including .pt extension if present.
+        return normalized_to_file_name.get(_normalize_name(query_stem_lower))
+    if query_base_lower in exact_stems or query_base_lower in base_stems:
+        return normalized_to_file_name.get(_normalize_name(query_base_lower))
+
+    return normalized_to_file_name.get(_normalize_name(query_base_lower))
 
 
 def load_ground_truth(csv_path: Path, query_dir: Path, data_dir: Path) -> list[QueryGroundTruth]:
