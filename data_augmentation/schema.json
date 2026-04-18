@@ -15,12 +15,17 @@
       "lookalike": {
         "type": "boolean",
         "description": "Whether the Query image and Candidate image are lookalike (True or False)."
+      },
+      "identical": {
+        "type": "boolean",
+        "description": "Whether the Query image and Candidate image are identical drugs (True or False)."
       }
     },
     "required": [
       "error",
       "reasoning",
-      "lookalike"
+      "lookalike",
+      "identical"
     ],
     "additionalProperties": false
   },

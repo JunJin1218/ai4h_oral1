@@ -1,0 +1,2 @@
+batch_id,run_name,model,top_k,similarity_type,n_queries,n_eval_pairs,n_pairs_used_for_metrics,n_submitted_pairs,n_output_predictions,n_response_errors,n_excluded_error_outputs,n_excluded_missing_outputs,n_excluded_rows_total,n_unresolved_positive_rows,accuracy,precision,recall,f1
+teacher_eval_claude_20260416T085614Z,teacher_eval_claude_20260416T085614Z,anthropic/claude-3-7-sonnet-20250219,,,17,898,769,877,877,129,129,0,129,21,0.8322496749024707,0.2,0.3492063492063492,0.2543352601156069

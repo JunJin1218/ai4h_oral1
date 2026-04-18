@@ -177,12 +177,6 @@
   min-height: 120px;
 }
 
-.upload-zone--scanning {
-  pointer-events: none;
-  opacity: 0.75;
-  cursor: not-allowed;
-}
-
 .upload-label {
   display: flex;
   flex-direction: column;
@@ -227,23 +221,6 @@
   max-height: 280px;
   object-fit: contain;
   border-radius: 8px;
-}
-
-.upload-preview-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-}
-
-.upload-filename {
-  font-size: 0.85rem;
-  color: #6b7280;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 /* Scan button */
@@ -402,17 +379,6 @@
   max-width: 56rem;
 }
 
-.query-image-name {
-  font-size: 0.9rem;
-  color: #374151;
-  margin: 0 0 1rem 0;
-}
-
-.query-image-name strong {
-  color: #1a1a1a;
-  font-weight: 600;
-}
-
 .output-sort {
   display: flex;
   align-items: center;
@@ -441,12 +407,6 @@
   accent-color: #c41e3a;
 }
 
-.output-sort-sep {
-  color: #d1d5db;
-  font-weight: 300;
-  user-select: none;
-}
-
 .result-columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -470,13 +430,13 @@
 }
 
 .result-list.lookalikes {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
 }
 
 .result-list.not-lookalikes {
-  background: #fff5f5;
-  border: 1px solid #fbc4c4;
+  background: #eff6ff;
+  border: 1px solid #93c5fd;
 }
 
 .result-list h3 {
@@ -509,8 +469,18 @@
 }
 
 .result-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
   font-size: 0.85rem;
   color: #374151;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.result-list li:last-child {
+  border-bottom: none;
 }
 
 .result-list .name {
@@ -680,6 +650,19 @@
 
 .candidate-card--reasoning {
   align-items: flex-start;
+}
+
+.candidate-flag {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .candidate-reasoning {
