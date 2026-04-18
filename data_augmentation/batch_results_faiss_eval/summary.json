@@ -14,22 +14,22 @@
     {
       "query_name": "1 Acarbose tab front YSP",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     },
     {
       "query_name": "2 Aciclovir Medovir Front",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     },
     {
       "query_name": "3 Antacid Beacons front",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     },
     {
       "query_name": "4 Folic acid sunward back",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     },
     {
       "query_name": "5 Fluoxetine 10 APO bottle fron",
@@ -39,32 +39,32 @@
     {
       "query_name": "6 Clomipramine 25 front",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     },
     {
       "query_name": "7 Amiodarone 200",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     },
     {
       "query_name": "8 Loratadine 10 Front",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     },
     {
       "query_name": "9 Thalidomide 50 back",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     },
     {
       "query_name": "10 Telmisartan 80 Intas box",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     },
     {
       "query_name": "11 Dextromethorphan ICM bottle",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     },
     {
       "query_name": "12 Rifampicin 300 Medochemie ba",
@@ -74,37 +74,37 @@
     {
       "query_name": "13 Gliclazide sunward front",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     },
     {
       "query_name": "14 Olanzapine 10 actavis box",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     },
     {
       "query_name": "15 Panadeine Back",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     },
     {
       "query_name": "16 Lacteol Forte sachet",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     },
     {
       "query_name": "35 Telmisartan",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     },
     {
       "query_name": "49 Rivaroxaban 2.5",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     },
     {
       "query_name": "50 aspirin",
       "status": "skipped",
-      "reason": "query image not found"
+      "reason": "FAISS retrieval failed: unable to open database file"
     }
   ]
 }

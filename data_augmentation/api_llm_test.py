@@ -36,8 +36,8 @@ SCHEMA_PATH = PROJECT_ROOT / "data_augmentation" / "schema.json"
 FEW_SHOTS_PATH = PROJECT_ROOT / "data_augmentation" / "few_shots.jsonl"
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data_augmentation" / "batch_results_faiss_eval"
 
-DB_PATH = PROJECT_ROOT / "data" / "sqlite" / "ai4h.db"
-INDEX_PATH = PROJECT_ROOT / "data" / "faiss" / "embeddings.index"
+DB_PATH = Path(r"C:\Users\Asus\T5 - SDS\T8-AI4H\ai4h_oral1\data\sqlite\ai4h.db")
+INDEX_PATH = Path(r"C:\Users\Asus\T5 - SDS\T8-AI4H\ai4h_oral1\data\faiss\embeddings.index")
 
 QUERY_IMAGE_ROOT = Path(r"C:\Users\Asus\T5 - SDS\T8-AI4H\ai4h_oral1\data\images")
 CANDIDATE_IMAGE_ROOT = Path(r"C:\Users\Asus\T5 - SDS\T8-AI4H\Cleaned Dataset v2")
