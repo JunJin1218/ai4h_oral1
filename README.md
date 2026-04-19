@@ -304,6 +304,11 @@ Required files/directories:
 - `data/sqlite/ai4h.db` for vector/file metadata and online feedback tables
 - medication source images under `input_img/`
 
+Cleaned image set download:
+
+- `input_img/` can be populated from the cleaned image set shared here:
+  `https://sutdapac-my.sharepoint.com/:f:/g/personal/celine_goh_mymail_sutd_edu_sg/IgD8cRMD9ydHQZ9Zga5_HlJiAYxMPBJrpvdEz3RRPLqJqio?e=UbWmsU`
+
 Without those assets, the API and most evaluation scripts will not run.
 
 ## Environment Setup
@@ -332,6 +337,16 @@ Frontend install:
 cd web_ui/frontend
 npm install
 ```
+
+Environment variables:
+
+- create a `.env` file in the project root when using OpenAI-powered scripts
+- set `OPENAI_API_KEY=...` in `.env`
+
+This is required for:
+
+- AI data augmentation under `data_augmentation/`
+- teacher-LLM evaluation via `assessor/evaluate_teacher_llm.py`
 
 ## Core Models
 
@@ -592,6 +607,7 @@ Default setup:
 - query source: `test_query_img/`
 - GT CSV: `test_query_img/gt_table_csv.csv`
 - retrieval candidates come from FAISS before being sent to the LLM
+- requires `OPENAI_API_KEY` in `.env`
 
 The script has three stages:
 
