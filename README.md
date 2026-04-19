@@ -88,12 +88,25 @@ The retrieval corpus is built in two steps.
 uv run python image_preprocess.py
 ```
 
+Embedding model details:
+
+- model loader: [image_embedding/vit.py](/home/emfor/ai4h_oral1/image_embedding/vit.py)
+- Hugging Face model: `google/vit-huge-patch14-224-in21k`
+- processor: `AutoImageProcessor.from_pretrained(...)`
+- encoder: `ViTModel.from_pretrained(...)`
+- pooling used in preprocessing and inference: `cls`
+- output embedding dimension: `1280`
+- output datatype saved to disk: PyTorch tensor, one 1D vector per `.pt` file
+
 Properties:
 
 - input root: `input_img/`
 - output root: `data/embeddings/`
 - each `.pt` file is a single 1D embedding tensor
 - embedding filenames are used later for annotation matching and DB sync
+- images are discovered recursively from `input_img/`
+- flat files are saved as `{stem}.pt`
+- nested paths are flattened with `__`, e.g. `subdir/file.png -> subdir__file.pt`
 
 ### 2. Embedding files -> FAISS + SQLite
 
@@ -108,6 +121,20 @@ What it creates:
 - `data/faiss/embeddings.index`
 - `data/sqlite/ai4h.db`
 
+FAISS build details:
+
+- index type: `faiss.IndexFlatL2`
+- wrapped as: `faiss.IndexIDMap2`
+- vector dtype: `float32`
+- IDs inserted into FAISS: `0, 1, 2, ...` in sorted embedding filename order
+- each FAISS ID is stored again as `vector_id` in SQLite
+
+SQLite sync details:
+
+- table synced: `image_db`
+- sync behavior: current code does `DELETE FROM image_db` and reinserts all rows
+- inserted row format: `(vector_id, file_name)`
+
 How IDs are assigned:
 
 - embeddings are enumerated in sorted filename order
@@ -119,6 +146,54 @@ Operationally:
 - FAISS stores vectors and supports nearest-neighbor search
 - SQLite maps each `vector_id` back to a filename and stores feedback / labels / training logs
 - retrieval code combines both to return `(vector_id, score, vector, file_name)` instead of raw vectors only
+
+Retrieval metric details:
+
+- the on-disk FAISS file is built as an L2 flat index
+- at query time, [utils.py](/home/emfor/ai4h_oral1/utils.py) reloads vectors from the stored index and supports three retrieval modes:
+  - `l2`: `faiss.IndexFlatL2`
+  - `ip`: `faiss.IndexFlatIP`
+  - `cosine`: vectors are L2-normalized, then searched with `faiss.IndexFlatIP`
+
+This means:
+
+- the saved corpus vectors are the same across modes
+- the metric choice is applied during search, not by storing three separate FAISS indices
+
+## Reproducibility Notes
+
+If someone needs to reproduce the retrieval corpus from raw images, the minimum sequence is:
+
+```bash
+# 1. embed all input images with ViT-Huge
+uv run python image_preprocess.py
+
+# 2. build FAISS + SQLite from the saved embedding files
+uv run python data/embedding_to_db.py
+```
+
+That recreates:
+
+- `data/embeddings/*.pt`
+- `data/faiss/embeddings.index`
+- `data/sqlite/ai4h.db` with `image_db`
+
+For assessor training reproduction, the next stage depends on the label source:
+
+- human-annotated Excel -> use `train.py` or `scripts/train_model_v3.py`
+- AI-generated SQLite labels -> use `train_ai_feedback.py`
+- online UI feedback -> use `train_online.py` via the FastAPI/UI flow
+
+To reproduce the currently documented backend model family:
+
+```bash
+uv run python -m train_ai_feedback --out-dir assessor/model_ai_feedback_h2048_1024_512
+```
+
+Important reproducibility caveat:
+
+- exact reproduction also depends on the contents of `input_img/`, annotation Excel files, SQLite feedback tables, and any existing AI batch outputs
+- those datasets are local assets, so code alone is not enough without the same underlying files
 
 ## SQLite Schema And Data Roles
 
@@ -273,6 +348,36 @@ npm install
 - outputs a probability-like score in `[0, 1]`
 
 The training code describes the representation as a pairwise MLP over embedding interactions, not simple nearest-neighbor matching.
+
+### Assessor architecture
+
+The current assessor is a pairwise MLP classifier.
+
+Input:
+
+- query embedding `e1` with dimension `1280`
+- candidate embedding `e2` with dimension `1280`
+
+Feature construction:
+
+- L2-normalize `e1` and `e2`
+- build pair features as:
+  - `|e1 - e2|`
+  - `e1 * e2`
+- concatenate them into a `2560`-dimensional feature vector
+
+MLP structure:
+
+- `2560 -> 1024 -> 256 -> 1`
+- `ReLU` after each hidden layer
+- `Dropout(0.2)` after each hidden layer
+- final `sigmoid` output
+
+Interpretation:
+
+- the assessor is not a retrieval model
+- it takes a retrieved pair and predicts whether that pair should be considered a lookalike
+- final score is interpreted as a lookalike probability-like score, then thresholded in the API/UI
 
 ### Current best model in this repo
 
@@ -457,6 +562,7 @@ Main evaluation scripts:
 - [scripts/eval_on_test_data.py](/home/emfor/ai4h_oral1/scripts/eval_on_test_data.py)
 - [scripts/compare_models.py](/home/emfor/ai4h_oral1/scripts/compare_models.py)
 - [assessor/evaluate.py](/home/emfor/ai4h_oral1/assessor/evaluate.py)
+- [assessor/evaluate_teacher_llm.py](/home/emfor/ai4h_oral1/assessor/evaluate_teacher_llm.py)
 
 Examples:
 
@@ -469,6 +575,88 @@ uv run python scripts/compare_models.py --model-a assessor/model --model-b asses
 ```
 
 `assessor/evaluate.py` is broader. It can evaluate checkpoints against `test_query_img/` ground truth and supports multiple retrieval modes and top-k settings.
+
+## LLM Evaluation
+
+Teacher-LLM evaluation is implemented in [assessor/evaluate_teacher_llm.py](/home/emfor/ai4h_oral1/assessor/evaluate_teacher_llm.py).
+
+Purpose:
+
+- evaluate an OpenAI vision model as a direct lookalike classifier baseline
+- compare teacher-LLM judgments against the held-out `test_query_img/` ground truth
+- log metrics such as accuracy, precision, recall, and F1
+
+Default setup:
+
+- model default: `gpt-5-mini`
+- query source: `test_query_img/`
+- GT CSV: `test_query_img/gt_table_csv.csv`
+- retrieval candidates come from FAISS before being sent to the LLM
+
+The script has three stages:
+
+### 1. Submit batch requests
+
+This stage:
+
+- embeds each test query image
+- retrieves top-k candidates from FAISS
+- builds query/candidate image pairs
+- uploads a batch request file to the OpenAI Batch API
+
+Example:
+
+```bash
+uv run python assessor/evaluate_teacher_llm.py submit \
+  --model gpt-5-mini \
+  --top-k 50 \
+  --similarity-type l2 \
+  --few-shot-count 3 \
+  --prompt-variant a_baseline
+```
+
+Useful options:
+
+- `--prompt-variant a_baseline`
+- `--prompt-variant b_conservative`
+- `--prompt-variant d_scoring`
+- `--few-shot-count 3` or `5`
+- `--dry-run` to generate manifests without uploading a batch
+
+### 2. Poll and download outputs
+
+This stage checks active batches, downloads completed output files, and archives finished runs.
+
+Example:
+
+```bash
+uv run python assessor/evaluate_teacher_llm.py poll --watch
+```
+
+### 3. Generate report
+
+This stage:
+
+- reads the completed batch output JSONL
+- aligns predictions with the saved manifest
+- computes metrics against ground truth
+- writes summary CSV files
+
+Example:
+
+```bash
+uv run python assessor/evaluate_teacher_llm.py report
+```
+
+Output files are written under:
+
+- `assessor/teacher_eval/batches/`
+- `assessor/teacher_eval/manifests/`
+- `assessor/teacher_eval/results/`
+- `assessor/teacher_eval/evaluate_teacher_llm_results.csv`
+- `assessor/teacher_eval/evaluate_teacher_llm_missing.csv`
+
+Prompt variants are defined in [assessor/prompt_variants.py](/home/emfor/ai4h_oral1/assessor/prompt_variants.py). The `d_scoring` variant additionally asks the LLM for a `score` from 1 to 5 before mapping that to `lookalike = true/false`.
 
 ## AI Feedback / Data Augmentation Utilities
 
