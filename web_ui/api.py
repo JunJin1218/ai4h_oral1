@@ -43,8 +43,13 @@ app.add_middleware(
 
 DB_PATH = Path("data/sqlite/ai4h.db")
 INDEX_PATH = Path("data/faiss/embeddings.index")
-IMAGE_ROOTS = [Path("input_img"), Path("processed_img")]
-ASSESSOR_MODEL_DIR = Path(os.environ.get("ASSESSOR_MODEL_DIR", "assessor/model"))
+IMAGE_ROOTS = [Path("input_img")]
+DEFAULT_ASSESSOR_CHECKPOINT_PATH = Path(
+    "assessor/model_ai_feedback_h2048_1024_512/assessor_best_f1.pt"
+)
+ASSESSOR_CHECKPOINT_PATH = Path(
+    os.environ.get("ASSESSOR_CHECKPOINT_PATH", str(DEFAULT_ASSESSOR_CHECKPOINT_PATH))
+)
 AI_AUGMENT_TABLE = "ai_augment_feedback"
 
 
@@ -95,7 +100,7 @@ def _get_trainer() -> OnlineTrainer:
     global _trainer
     if _trainer is None:
         _trainer = OnlineTrainer(
-            model_dir=ASSESSOR_MODEL_DIR,
+            model_checkpoint_path=ASSESSOR_CHECKPOINT_PATH,
             db_path=DB_PATH,
             index_path=INDEX_PATH,
         )

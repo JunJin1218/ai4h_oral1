@@ -148,6 +148,7 @@ class OnlineTrainer:
         self,
         *,
         model_dir: str | Path | None = None,
+        model_checkpoint_path: str | Path | None = None,
         db_path: str | Path = "data/sqlite/ai4h.db",
         buffer_capacity: int = 20000,
         per_alpha: float = 0.6,
@@ -155,10 +156,25 @@ class OnlineTrainer:
         lr: float = 1e-4,
         index_path: str | Path = "data/faiss/embeddings.index",
     ) -> None:
-        hardcoded_model_dir = Path("assessor/model_ai_feedback_h2048_1024_512")
-        hardcoded_checkpoint = "assessor_best_f1.pt"
-        self.model_dir = hardcoded_model_dir
-        self.model_checkpoint = self.model_dir / hardcoded_checkpoint
+        default_model_checkpoint = Path(
+            "assessor/model_ai_feedback_h2048_1024_512/assessor_best_f1.pt"
+        )
+        checkpoint_path = Path(model_checkpoint_path) if model_checkpoint_path else None
+
+        if checkpoint_path is None and model_dir is not None:
+            model_dir_path = Path(model_dir)
+            if model_dir_path.suffix == ".pt":
+                checkpoint_path = model_dir_path
+            else:
+                checkpoint_path = model_dir_path / "assessor_best_f1.pt"
+
+        if checkpoint_path is None:
+            checkpoint_path = default_model_checkpoint
+
+        self.model_checkpoint = checkpoint_path
+        self.model_dir = self.model_checkpoint.parent
+        self.model_filename = self.model_checkpoint.name
+        self.model_config_path = self.model_dir / "config.json"
         self.db_path = Path(db_path)
         self.index_path = Path(index_path)
         self.log_dir = Path(os.environ.get("TENSORBOARD_LOG_DIR", "log")) / "online"
@@ -171,16 +187,16 @@ class OnlineTrainer:
         self.writer = SummaryWriter(log_dir=str(self.log_dir))
         self.train_step_count = 0
 
-        if self.model_checkpoint.exists() and (self.model_dir / "config.json").exists():
+        if self.model_checkpoint.exists() and self.model_config_path.exists():
             self.model, self.cfg = load_assessor(
                 device=self.device,
                 in_dir=self.model_dir,
-                filename=hardcoded_checkpoint,
+                filename=self.model_filename,
             )
         else:
             raise FileNotFoundError(
                 f"Expected assessor checkpoint at {self.model_checkpoint} "
-                f"with config {(self.model_dir / 'config.json')}, but it was not found."
+                f"with config {self.model_config_path}, but it was not found."
             )
 
         self.model.train()
@@ -489,6 +505,12 @@ def build_feedback_items(
 def main() -> None:
     parser = argparse.ArgumentParser(description="Online training pipeline for lookalike assessor")
     parser.add_argument("--query-file-name", type=str, required=True)
+    parser.add_argument(
+        "--model-checkpoint-path",
+        type=str,
+        default="assessor/model_ai_feedback_h2048_1024_512/assessor_best_f1.pt",
+        help="Path to assessor checkpoint (.pt). config.json is read from the same directory.",
+    )
     parser.add_argument("--top-k", type=int, default=20)
     parser.add_argument("--similarity-type", type=str, default="l2")
     parser.add_argument(
@@ -504,7 +526,11 @@ def main() -> None:
     parser.add_argument("--per-beta", type=float, default=0.4)
     args = parser.parse_args()
 
-    trainer = OnlineTrainer(per_alpha=args.per_alpha, per_beta=args.per_beta)
+    trainer = OnlineTrainer(
+        model_checkpoint_path=args.model_checkpoint_path,
+        per_alpha=args.per_alpha,
+        per_beta=args.per_beta,
+    )
     loaded = trainer.hydrate_replay_from_online_feedback(limit=2000)
     print(f"Hydrated replay from online_feedback: {loaded}")
 

@@ -21,6 +21,8 @@ if str(_root) not in sys.path:
     sys.path.insert(0, str(_root))
 
 from assessor.evaluate import IMAGE_EXTS, QueryGroundTruth, load_ground_truth
+from assessor.prompt_variants import build_schema_format as build_variant_schema_format
+from assessor.prompt_variants import get_prompt_variant
 from data_augmentation.batch_generator import (
     COMPLETION_WINDOW,
     ENDPOINT,
@@ -28,7 +30,6 @@ from data_augmentation.batch_generator import (
     build_few_shot_content,
     build_image_index,
     load_few_shots,
-    load_prompt,
     load_schema_format,
     resolve_image_path,
     upload_vision_file,
@@ -44,13 +45,6 @@ GT_CSV_PATH = TEST_QUERY_DIR / "gt_table_csv.csv"
 DEFAULT_TOP_K = 50
 DEFAULT_SIMILARITY_TYPE = "l2"
 BASE_DIR = Path("assessor/teacher_eval")
-INPUT_DIR = BASE_DIR / "batches"
-MANIFEST_DIR = BASE_DIR / "manifests"
-RESULT_DIR = BASE_DIR / "results"
-ACTIVE_LOG_PATH = BASE_DIR / "active_batches.jsonl"
-DONE_LOG_PATH = BASE_DIR / "done_batches.jsonl"
-REPORT_CSV_PATH = BASE_DIR / "evaluate_teacher_llm_results.csv"
-MISSING_CSV_PATH = BASE_DIR / "evaluate_teacher_llm_missing.csv"
 ACTIVE_STATUSES = {
     "validating",
     "in_progress",
@@ -75,6 +69,19 @@ class CandidateSpec:
     note: str | None
     vector_id: int | None
     candidate_image_path: str | None
+
+
+def build_eval_paths(base_dir: Path) -> dict[str, Path]:
+    return {
+        "base_dir": base_dir,
+        "input_dir": base_dir / "batches",
+        "manifest_dir": base_dir / "manifests",
+        "result_dir": base_dir / "results",
+        "active_log_path": base_dir / "active_batches.jsonl",
+        "done_log_path": base_dir / "done_batches.jsonl",
+        "report_csv_path": base_dir / "evaluate_teacher_llm_results.csv",
+        "missing_csv_path": base_dir / "evaluate_teacher_llm_missing.csv",
+    }
 
 
 def ensure_parent(path: Path) -> None:
@@ -235,15 +242,17 @@ def submit(args: argparse.Namespace) -> None:
     if not args.dry_run and not os.environ.get("OPENAI_API_KEY"):
         raise RuntimeError("OPENAI_API_KEY is missing in .env")
 
+    paths = build_eval_paths(Path(args.base_dir))
     run_name = args.run_name or make_run_name()
-    jsonl_path = INPUT_DIR / f"{run_name}.jsonl"
-    manifest_path = MANIFEST_DIR / f"{run_name}.jsonl"
+    jsonl_path = paths["input_dir"] / f"{run_name}.jsonl"
+    manifest_path = paths["manifest_dir"] / f"{run_name}.jsonl"
     ensure_parent(jsonl_path)
     ensure_parent(manifest_path)
 
-    prompt = load_prompt()
-    text_config = load_schema_format()
-    few_shots = load_few_shots()
+    variant = get_prompt_variant(args.prompt_variant)
+    prompt = variant["prompt"]
+    text_config = build_variant_schema_format(load_schema_format(), args.prompt_variant)
+    few_shots = load_few_shots(args.few_shot_count)
     few_shot_content = build_few_shot_content(few_shots)
     image_index = build_image_index()
     ground_truth = load_ground_truth(Path(args.gt_csv), Path(args.query_dir), Path(args.data_dir))
@@ -381,15 +390,16 @@ def submit(args: argparse.Namespace) -> None:
         "manifest_path": str(manifest_path),
         "query_count": len(ground_truth),
         "request_count": written_requests,
-        "model": args.model,
-        "top_k": args.top_k,
-        "similarity_type": args.similarity_type,
-        "gt_csv": str(args.gt_csv),
+            "model": args.model,
+            "prompt_variant": args.prompt_variant,
+            "top_k": args.top_k,
+            "similarity_type": args.similarity_type,
+            "gt_csv": str(args.gt_csv),
         "query_dir": str(args.query_dir),
     }
-    append_jsonl(ACTIVE_LOG_PATH, [record])
+    append_jsonl(paths["active_log_path"], [record])
     print(f"[teacher_eval.submit] batch_id={batch.id}")
-    print(f"[teacher_eval.submit] active_log={ACTIVE_LOG_PATH}")
+    print(f"[teacher_eval.submit] active_log={paths['active_log_path']}")
 
 
 def download_file(client: OpenAI, file_id: str, out_path: Path) -> None:
@@ -403,8 +413,9 @@ def poll(args: argparse.Namespace) -> None:
     if not os.environ.get("OPENAI_API_KEY"):
         raise RuntimeError("OPENAI_API_KEY is missing in .env")
 
+    paths = build_eval_paths(Path(args.base_dir))
     client = OpenAI()
-    active_records = read_jsonl(ACTIVE_LOG_PATH)
+    active_records = read_jsonl(paths["active_log_path"])
     remaining_records: list[dict[str, Any]] = []
     completed_records: list[dict[str, Any]] = []
 
@@ -428,14 +439,14 @@ def poll(args: argparse.Namespace) -> None:
             archived["completed_at"] = datetime.now(timezone.utc).isoformat()
 
             if batch.output_file_id:
-                output_path = RESULT_DIR / f"{batch.id}_output.jsonl"
+                output_path = paths["result_dir"] / f"{batch.id}_output.jsonl"
                 download_file(client, batch.output_file_id, output_path)
                 archived["output_path"] = str(output_path)
             else:
                 archived["output_path"] = None
 
             if batch.error_file_id:
-                error_path = RESULT_DIR / f"{batch.id}_error.jsonl"
+                error_path = paths["result_dir"] / f"{batch.id}_error.jsonl"
                 download_file(client, batch.error_file_id, error_path)
                 archived["error_path"] = str(error_path)
             else:
@@ -446,8 +457,8 @@ def poll(args: argparse.Namespace) -> None:
 
         remaining_records.append(record)
 
-    write_jsonl(ACTIVE_LOG_PATH, remaining_records)
-    append_jsonl(DONE_LOG_PATH, completed_records)
+    write_jsonl(paths["active_log_path"], remaining_records)
+    append_jsonl(paths["done_log_path"], completed_records)
     print(
         f"[teacher_eval.poll] remaining_active={len(remaining_records)} "
         f"archived={len(completed_records)}"
@@ -476,6 +487,7 @@ def extract_output_payload(record: dict[str, Any]) -> dict[str, Any]:
                 "response_id": body.get("id"),
                 "request_id": response.get("request_id"),
                 "error": bool(payload.get("error", False)),
+                "score": int(payload["score"]) if payload.get("score") is not None else None,
                 "lookalike": bool(payload.get("lookalike", False)),
                 "identical": bool(payload.get("identical", False)),
                 "reasoning": str(payload.get("reasoning", "")),
@@ -483,10 +495,10 @@ def extract_output_payload(record: dict[str, Any]) -> dict[str, Any]:
     raise RuntimeError(f"No output_text found for custom_id={record.get('custom_id')}")
 
 
-def find_done_record(batch_id: str | None) -> dict[str, Any]:
-    records = read_jsonl(DONE_LOG_PATH)
+def find_done_record(batch_id: str | None, done_log_path: Path) -> dict[str, Any]:
+    records = read_jsonl(done_log_path)
     if not records:
-        raise RuntimeError(f"No done records found in {DONE_LOG_PATH}")
+        raise RuntimeError(f"No done records found in {done_log_path}")
     if batch_id is None:
         return records[-1]
     for record in records:
@@ -496,7 +508,8 @@ def find_done_record(batch_id: str | None) -> dict[str, Any]:
 
 
 def report(args: argparse.Namespace) -> None:
-    done_record = find_done_record(args.batch_id)
+    paths = build_eval_paths(Path(args.base_dir))
+    done_record = find_done_record(args.batch_id, paths["done_log_path"])
     output_path = Path(done_record["output_path"]) if done_record.get("output_path") else None
     manifest_path = Path(done_record["manifest_path"])
     if output_path is None or not output_path.exists():
@@ -548,6 +561,7 @@ def report(args: argparse.Namespace) -> None:
             else:
                 pred_label = 1 if payload["lookalike"] else 0
                 row["prediction_status"] = "ok"
+                row["score"] = payload["score"]
                 row["reasoning"] = payload["reasoning"]
                 row["identical"] = payload["identical"]
         else:
@@ -578,6 +592,7 @@ def report(args: argparse.Namespace) -> None:
         "batch_id": done_record["batch_id"],
         "run_name": done_record.get("run_name"),
         "model": done_record.get("model"),
+        "prompt_variant": done_record.get("prompt_variant"),
         "top_k": done_record.get("top_k"),
         "similarity_type": done_record.get("similarity_type"),
         "n_queries": len({str(row["query_id"]) for row in manifest_rows}),
@@ -592,22 +607,22 @@ def report(args: argparse.Namespace) -> None:
         "f1": f1_score(y_true, y_pred, zero_division=0),
     }
 
-    REPORT_CSV_PATH.parent.mkdir(parents=True, exist_ok=True)
+    paths["report_csv_path"].parent.mkdir(parents=True, exist_ok=True)
     existing_reports = []
-    if REPORT_CSV_PATH.exists():
-        with REPORT_CSV_PATH.open("r", encoding="utf-8", newline="") as f:
+    if paths["report_csv_path"].exists():
+        with paths["report_csv_path"].open("r", encoding="utf-8", newline="") as f:
             existing_reports = list(csv.DictReader(f))
         existing_reports = [row for row in existing_reports if row.get("batch_id") != metrics["batch_id"]]
 
     fieldnames = list(metrics.keys())
-    with REPORT_CSV_PATH.open("w", encoding="utf-8", newline="") as f:
+    with paths["report_csv_path"].open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         for row in existing_reports:
             writer.writerow(row)
         writer.writerow(metrics)
 
-    with MISSING_CSV_PATH.open("w", encoding="utf-8", newline="") as f:
+    with paths["missing_csv_path"].open("w", encoding="utf-8", newline="") as f:
         fieldnames = [
             "batch_id",
             "query_id",
@@ -633,8 +648,8 @@ def report(args: argparse.Namespace) -> None:
         f"precision={metrics['precision']:.4f} recall={metrics['recall']:.4f} "
         f"f1={metrics['f1']:.4f}"
     )
-    print(f"[teacher_eval.report] report_csv={REPORT_CSV_PATH}")
-    print(f"[teacher_eval.report] missing_csv={MISSING_CSV_PATH}")
+    print(f"[teacher_eval.report] report_csv={paths['report_csv_path']}")
+    print(f"[teacher_eval.report] missing_csv={paths['missing_csv_path']}")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -646,17 +661,27 @@ def build_parser() -> argparse.ArgumentParser:
     submit_parser.add_argument("--gt-csv", type=str, default=str(GT_CSV_PATH))
     submit_parser.add_argument("--query-dir", type=str, default=str(TEST_QUERY_DIR))
     submit_parser.add_argument("--data-dir", type=str, default="data")
+    submit_parser.add_argument("--base-dir", type=str, default=str(BASE_DIR))
     submit_parser.add_argument("--top-k", type=int, default=DEFAULT_TOP_K)
     submit_parser.add_argument("--similarity-type", type=str, default=DEFAULT_SIMILARITY_TYPE)
+    submit_parser.add_argument("--few-shot-count", type=int, choices=(3, 5), default=3)
+    submit_parser.add_argument(
+        "--prompt-variant",
+        type=str,
+        choices=("a_baseline", "b_conservative", "d_scoring"),
+        default="a_baseline",
+    )
     submit_parser.add_argument("--model", type=str, default=os.environ.get("OPENAI_MODEL", DEFAULT_MODEL))
     submit_parser.add_argument("--run-name", type=str, default=None)
     submit_parser.add_argument("--dry-run", action="store_true")
 
     poll_parser = subparsers.add_parser("poll", help="Poll active teacher-eval batches and download outputs")
+    poll_parser.add_argument("--base-dir", type=str, default=str(BASE_DIR))
     poll_parser.add_argument("--watch", action="store_true")
     poll_parser.add_argument("--poll-interval", type=int, default=30)
 
     report_parser = subparsers.add_parser("report", help="Compute metrics from a completed teacher-eval batch")
+    report_parser.add_argument("--base-dir", type=str, default=str(BASE_DIR))
     report_parser.add_argument("--batch-id", type=str, default=None)
 
     return parser

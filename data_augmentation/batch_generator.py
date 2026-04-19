@@ -22,7 +22,7 @@ TOP_K = 50
 MODEL = "gpt-5-mini"
 DB_PATH = Path("data/sqlite/ai4h.db")
 INDEX_PATH = Path("data/faiss/embeddings.index")
-IMAGE_ROOTS = [Path("input_img"), Path("processed_img")]
+IMAGE_ROOTS = [Path("input_img")]
 PROMPT_PATH = Path("data_augmentation/prompt.txt")
 SCHEMA_PATH = Path("data_augmentation/schema.json")
 FEW_SHOTS_PATH = Path("data_augmentation/few_shots.jsonl")
@@ -105,7 +105,7 @@ def load_schema_format() -> dict:
     }
 
 
-def load_few_shots() -> list[dict]:
+def load_few_shots(max_examples: int | None = None) -> list[dict]:
     if not FEW_SHOTS_PATH.exists() or FEW_SHOTS_PATH.stat().st_size == 0:
         return []
 
@@ -116,9 +116,11 @@ def load_few_shots() -> list[dict]:
     try:
         parsed = json.loads(text)
         if isinstance(parsed, dict):
-            return [parsed]
+            out = [parsed]
+            return out[:max_examples] if max_examples is not None else out
         if isinstance(parsed, list):
-            return [x for x in parsed if isinstance(x, dict)]
+            out = [x for x in parsed if isinstance(x, dict)]
+            return out[:max_examples] if max_examples is not None else out
     except json.JSONDecodeError:
         pass
 
@@ -128,7 +130,7 @@ def load_few_shots() -> list[dict]:
         if not line:
             continue
         out.append(json.loads(line))
-    return out
+    return out[:max_examples] if max_examples is not None else out
 
 
 def build_few_shot_content(few_shots: list[dict]) -> list[dict]:
