@@ -1,3 +1,22 @@
+"""
+Filename Parser
+
+Parses medication image filenames into structured metadata fields and exports the results to CSV.
+The script first scans the input image directory, saves all filenames into a raw CSV, then applies
+regex-based parsing rules to extract fields such as chemical name, strength, brand, container type,
+manufacturer, date, image view type, and a generated Medicine_ID.
+
+Usage:
+    uv run python scripts/metadata_scripts/filename_parser.py
+
+Outputs:
+    - data/Metadata/raw_filenames.csv
+    - data/Metadata/medicine_metadata.csv
+
+Note:
+    Update `input_directory` in the `__main__` block if your image folder changes.
+"""
+
 import os
 import re
 import pandas as pd
