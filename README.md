@@ -4,6 +4,7 @@
 
 Identify and distinguish lookalike medications from images. Uses **ViT** for image embeddings and **model_v3** (Assessor MLP) for lookalike scoring, trained on ground-truth labels with both lookalike and non-lookalike examples (class-balanced loss).
 
+> **Note on repository branches:** The main branch contains the stable workflow documented in this README. Other branches are primarily used for ongoing testing and experimentation, especially around LLM-based evaluation and annotation generation. For the standard lookalike medication identification workflow, please refer to the main branch unless a specific experimental branch is required.
 ---
 
 ## Setup
